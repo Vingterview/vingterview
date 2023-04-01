@@ -1,10 +1,14 @@
 package ving.vingterview.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment  extends EntityDate{
 
     @Id
@@ -22,4 +26,10 @@ public class Comment  extends EntityDate{
     private String content;
 
 
+    @Builder
+    public Comment(Board board, Member member, String content) {
+        this.board = board;
+        this.member = member;
+        this.content = content;
+    }
 }

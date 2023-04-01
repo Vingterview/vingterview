@@ -1,10 +1,13 @@
 package ving.vingterview.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class BoardMemberLike {
 
     @Id
@@ -19,4 +22,10 @@ public class BoardMemberLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public BoardMemberLike(Board board, Member member) {
+        this.board = board;
+        this.member = member;
+    }
 }

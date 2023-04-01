@@ -1,10 +1,14 @@
 package ving.vingterview.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TagQuestion {
 
     @Id
@@ -19,4 +23,10 @@ public class TagQuestion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    @Builder
+    public TagQuestion(Tag tag, Question question) {
+        this.tag = tag;
+        this.question = question;
+    }
 }

@@ -1,10 +1,14 @@
 package ving.vingterview.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
 
     @Id
@@ -19,4 +23,11 @@ public class Tag {
 
     @Enumerated(EnumType.STRING)
     private TagType category;
+
+    @Builder
+    public Tag(Tag parent, String name, TagType category) {
+        this.parent = parent;
+        this.name = name;
+        this.category = category;
+    }
 }
