@@ -12,7 +12,7 @@ import ving.vingterview.domain.member.Member;
 public class BoardMemberLike {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_member_id")
     private Long id;
 

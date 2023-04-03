@@ -14,7 +14,7 @@ import ving.vingterview.domain.member.Member;
 public class Question extends EntityDate {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
     private Long id;
 

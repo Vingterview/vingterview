@@ -13,7 +13,7 @@ import ving.vingterview.domain.question.Question;
 public class TagQuestion {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_question_id")
     private Long id;
 

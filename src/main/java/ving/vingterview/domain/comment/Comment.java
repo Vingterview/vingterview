@@ -15,7 +15,7 @@ import ving.vingterview.domain.board.Board;
 public class Comment  extends EntityDate {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
 

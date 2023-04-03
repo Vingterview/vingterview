@@ -12,7 +12,7 @@ import ving.vingterview.domain.member.Member;
 public class QuestionMemberScrap {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_member_id")
     private Long id;
 

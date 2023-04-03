@@ -28,7 +28,6 @@ public class InitDb {
     @PostConstruct
     public void InitDb() {
         initService.dbInit();
-
     }
 
 
