@@ -38,7 +38,7 @@ public class CommentController {
         return;
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public Long update(@PathVariable Long id, @ModelAttribute CommentUpdateDTO commentUpdateDTO) {
         // id로 댓글 조회 후 업데이트
         return null;
