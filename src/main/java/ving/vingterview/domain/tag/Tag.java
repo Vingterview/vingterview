@@ -1,4 +1,4 @@
-package ving.vingterview.domain;
+package ving.vingterview.domain.tag;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

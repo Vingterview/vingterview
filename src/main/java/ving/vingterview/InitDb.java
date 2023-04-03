@@ -6,8 +6,17 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ving.vingterview.domain.*;
-
+import ving.vingterview.domain.board.Board;
+import ving.vingterview.domain.board.BoardMemberLike;
+import ving.vingterview.domain.comment.Comment;
+import ving.vingterview.domain.comment.CommentMemberLike;
+import ving.vingterview.domain.member.Member;
+import ving.vingterview.domain.question.Question;
+import ving.vingterview.domain.question.QuestionMemberScrap;
+import ving.vingterview.domain.tag.Tag;
+import ving.vingterview.domain.tag.TagMember;
+import ving.vingterview.domain.tag.TagQuestion;
+import ving.vingterview.domain.tag.TagType;
 
 
 @Component
@@ -43,7 +52,7 @@ public class InitDb {
 
 
 
-            Tag tag1 = createTag(null,"대기업",TagType.CLASSIFICATION);
+            Tag tag1 = createTag(null,"대기업", TagType.CLASSIFICATION);
             Tag tag2 = createTag(null,"중소기업",TagType.CLASSIFICATION);
             Tag tag3 = createTag(null,"스타트업",TagType.CLASSIFICATION);
 

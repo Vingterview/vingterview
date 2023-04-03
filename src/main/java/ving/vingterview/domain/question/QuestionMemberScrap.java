@@ -1,32 +1,32 @@
-package ving.vingterview.domain;
+package ving.vingterview.domain.question;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ving.vingterview.domain.member.Member;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TagMember {
+@NoArgsConstructor
+public class QuestionMemberScrap {
 
     @Id
     @GeneratedValue
-    @Column(name = "tag_member_id")
+    @Column(name = "question_member_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    public TagMember(Tag tag, Member member) {
-        this.tag = tag;
+    public QuestionMemberScrap(Question question, Member member) {
+        this.question = question;
         this.member = member;
     }
 }

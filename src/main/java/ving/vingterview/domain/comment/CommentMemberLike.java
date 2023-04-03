@@ -1,10 +1,11 @@
-package ving.vingterview.domain;
+package ving.vingterview.domain.comment;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ving.vingterview.domain.member.Member;
 
 @Entity
 @Getter
