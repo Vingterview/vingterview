@@ -12,6 +12,17 @@ spring:
         # show_sql: true
         format_sql: true
 
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
+
+
+
+img:
+  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\img\

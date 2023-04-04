@@ -5,11 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.member.*;
+import ving.vingterview.service.file.FileStore;
+import ving.vingterview.service.member.MemberService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
+
+    private final MemberService memberService;
 
     @GetMapping("")
     public ResponseEntity<MemberListDTO> list() {
@@ -19,7 +25,9 @@ public class MemberController {
 
     @PostMapping("")
     public Long create(@ModelAttribute MemberCreateDTO memberCreateDTO,
-                       @ModelAttribute MemberProfileImageDTO memberProfileImageDTO) {
+                       @ModelAttribute MemberProfileImageDTO memberProfileImageDTO){
+
+        memberService.join(memberCreateDTO,memberProfileImageDTO);
 
         return null; // Member Id 반환
     }
