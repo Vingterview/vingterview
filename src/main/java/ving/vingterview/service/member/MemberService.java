@@ -10,7 +10,6 @@ import ving.vingterview.dto.member.*;
 import ving.vingterview.repository.MemberRepository;
 import ving.vingterview.service.file.FileStore;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,8 +50,7 @@ public class MemberService {
     private void validateDuplicateMember(String loginId) {
         memberRepository.findByLoginId(loginId)
                 .ifPresent(m -> {
-    //                    log.warn("이미 존재하는 회원입니다");
-                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                    throw new RuntimeException("이미 존재하는 회원입니다.");
                 });
     }
 
@@ -77,7 +75,6 @@ public class MemberService {
 
     /**
      * 멤버 삭제
-     * @param id
      */
     public void delete(Long id) {
         memberRepository.deleteById(id);
@@ -85,7 +82,21 @@ public class MemberService {
 
     @Transactional
     public Long update(Long id, MemberUpdateDTO memberUpdateDTO, MemberProfileImageDTO memberProfileImageDTO) {
-        return null;
+
+        Optional<Member> findMember = memberRepository.findById(id);
+        Member member = findMember.orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
+
+        fileStore.deleteFile(member.getProfileImageUrl());
+        Optional<UploadFile> uploadFile = Optional.ofNullable(fileStore.storeFile(memberProfileImageDTO.getProfileImage()));
+
+
+        member.update(memberUpdateDTO.getName(), memberUpdateDTO.getAge(), memberUpdateDTO.getEmail(),
+                memberUpdateDTO.getNickname(),
+                uploadFile.orElse(new UploadFile(null, null)).getStoreFileName());
+
+        return member.getId();
+
+
     }
 
 }

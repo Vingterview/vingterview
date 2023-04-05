@@ -37,4 +37,13 @@ public class Member  extends EntityDate {
         this.profileImageUrl = profileImageUrl;
 
     }
+
+    public void update(String name, int age, String email, String nickname, String profileImageUrl) {
+
+        this.name = name;
+        this.nickname = nickname;
+        this.age = age;
+        this.email = email;
+        this.profileImageUrl = profileImageUrl;
+    }
 }
