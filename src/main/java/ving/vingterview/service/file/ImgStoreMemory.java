@@ -3,7 +3,6 @@ package ving.vingterview.service.file;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ving.vingterview.domain.file.ImgFile;
@@ -60,5 +59,13 @@ public class ImgStoreMemory implements FileStore{
         }
         return new ImgFile(originalFilename, storeFileName);
 
+    }
+
+    @Override
+    public void deleteFile(String fileName) {
+        File file = new File(getFullPath(fileName));
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }
