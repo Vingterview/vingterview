@@ -8,4 +8,8 @@ import java.util.List;
 public class CommentListDTO {
 
     private List<CommentDTO> comments;
+
+    public CommentListDTO(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
 }

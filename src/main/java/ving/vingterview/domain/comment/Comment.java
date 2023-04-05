@@ -9,6 +9,8 @@ import ving.vingterview.domain.EntityDate;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.board.Board;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,11 +30,18 @@ public class Comment  extends EntityDate {
     private Member member;
     private String content;
 
+    @OneToMany(mappedBy = "comment")
+    private List<CommentMemberLike> likes;
+
 
     @Builder
     public Comment(Board board, Member member, String content) {
         this.board = board;
         this.member = member;
+        this.content = content;
+    }
+
+    public void update(String content) {
         this.content = content;
     }
 }
