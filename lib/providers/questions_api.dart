@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:capston/models/users.dart';
+import 'package:capston/models/questions.dart';
 import 'package:http/http.dart' as http;
 
 class UserApi {
@@ -13,7 +14,9 @@ class UserApi {
 
     if (statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      print(jsonMap);
       user = Users.fromJson(jsonMap);
+      print(user);
     }
 
     return user;

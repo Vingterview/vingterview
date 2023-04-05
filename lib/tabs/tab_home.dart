@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/tabs/tab_video.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -93,7 +94,9 @@ class HomePage extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.keyboard_arrow_right_sharp),
                     color: Color(0xFF6fa8dc),
-                    onPressed: () {   // 수정
+                    onPressed: () {
+                      // 수정
+                      // Navigator.pushNamed(context, '/board');
                     },
                   ),
                 ],
@@ -123,7 +126,9 @@ class HomePage extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.keyboard_arrow_right_sharp),
                     color: Color(0xFF6fa8dc),
-                    onPressed: () { // 수정
+                    onPressed: () {
+                      // 수정
+                      Navigator.pushNamed(context, '/question');
                     },
                   ),
                 ],
