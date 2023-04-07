@@ -26,3 +26,6 @@ logging.level:
 
 img:
   dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\img\
+
+video:
+  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\video\

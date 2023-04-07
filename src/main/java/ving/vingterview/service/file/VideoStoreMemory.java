@@ -13,11 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@Component("imgStore")
-public class ImgStoreMemory implements FileStore{
 
-    @Value("${img.dir}")
+@Slf4j
+@Component("videoStore")
+public class VideoStoreMemory implements FileStore {
+
+    @Value("${video.dir}")
     private String fileDir;
 
     @Override
@@ -27,25 +28,23 @@ public class ImgStoreMemory implements FileStore{
 
     @Override
     @Transactional
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles){
+    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) {
 
-        List<UploadFile> storeFileResult =new ArrayList<>();
+        List<UploadFile> storeFileResult = new ArrayList<>();
 
-        if (multipartFiles.isEmpty()) {
-            return null;
-        }
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
                 storeFileResult.add(storeFile(multipartFile));
             }
-
         }
+
         return storeFileResult;
     }
 
     @Override
     @Transactional
-    public UploadFile storeFile(MultipartFile multipartFile){
+    public UploadFile storeFile(MultipartFile multipartFile) {
+
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -58,7 +57,6 @@ public class ImgStoreMemory implements FileStore{
             log.warn("업로드 폴더 생성 실패 {}", e.getMessage());
         }
         return new ImgFile(originalFilename, storeFileName);
-
     }
 
     @Override

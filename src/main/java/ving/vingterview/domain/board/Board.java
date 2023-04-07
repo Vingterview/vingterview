@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ving.vingterview.domain.EntityDate;
+import ving.vingterview.domain.comment.Comment;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.question.Question;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,7 +21,6 @@ public class Board extends EntityDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
@@ -31,6 +33,12 @@ public class Board extends EntityDate {
     private String videoUrl;
 
 
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "board")
+    private List<BoardMemberLike> boardMemberLikes;
+
     @Builder
     public Board(Question question, Member member, String content, String videoUrl) {
         this.question = question;
@@ -38,4 +46,11 @@ public class Board extends EntityDate {
         this.content = content;
         this.videoUrl = videoUrl;
     }
+
+    public void update(Question question , String content, String videoUrl) {
+        this.question = question;
+        this.content = content;
+        this.videoUrl = videoUrl;
+    }
+
 }

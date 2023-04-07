@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ving.vingterview.domain.LikeType;
 import ving.vingterview.domain.member.Member;
 
 @Entity
@@ -15,6 +16,9 @@ public class BoardMemberLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_member_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private LikeType likeStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -28,5 +32,14 @@ public class BoardMemberLike {
     public BoardMemberLike(Board board, Member member) {
         this.board = board;
         this.member = member;
+        this.likeStatus = LikeType.LIKE;
+    }
+
+    public void updateStatus() {
+        if (this.likeStatus == LikeType.LIKE) {
+            this.likeStatus = LikeType.UNLIKE;
+        }else{
+            this.likeStatus = LikeType.LIKE;
+        }
     }
 }

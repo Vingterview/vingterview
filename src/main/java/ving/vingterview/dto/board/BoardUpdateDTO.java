@@ -7,4 +7,5 @@ public class BoardUpdateDTO {
 
     private Long questionId;
     private String content;
+    private String videoUrl;
 }
