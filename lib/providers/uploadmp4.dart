@@ -1,23 +1,74 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
-Future<String> uploadVideo(File videoFile) async {
-  var stream = new http.ByteStream(videoFile.openRead());
-  stream.cast();
+class UploadVideoApi {
+  Future<String> pickVideo() async {
+    // 영상 업로드  # 2
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    final video_url = uploadVideo(pickedFile);
+    return video_url;
+  }
 
-  var uri = Uri.parse("https://example.com/upload");
-  var request = new http.MultipartRequest("POST", uri);
-  var multipartFile = new http.MultipartFile(
-    'video',
-    stream,
-    videoFile.lengthSync(),
-    filename: videoFile.path.split("/").last,
-  );
+  Future<String> changeVideo(int id) async {
+    // 영상 변경  # 6
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final video_url = updateVideo(id, pickedFile);
+    return video_url;
+  }
 
-  request.files.add(multipartFile);
-  var response = await request.send();
-  var responseData = await response.stream.toBytes();
-  var responseString = String.fromCharCodes(responseData);
+  Future<String> uploadVideo(XFile videoFile) async {
+    String uri = 'https://ee-wfnlp.run.goorm.site';
+    final url = Uri.parse('$uri/boards/video');
 
-  return responseString;
+    // open the video file
+    final bytes = await videoFile.readAsBytes();
+
+    // create the multipart request
+    final request = http.MultipartRequest('POST', url)
+      ..files.add(http.MultipartFile.fromBytes('video', bytes,
+          filename: 'example.mp4'));
+
+    // send the request
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    // check the response status code
+    if (response.statusCode == 201) {
+      final responseJson = jsonDecode(responseBody);
+      final videoUrl = responseJson['video_url'];
+      return videoUrl;
+    } else {
+      throw Exception('Failed to post video');
+    }
+  }
+
+  Future<String> updateVideo(int id, XFile videoFile) async {
+    String uri = 'https://ee-wfnlp.run.goorm.site';
+    final url = Uri.parse('$uri/boards/$id/video');
+
+    // open the video file
+    final bytes = await videoFile.readAsBytes();
+
+    // create the multipart request
+    final request = http.MultipartRequest('PATCH', url)
+      ..files.add(http.MultipartFile.fromBytes('video', bytes,
+          filename: 'example.mp4'));
+
+    // send the request
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    // check the response status code
+    if (response.statusCode == 201) {
+      final responseJson = jsonDecode(responseBody);
+      final videoUrl = responseJson['video_url'];
+      return videoUrl;
+    } else {
+      throw Exception('Failed to post video');
+    }
+  }
 }

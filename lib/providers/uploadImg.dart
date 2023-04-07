@@ -1,23 +1,75 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 
-Future<String> uploadImage(File imageFile) async {
-  var stream = new http.ByteStream(imageFile.openRead());
-  stream.cast();
+class UploadImageApi {
+  Future<String> pickImage() async {
+    // 프로필 사진 업로드  #2
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final profile_image_url = uploadImage(pickedFile);
+    return profile_image_url;
+  }
 
-  var uri = Uri.parse("https://example.com/upload");
-  var request = new http.MultipartRequest("POST", uri);
-  var multipartFile = new http.MultipartFile(
-    'image',
-    stream,
-    imageFile.lengthSync(),
-    filename: imageFile.path.split("/").last,
-  );
+  Future<String> changeImage(int id) async {
+    // 프로필 사진 변경  #6
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final profile_image_url = updateImage(id, pickedFile);
+    return profile_image_url;
+  }
 
-  request.files.add(multipartFile);
-  var response = await request.send();
-  var responseData = await response.stream.toBytes();
-  var responseString = String.fromCharCodes(responseData);
+  Future<String> uploadImage(XFile imageFile) async {
+    String uri = 'https://ee-wfnlp.run.goorm.site';
+    final url = Uri.parse('$uri/members/image');
 
-  return responseString;
+    // open the image file
+    final bytes = await imageFile.readAsBytes();
+
+    // create the multipart request
+    final request = http.MultipartRequest('POST', url)
+      ..fields['userId'] = '123'
+      ..files.add(http.MultipartFile.fromBytes('image', bytes,
+          filename: 'example.jpg'));
+
+    // send the request
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    // check the response status code
+    if (response.statusCode == 201) {
+      final responseJson = jsonDecode(responseBody);
+      final videoUrl = responseJson['profile_image_url'];
+      return videoUrl;
+    } else {
+      throw Exception('Failed to post video');
+    }
+  }
+
+  Future<String> updateImage(int id, XFile imageFile) async {
+    String uri = 'https://ee-wfnlp.run.goorm.site';
+    final url = Uri.parse('$uri/members/$id/image');
+
+    // open the image file
+    final bytes = await imageFile.readAsBytes();
+
+    // create the multipart request
+    final request = http.MultipartRequest('PATCH', url)
+      ..files.add(http.MultipartFile.fromBytes('image', bytes,
+          filename: 'example.jpg'));
+
+    // send the request
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    // check the response status code
+    if (response.statusCode == 201) {
+      final responseJson = jsonDecode(responseBody);
+      final videoUrl = responseJson['profile_image_url'];
+      return videoUrl;
+    } else {
+      throw Exception('Failed to post video');
+    }
+  }
 }
