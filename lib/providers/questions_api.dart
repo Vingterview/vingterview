@@ -8,22 +8,22 @@ import 'package:http/http.dart' as http;
 class QuestionApi {
   String uri = 'https://ee-wfnlp.run.goorm.site';
 
-  Future<List<Questions>> getVideos() async {
+  Future<List<Questions>> getQuestions() async {
     // 질문 전체 목록 # 0
     final response = await http.get(Uri.parse('$uri/questions'));
     final statusCode = response.statusCode;
     final body = response.body;
-    List<Questions> videos = [];
+    List<Questions> questions = [];
 
     if (statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(body);
-      videos = jsonList.map((json) => Questions.fromJson(json)).toList();
+      questions = jsonList.map((json) => Questions.fromJson(json)).toList();
     }
 
-    return videos;
+    return questions;
   }
 
-  Future<int> postVideo(
+  Future<int> postQuestion(
       List<Tags> tags, int member_id, String question_content) async {
     // 질문 등록   # 1
     final response = await http.post(
@@ -40,7 +40,7 @@ class QuestionApi {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['question_id'];
     } else {
-      throw Exception('Failed to post video');
+      throw Exception('Failed to post question');
     }
   }
 
