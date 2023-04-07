@@ -3,27 +3,31 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Users {
-  final int id;
-  final String userId;
-  final String password;
+  final int member_id;
+  final String id;
   final String name;
   final int age;
+  final String email;
   final String nickName;
-  final String createTime;
-  final String updateTime;
+  final String profile_image_url;
 
-  Users({this.id, this.userId, this.password, this.name, this.age, this.nickName, this.createTime, this.updateTime});
+  Users(
+      {this.member_id,
+      this.id,
+      this.name,
+      this.age,
+      this.email,
+      this.nickName,
+      this.profile_image_url});
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
-      id: json['id'],
-      userId: json['userId'],
-      password: json['password'],
-      name: json['name'],
-      age: json['age'],
-      nickName: json['nickName'],
-      createTime: json['createTime'],
-      updateTime: json['updateTime']
-    );
+        member_id: json['member_id'],
+        id: json['id'],
+        name: json['name'],
+        age: json['age'],
+        email: json['email'],
+        nickName: json['nickName'],
+        profile_image_url: json['profile_image_url']);
   }
 }
