@@ -20,13 +20,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping(params = "board_id")
-    public ResponseEntity<CommentListDTO> filterByBoard(@RequestParam(name = "board_id") Long boardId) {
+    public ResponseEntity<CommentListDTO> findByBoard(@RequestParam(name = "board_id") Long boardId) {
         CommentListDTO result = commentService.findByBoard(boardId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(params = "member_id")
-    public ResponseEntity<CommentListDTO> filterByMember(@RequestParam(name = "member_id") Long memberId) {
+    public ResponseEntity<CommentListDTO> findByMember(@RequestParam(name = "member_id") Long memberId) {
         CommentListDTO result = commentService.findByMember(memberId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -54,7 +54,6 @@ public class CommentController {
 
     @GetMapping("/{id}/like")
     public void like(@PathVariable Long id) {
-        // 댓글 좋아요
-        return;
+        commentService.like(id);
     }
 }

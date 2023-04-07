@@ -1,9 +1,6 @@
 package ving.vingterview.service.comment;
 
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,16 +10,13 @@ import ving.vingterview.domain.comment.Comment;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.dto.comment.CommentCreateDTO;
 import ving.vingterview.dto.comment.CommentDTO;
-import ving.vingterview.dto.comment.CommentListDTO;
 import ving.vingterview.dto.comment.CommentUpdateDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -109,7 +103,8 @@ class CommentServiceTest {
 
         commentService.delete(commentId);
 
-        assertThatThrownBy(() -> commentService.findOne(commentId)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> commentService.findOne(commentId))
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     // 없는 댓글을 찾는 경우
@@ -146,6 +141,7 @@ class CommentServiceTest {
                 .containsExactlyElementsOf(comments.stream().map(comment -> comment.getId()).toList());
         assertThat(foundComments).extracting("content")
                 .containsExactlyElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
+
     }
 
     // 게시글에 달린 댓글이 없는 경우
@@ -231,5 +227,45 @@ class CommentServiceTest {
 
         assertThatThrownBy(() -> commentService.findByMember(member.getId() + 100L))
                 .isInstanceOf(NoSuchElementException.class);
+    }
+
+    // 새로운 댓글에 좋아요를 누른 경우
+    @Test
+    void like() {
+        Member member = Member.builder().name("testMember1").build();
+        Board board = Board.builder().member(member).content("testBoard").build();
+        Comment comment = Comment.builder().member(member).board(board).content("testComment").build();
+        em.persist(member);
+        em.persist(board);
+        em.persist(comment);
+
+        em.flush();
+        em.clear();
+
+        commentService.like(comment.getId());
+        em.flush();
+
+        CommentDTO dto = commentService.findOne(comment.getId());
+        assertThat(dto.getLikeCount()).isEqualTo(1);
+    }
+
+    // 같은 사용자가 같은 댓글에 좋아요를 두번 누른 경우
+    @Test
+    void unlike() {
+        Member member = Member.builder().name("testMember1").build();
+        Board board = Board.builder().member(member).content("testBoard").build();
+        Comment comment = Comment.builder().member(member).board(board).content("testComment").build();
+        em.persist(member);
+        em.persist(board);
+        em.persist(comment);
+
+        em.flush();
+        em.clear();
+
+        commentService.like(comment.getId());
+        commentService.like(comment.getId());
+
+        CommentDTO dto = commentService.findOne(comment.getId());
+        assertThat(dto.getLikeCount()).isEqualTo(0);
     }
 }

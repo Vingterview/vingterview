@@ -31,7 +31,7 @@ public class Comment  extends EntityDate {
     private Member member;
     private String content;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<CommentMemberLike> likes = new ArrayList<>();
 
 

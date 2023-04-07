@@ -4,20 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ving.vingterview.domain.LikeType;
 import ving.vingterview.domain.board.Board;
 import ving.vingterview.domain.comment.Comment;
+import ving.vingterview.domain.comment.CommentMemberLike;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.dto.comment.CommentCreateDTO;
 import ving.vingterview.dto.comment.CommentDTO;
 import ving.vingterview.dto.comment.CommentListDTO;
 import ving.vingterview.dto.comment.CommentUpdateDTO;
 import ving.vingterview.repository.BoardRepository;
+import ving.vingterview.repository.CommentMemberLikeRepository;
 import ving.vingterview.repository.CommentRepository;
 import ving.vingterview.repository.MemberRepository;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final CommentMemberLikeRepository likeRepository;
 
     /**
      * 댓글 등록
@@ -57,8 +59,9 @@ public class CommentService {
                 .orElseThrow(()->new NoSuchElementException("댓글 없음"));
         Member member = comment.getMember();
         Board board = comment.getBoard();
+        int likeCount = likeRepository.countByCommentAndLikeStatus(comment, LikeType.LIKE);
 
-        return convertToCommentDTO(comment, member, board);
+        return convertToCommentDTO(comment, member, board, likeCount);
     }
 
     /**
@@ -74,7 +77,8 @@ public class CommentService {
         List<CommentDTO> results = comments.stream()
                 .map(comment -> {
                     Member member = comment.getMember();
-                    return convertToCommentDTO(comment, member, board);
+                    int likeCount = likeRepository.countByCommentAndLikeStatus(comment, LikeType.LIKE);
+                    return convertToCommentDTO(comment, member, board, likeCount);
                 })
                 .toList();
         return new CommentListDTO(results);
@@ -95,7 +99,8 @@ public class CommentService {
         List<CommentDTO> results = comments.stream()
                 .map((comment) -> {
                     Board board = comment.getBoard();
-                    return convertToCommentDTO(comment, member, board);
+                    int likeCount = likeRepository.countByCommentAndLikeStatus(comment, LikeType.LIKE);
+                    return convertToCommentDTO(comment, member, board, likeCount);
                 })
                 .toList();
         return new CommentListDTO(results);
@@ -122,6 +127,24 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    /**
+     * 좋아요
+     * @param id
+     */
+    public void like(Long id) {
+        Long member_id = 1L;
+        Optional<CommentMemberLike> like = likeRepository.findByCommentIdAndMemberId(id, member_id);
+
+        if (like.isEmpty()) {
+            Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 게시물을 찾을 수 없습니다."));
+            Member member = memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("해당 멤버를 찾을 수 없습니다."));
+            likeRepository.save(new CommentMemberLike(comment, member));
+
+        } else {
+            like.get().updateStatus();
+        }
+    }
+
     // 유틸리티 메소드
     /**
      * DTO로 변환
@@ -130,9 +153,7 @@ public class CommentService {
      * @param board
      * @return
      */
-    private static CommentDTO convertToCommentDTO(Comment comment, Member member, Board board) {
-
-        int likeCount = (int) comment.getLikes().stream().count();
+    private static CommentDTO convertToCommentDTO(Comment comment, Member member, Board board, int likeCount) {
 
         return CommentDTO.builder()
                 .commentId(comment.getId())
@@ -144,5 +165,4 @@ public class CommentService {
                 .likeCount(likeCount)
                 .build();
     }
-    // 좋아요
 }

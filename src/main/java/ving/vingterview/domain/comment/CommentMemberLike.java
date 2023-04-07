@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ving.vingterview.domain.LikeType;
 import ving.vingterview.domain.member.Member;
 
 @Entity
@@ -25,9 +26,21 @@ public class CommentMemberLike {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
+    private LikeType likeStatus;
+
     @Builder
     public CommentMemberLike(Comment comment, Member member) {
         this.comment = comment;
         this.member = member;
+        this.likeStatus = LikeType.LIKE;
+    }
+
+    public void updateStatus() {
+        if (this.likeStatus == LikeType.LIKE) {
+            this.likeStatus = LikeType.UNLIKE;
+        }else{
+            this.likeStatus = LikeType.LIKE;
+        }
     }
 }
