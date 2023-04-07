@@ -13,10 +13,19 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("")
-    public ResponseEntity<BoardListDTO> list(@RequestParam(name = "member_id", required = false) Long member_id,
-                                             @RequestParam(name = "question_id", required = false) Long question_id) {
-        return null;
+    @GetMapping(value = "",params = "member_id")
+    public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id){
+
+        BoardListDTO boardListDTO = boardService.findByMember(member_id);
+
+        return ResponseEntity.ok(boardListDTO);
+    }
+
+    @GetMapping(value = "",params = "question_id")
+    public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id) {
+        BoardListDTO boardListDTO = boardService.findByQuestion(question_id);
+
+        return ResponseEntity.ok(boardListDTO);
     }
 
     @PostMapping("")

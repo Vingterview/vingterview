@@ -11,10 +11,7 @@ import ving.vingterview.domain.comment.Comment;
 import ving.vingterview.domain.file.UploadFile;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.question.Question;
-import ving.vingterview.dto.board.BoardCreateDTO;
-import ving.vingterview.dto.board.BoardDTO;
-import ving.vingterview.dto.board.BoardUpdateDTO;
-import ving.vingterview.dto.board.BoardVideoDTO;
+import ving.vingterview.dto.board.*;
 import ving.vingterview.repository.BoardMemberLikeRepository;
 import ving.vingterview.repository.BoardRepository;
 import ving.vingterview.repository.MemberRepository;
@@ -25,6 +22,7 @@ import ving.vingterview.service.file.FileStore;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,31 +66,7 @@ public class BoardService {
     public BoardDTO findById(Long id) {
 
         Board board = boardRepository.findByIdWithMemberQuestion(id).orElseThrow(() -> new RuntimeException("해당 게시글을 찾을 수 없습니다."));
-        Question question = board.getQuestion();
-        Member member = board.getMember();
-
-        List<Comment> comments = board.getComments();
-        List<BoardMemberLike> boardMemberLikes = board.getBoardMemberLikes();
-
-
-        BoardDTO boardDTO = BoardDTO.builder()
-                .id(board.getId())
-                .questionId(question.getId())
-                .questionContent(question.getContent())
-                .memberId(member.getId())
-                .memberNickname(member.getNickname())
-                .profileImageUrl(member.getProfileImageUrl())
-                .content(board.getContent())
-                .videoUrl(board.getVideoUrl())
-                .likeCount(boardMemberLikes.size())
-                .commentCount(comments.size())
-                .createTime(LocalDateTime.now())
-                .updateTime(board.getUpdateTime())
-                .createTime(board.getCreateTime())
-                .build();
-
-
-        return boardDTO;
+        return transferBoardDTO(board);
     }
 
     public String videoUpload(BoardVideoDTO boardVideoDTO) {
@@ -136,4 +110,64 @@ public class BoardService {
 
 
     }
+
+    public BoardListDTO findByMember(Long memberId) {
+
+        List<Long> boardIds = boardRepository.findByMemberId(memberId)
+                .stream().map(board -> board.getId()).collect(Collectors.toList());
+
+        List<BoardDTO> boardDTOList = boardRepository.findByIdsWithMemberQuestion(boardIds)
+                .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(boardDTOList);
+
+        return boardListDTO;
+
+    }
+
+    public BoardListDTO findByQuestion(Long questionId) {
+
+        List<Long> boardIds = boardRepository.findByQuestionId(questionId)
+                .stream().map(board -> board.getId()).collect(Collectors.toList());
+
+        List<BoardDTO> boardDTOList = boardRepository.findByIdsWithMemberQuestion(boardIds)
+                .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(boardDTOList);
+
+        return boardListDTO;
+    }
+
+
+    private BoardDTO transferBoardDTO(Board board) {
+
+        Question question = board.getQuestion();
+        Member member = board.getMember();
+
+        List<Comment> comments = board.getComments();
+        List<BoardMemberLike> boardMemberLikes = board.getBoardMemberLikes();
+
+
+        return BoardDTO.builder()
+                .id(board.getId())
+                .questionId(question.getId())
+                .questionContent(question.getContent())
+                .memberId(member.getId())
+                .memberNickname(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
+                .content(board.getContent())
+                .videoUrl(board.getVideoUrl())
+                .likeCount(boardMemberLikes.size())
+                .commentCount(comments.size())
+                .createTime(LocalDateTime.now())
+                .updateTime(board.getUpdateTime())
+                .createTime(board.getCreateTime())
+                .build();
+    }
+
+
 }
