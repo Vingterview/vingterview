@@ -84,4 +84,17 @@ class VideoApi {
       throw Exception('Failed to post video');
     }
   }
+
+  Future<void> like(int id) async {
+    // 라이크  # 7
+    var url = Uri.parse('$uri/boards/$id/like');
+
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
 }
