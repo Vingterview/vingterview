@@ -17,6 +17,7 @@ import ving.vingterview.repository.MemberRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class CommentService {
      * @param commentCreateDTO
      * @return
      */
-    public Long save(CommentCreateDTO commentCreateDTO) {
+    public Long create(CommentCreateDTO commentCreateDTO) {
         Board board = boardRepository.findById(commentCreateDTO.getBoardId())
                 .orElseThrow(()->new NoSuchElementException("게시글 없음"));
         Member member = memberRepository.findById(commentCreateDTO.getMemberId())
@@ -50,6 +51,7 @@ public class CommentService {
      * @param id
      * @return
      */
+    @Transactional(readOnly = true)
     public CommentDTO findOne(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()->new NoSuchElementException("댓글 없음"));
@@ -64,17 +66,17 @@ public class CommentService {
      * @param boardId
      * @return
      */
-    public CommentListDTO filterByBoard(Long boardId) {
+    @Transactional(readOnly = true)
+    public CommentListDTO findByBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("게시글 없음"));
         List<Comment> comments = commentRepository.findAllByBoard(board);
         List<CommentDTO> results = comments.stream()
-                .map((comment) -> {
+                .map(comment -> {
                     Member member = comment.getMember();
                     return convertToCommentDTO(comment, member, board);
                 })
                 .toList();
-        log.info("comments={}", results);
         return new CommentListDTO(results);
     }
 
@@ -83,17 +85,19 @@ public class CommentService {
      * @param memberId
      * @return
      */
-    public CommentListDTO filterByMember(Long memberId) {
+    @Transactional(readOnly = true)
+    public CommentListDTO findByMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("회원 없음"));
         List<Comment> comments = commentRepository.findAllByMember(member);
+
+
         List<CommentDTO> results = comments.stream()
                 .map((comment) -> {
                     Board board = comment.getBoard();
                     return convertToCommentDTO(comment, member, board);
                 })
                 .toList();
-        log.info("comments={}", results);
         return new CommentListDTO(results);
     }
 
@@ -106,7 +110,7 @@ public class CommentService {
     public Long update(Long id, CommentUpdateDTO commentUpdateDTO) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()->new NoSuchElementException("댓글 없음"));
-        comment.update(comment.getContent());
+        comment.update(commentUpdateDTO.getContent());
         return comment.getId();
     }
 

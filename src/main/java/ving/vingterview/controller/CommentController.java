@@ -21,19 +21,19 @@ public class CommentController {
 
     @GetMapping(params = "board_id")
     public ResponseEntity<CommentListDTO> filterByBoard(@RequestParam(name = "board_id") Long boardId) {
-        CommentListDTO result = commentService.filterByBoard(boardId);
+        CommentListDTO result = commentService.findByBoard(boardId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(params = "member_id")
     public ResponseEntity<CommentListDTO> filterByMember(@RequestParam(name = "member_id") Long memberId) {
-        CommentListDTO result = commentService.filterByMember(memberId);
+        CommentListDTO result = commentService.findByMember(memberId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "")
     public Long create(@RequestBody CommentCreateDTO commentCreateDTO) {
-        return commentService.save(commentCreateDTO);
+        return commentService.create(commentCreateDTO);
     }
 
     @GetMapping("/{id}")
@@ -48,7 +48,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Long update(@PathVariable Long id, @ModelAttribute CommentUpdateDTO commentUpdateDTO) {
+    public Long update(@PathVariable Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
         return commentService.update(id, commentUpdateDTO);
     }
 

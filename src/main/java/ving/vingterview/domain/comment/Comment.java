@@ -9,6 +9,7 @@ import ving.vingterview.domain.EntityDate;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.board.Board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class Comment  extends EntityDate {
     private String content;
 
     @OneToMany(mappedBy = "comment")
-    private List<CommentMemberLike> likes;
+    private List<CommentMemberLike> likes = new ArrayList<>();
 
 
     @Builder
