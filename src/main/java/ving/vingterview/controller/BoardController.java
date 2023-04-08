@@ -1,10 +1,13 @@
 package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/boards")
@@ -75,7 +78,28 @@ public class BoardController {
 
     @PostMapping("/video")
     public String videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        return boardService.videoUpload(boardVideoDTO);
+        System.out.println("BoardController.videoUpload Start");
+        String s = boardService.videoUpload(boardVideoDTO);
+        System.out.println("BoardController.videoUpload Returned");
+        return s;
+
+
+    }
+
+
+    @PostMapping("/videoAsync")
+    public CompletableFuture<ResponseEntity<String>> videoUploadAsync(@ModelAttribute BoardVideoDTO boardVideoDTO) {
+        try {
+            CompletableFuture<String> uploadFuture = boardService.videoUploadAsync(boardVideoDTO);
+            String filePath = uploadFuture.get();
+            if (filePath != null) {
+                return CompletableFuture.completedFuture(ResponseEntity.ok(filePath));
+            } else {
+                return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+            }
+        } catch (Exception e) {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        }
     }
 
 /*    @PostMapping("/{id}/video")

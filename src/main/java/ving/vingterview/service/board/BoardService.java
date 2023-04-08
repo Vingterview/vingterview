@@ -3,8 +3,10 @@ package ving.vingterview.service.board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ving.vingterview.domain.board.Board;
 import ving.vingterview.domain.board.BoardMemberLike;
 import ving.vingterview.domain.comment.Comment;
@@ -22,6 +24,7 @@ import ving.vingterview.service.file.FileStore;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,9 +72,30 @@ public class BoardService {
         return transferBoardDTO(board);
     }
 
+
     public String videoUpload(BoardVideoDTO boardVideoDTO) {
-        Optional<UploadFile> uploadFile = Optional.ofNullable(videoStore.storeFile(boardVideoDTO.getVideo()));
-        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
+
+        MultipartFile video = boardVideoDTO.getVideo();
+//        Optional<UploadFile> uploadFile = Optional.ofNullable(videoStore.storeFile(boardVideoDTO.getVideo()));
+
+        System.out.println("BoardService.videoUpload");
+        UploadFile uploadFile = videoStore.storeFile(video.getOriginalFilename());
+        videoStore.uploadFile(video, uploadFile.getStoreFileName());
+
+        return uploadFile.getStoreFileName();
+
+    }
+
+    @Async
+    public CompletableFuture<String> videoUploadAsync(BoardVideoDTO boardVideoDTO) {
+        try {
+            MultipartFile video = boardVideoDTO.getVideo();
+            UploadFile uploadFile = videoStore.storeFile(video.getOriginalFilename());
+            videoStore.uploadFile(video, uploadFile.getStoreFileName());
+            return CompletableFuture.completedFuture(uploadFile.getStoreFileName());
+        } catch (Exception e) {
+            return CompletableFuture.completedFuture(null);
+        }
     }
 
 

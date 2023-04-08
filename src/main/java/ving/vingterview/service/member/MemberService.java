@@ -114,7 +114,8 @@ public class MemberService {
 
     public String profileUpload(MemberProfileImageDTO memberProfileImageDTO) {
 
-        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
-        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
+//        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
+//        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
+        return null;
     }
 }

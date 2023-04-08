@@ -1,5 +1,6 @@
 package ving.vingterview.service.file;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 import ving.vingterview.domain.file.UploadFile;
 
@@ -11,11 +12,15 @@ public interface FileStore {
 
 
     String getFullPath(String fileName);
-    List<UploadFile> storeFiles(List<MultipartFile> multipartFiles);
 
-    UploadFile storeFile(MultipartFile multipartFile);
+    UploadFile storeFile(String originalFileName);
+
+    @Async
+    void uploadFile(MultipartFile multipartFile,String storeName);
 
     void deleteFile(String fileName);
+
+
 
     default String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename); // 확장자 추출

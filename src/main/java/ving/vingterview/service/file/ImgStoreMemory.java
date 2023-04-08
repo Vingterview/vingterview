@@ -2,6 +2,7 @@ package ving.vingterview.service.file;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,40 +26,27 @@ public class ImgStoreMemory implements FileStore{
         return fileDir + fileName;
     }
 
+
     @Override
-    @Transactional
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles){
+    public UploadFile storeFile(String originalFileName) {
 
-        List<UploadFile> storeFileResult =new ArrayList<>();
-
-        if (multipartFiles.isEmpty()) {
-            return null;
-        }
-        for (MultipartFile multipartFile : multipartFiles) {
-            if (!multipartFile.isEmpty()) {
-                storeFileResult.add(storeFile(multipartFile));
-            }
-
-        }
-        return storeFileResult;
+        String storeFileName = createStoreFileName(originalFileName);
+        return new ImgFile(originalFileName, storeFileName);
     }
 
     @Override
-    @Transactional
-    public UploadFile storeFile(MultipartFile multipartFile){
+    @Async
+    public void uploadFile(MultipartFile multipartFile, String storeFileName) {
+
         if (multipartFile.isEmpty()) {
-            return null;
+            log.warn("null");
         }
 
-        String originalFilename = multipartFile.getOriginalFilename();
-        String storeFileName = createStoreFileName(originalFilename);
         try {
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
         } catch (IOException e) {
             log.warn("업로드 폴더 생성 실패 {}", e.getMessage());
         }
-        return new ImgFile(originalFilename, storeFileName);
-
     }
 
     @Override
