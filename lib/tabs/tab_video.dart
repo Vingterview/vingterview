@@ -37,9 +37,8 @@ class VideoPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                     onTap: () async {
-                      int result =
-                          await videoApi.postVideo(1, 1, "ddddd", "~.mp4");
-                      print(result);
+                      Navigator.pushNamed(context, '/video_detail',
+                          arguments: videolist[index].boardId);
                     },
                     child: Container(
                       padding:

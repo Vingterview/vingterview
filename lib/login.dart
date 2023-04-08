@@ -59,9 +59,19 @@ class _loginState extends State<login> {
                 try {
                   int member_id = await _userApi.userLogin(
                       idController.text, passwordController.text);
+                  print(member_id);
                   // 로그인 성공
-                  print('로그인 성공! 회원 ID: $member_id');
-                  Navigator.pushReplacementNamed(context, '/index');
+                  if (member_id != null) {
+                    print('로그인 성공! 회원 ID: $member_id');
+                    Navigator.pushReplacementNamed(context, '/index');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('회원정보가 맞지 않습니다. 다시 시도해주세요.')),
+                    );
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }
+                  // print('로그인 성공! 회원 ID: $member_id');
+                  // Navigator.pushReplacementNamed(context, '/index');
                 } catch (e) {
                   // 로그인 실패
                   print(e.toString());
