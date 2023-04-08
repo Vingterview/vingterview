@@ -29,11 +29,9 @@ public class MemberService {
      * 회원 가입
      */
     @Transactional
-    public Long join(MemberCreateDTO memberCreateDTO, MemberProfileImageDTO memberProfileImageDTO) {
+    public Long join(MemberCreateDTO memberCreateDTO) {
 
         validateDuplicateMember(memberCreateDTO.getLoginId());
-        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
-
         Member member = Member.builder()
                 .name(memberCreateDTO.getName())
                 .loginId(memberCreateDTO.getLoginId())
@@ -41,7 +39,7 @@ public class MemberService {
                 .age(memberCreateDTO.getAge())
                 .email(memberCreateDTO.getEmail())
                 .nickname(memberCreateDTO.getNickname())
-                .profileImageUrl(uploadFile.orElse(new UploadFile(null,null)).getStoreFileName())
+                .profileImageUrl(memberCreateDTO.getProfileImageUrl())
                 .build();
 
         memberRepository.save(member);
@@ -62,8 +60,21 @@ public class MemberService {
     /**
      * 멤버 id로 조회
      */
-    public Optional<Member> findById(Long id) {
-        return memberRepository.findById(id);
+    public MemberDTO findById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 멤버를 찾을 수 없습니다."));
+
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setId(member.getId());
+        memberDTO.setPassword(member.getPassword());
+        memberDTO.setLoginId(member.getLoginId());
+        memberDTO.setName(member.getName());
+        memberDTO.setAge(member.getAge());
+        memberDTO.setEmail(member.getEmail());
+        memberDTO.setNickname(member.getNickname());
+        memberDTO.setProfileImageUrl(member.getProfileImageUrl());
+
+
+        return memberDTO;
     }
 
     /**
@@ -85,22 +96,25 @@ public class MemberService {
     }
 
     @Transactional
-    public Long update(Long id, MemberUpdateDTO memberUpdateDTO, MemberProfileImageDTO memberProfileImageDTO) {
+    public Long update(Long id, MemberUpdateDTO memberUpdateDTO) {
 
         Optional<Member> findMember = memberRepository.findById(id);
         Member member = findMember.orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
 
         imgStore.deleteFile(member.getProfileImageUrl());
-        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
-
 
         member.update(memberUpdateDTO.getName(), memberUpdateDTO.getAge(), memberUpdateDTO.getEmail(),
                 memberUpdateDTO.getNickname(),
-                uploadFile.orElse(new UploadFile(null, null)).getStoreFileName());
+                memberUpdateDTO.getProfileImageUrl());
 
         return member.getId();
 
 
     }
 
+    public String profileUpload(MemberProfileImageDTO memberProfileImageDTO) {
+
+        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
+        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
+    }
 }
