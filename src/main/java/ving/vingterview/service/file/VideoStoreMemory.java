@@ -11,6 +11,7 @@ import ving.vingterview.domain.file.UploadFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,26 +34,26 @@ public class VideoStoreMemory implements FileStore {
     public UploadFile storeFile(String originalFileName) {
 
         String storeFileName = createStoreFileName(originalFileName);
-        System.out.println("VideoStoreMemory.storeFile");
         return new ImgFile(originalFileName, storeFileName);
     }
 
     @Override
-    @Async
+//    @Async
     public void uploadFile(MultipartFile multipartFile, String storeFileName) {
 
         if (multipartFile.isEmpty()) {
             log.warn("null");
         }
-        System.out.println("VideoStoreMemory.uploadFile");
 
         try {
+            log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
+            log.info("Ended uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
+
         } catch (IOException e) {
             log.warn("업로드 폴더 생성 실패 {}", e.getMessage());
         }
     }
-
 
     @Override
     public void deleteFile(String fileName) {

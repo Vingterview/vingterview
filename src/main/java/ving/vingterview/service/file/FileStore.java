@@ -15,7 +15,7 @@ public interface FileStore {
 
     UploadFile storeFile(String originalFileName);
 
-    @Async
+
     void uploadFile(MultipartFile multipartFile,String storeName);
 
     void deleteFile(String fileName);

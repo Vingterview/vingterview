@@ -76,27 +76,17 @@ public class BoardService {
     public String videoUpload(BoardVideoDTO boardVideoDTO) {
 
         MultipartFile video = boardVideoDTO.getVideo();
-//        Optional<UploadFile> uploadFile = Optional.ofNullable(videoStore.storeFile(boardVideoDTO.getVideo()));
 
-        System.out.println("BoardService.videoUpload");
         UploadFile uploadFile = videoStore.storeFile(video.getOriginalFilename());
+
+        log.info("Started uploading file {} at {} {}", uploadFile.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
         videoStore.uploadFile(video, uploadFile.getStoreFileName());
+        log.info("Ended uploading file {} at {} {}", uploadFile.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
 
         return uploadFile.getStoreFileName();
 
     }
 
-    @Async
-    public CompletableFuture<String> videoUploadAsync(BoardVideoDTO boardVideoDTO) {
-        try {
-            MultipartFile video = boardVideoDTO.getVideo();
-            UploadFile uploadFile = videoStore.storeFile(video.getOriginalFilename());
-            videoStore.uploadFile(video, uploadFile.getStoreFileName());
-            return CompletableFuture.completedFuture(uploadFile.getStoreFileName());
-        } catch (Exception e) {
-            return CompletableFuture.completedFuture(null);
-        }
-    }
 
 
     public void delete(Long id) {

@@ -1,14 +1,18 @@
 package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import ving.vingterview.domain.file.UploadFile;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RestController
 @RequestMapping("/boards")
 @RequiredArgsConstructor
@@ -78,29 +82,14 @@ public class BoardController {
 
     @PostMapping("/video")
     public String videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        System.out.println("BoardController.videoUpload Start");
-        String s = boardService.videoUpload(boardVideoDTO);
-        System.out.println("BoardController.videoUpload Returned");
-        return s;
+        String videoUrl = boardService.videoUpload(boardVideoDTO);
+        log.info("BoardController.videoUpload Returned {}", videoUrl);
 
-
+        return videoUrl;
     }
 
 
-    @PostMapping("/videoAsync")
-    public CompletableFuture<ResponseEntity<String>> videoUploadAsync(@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        try {
-            CompletableFuture<String> uploadFuture = boardService.videoUploadAsync(boardVideoDTO);
-            String filePath = uploadFuture.get();
-            if (filePath != null) {
-                return CompletableFuture.completedFuture(ResponseEntity.ok(filePath));
-            } else {
-                return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-            }
-        } catch (Exception e) {
-            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-        }
-    }
+
 
 /*    @PostMapping("/{id}/video")
     public String videoUploadByBoard(@PathVariable(name = "id") Long id,@ModelAttribute BoardVideoDTO boardVideoDTO) {
