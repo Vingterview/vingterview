@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag,Long> {
 
-    public Optional<List<Tag>> findAllByCategoryIn(TagType... categories);
+    public List<Tag> findAllByCategoryIn(TagType... categories);
 
-    public Optional<List<Tag>> findAllByParentId(Long parentId);
+    public List<Tag> findAllByParentId(Long parentId);
+
+    public List<Tag> findAllByIdIn(List<Long> tags);
 }

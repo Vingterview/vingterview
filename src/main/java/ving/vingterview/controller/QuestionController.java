@@ -3,14 +3,13 @@ package ving.vingterview.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionDTO;
 import ving.vingterview.dto.question.QuestionListDTO;
+import ving.vingterview.service.question.QuestionService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/questions")
@@ -18,24 +17,38 @@ import java.util.Map;
 @Slf4j
 public class QuestionController {
 
+    private final QuestionService questionService;
+
+
     @GetMapping("")
-    public ResponseEntity<QuestionListDTO> list(@RequestParam(name = "tag_id", required = false) List<Long> tagId,
-                                                @RequestParam(name = "member_id", required = false) Long memberId,
-                                                @RequestParam(name = "scrap_member_id", required = false) Long scrapMemberId) {
-        log.info("tagId={}", tagId);
-        // 질문 목록 조회
-        return null;
+    public ResponseEntity<List<QuestionDTO>> list() {
+        return ResponseEntity.ok(questionService.findAll());
+    }
+
+    @GetMapping(params = "tag_id")
+    public ResponseEntity<List<QuestionDTO>> findByTag(@RequestParam(name = "tag_id") List<Long> tagId) {
+        return ResponseEntity.ok(questionService.findByTags(tagId));
+    }
+
+
+    @GetMapping(params = "member_id")
+    public ResponseEntity<List<QuestionDTO>> findByMember(@RequestParam(name = "member_id") Long memberId) {
+        return ResponseEntity.ok(questionService.findByMember(memberId));
+    }
+
+    @GetMapping(params = "scrap_member_id")
+    public ResponseEntity<List<QuestionDTO>> findScraps(@RequestParam(name = "scrap_member_id") Long scrapMemberId) {
+        return ResponseEntity.ok(questionService.findByScrap(scrapMemberId));
     }
 
     @PostMapping("")
-    public Long create(@ModelAttribute QuestionCreateDTO questionCreateDTO) {
-        // 질문 생성
-        return null; // 질문 id 반환
+    public Long create(@RequestBody QuestionCreateDTO questionCreateDTO) {
+        Long id = questionService.create(questionCreateDTO);
+        return id;
     }
 
     @GetMapping("/{id}/scrap")
     public void scrap(@PathVariable Long id) {
-        // 질문 스크랩
-        return;
+        questionService.scrap(id);
     }
 }
