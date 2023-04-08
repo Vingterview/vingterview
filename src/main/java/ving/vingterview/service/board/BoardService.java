@@ -111,6 +111,19 @@ public class BoardService {
 
     }
 
+
+    public BoardListDTO findAll() {
+        List<Board> boards = boardRepository.findAll();
+        List<BoardDTO> boardDTOList = boards.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(boardDTOList);
+
+        return boardListDTO;
+    }
+
+
     public BoardListDTO findByMember(Long memberId) {
 
         List<Long> boardIds = boardRepository.findByMemberId(memberId)
@@ -168,6 +181,9 @@ public class BoardService {
                 .createTime(board.getCreateTime())
                 .build();
     }
+
+
+
 
 
 }

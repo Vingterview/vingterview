@@ -13,6 +13,15 @@ public class BoardController {
 
     private final BoardService boardService;
 
+
+    @GetMapping(value = "")
+    public ResponseEntity<BoardListDTO> boards() {
+
+        BoardListDTO boardListDTO = boardService.findAll();
+
+        return ResponseEntity.ok(boardListDTO);
+    }
+
     @GetMapping(value = "",params = "member_id")
     public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id){
 
@@ -29,7 +38,7 @@ public class BoardController {
     }
 
     @PostMapping("")
-    public Long create(@ModelAttribute BoardCreateDTO boardCreateDTO) {
+    public Long create(@RequestBody BoardCreateDTO boardCreateDTO) {
 
         return boardService.save(boardCreateDTO); // board_id
     }
@@ -52,7 +61,7 @@ public class BoardController {
 
     @PutMapping("/{id}")
     public Long update(@PathVariable(name = "id") Long id,
-                       @ModelAttribute BoardUpdateDTO boardUpdateDTO) {
+                       @RequestBody BoardUpdateDTO boardUpdateDTO) {
 
         return boardService.update(id, boardUpdateDTO);
 
@@ -64,8 +73,13 @@ public class BoardController {
         boardService.like(id);
     }
 
-    @GetMapping("/video")
-    public String videoUpload(BoardVideoDTO boardVideoDTO) {
+    @PostMapping("/video")
+    public String videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
         return boardService.videoUpload(boardVideoDTO);
     }
+
+/*    @PostMapping("/{id}/video")
+    public String videoUploadByBoard(@PathVariable(name = "id") Long id,@ModelAttribute BoardVideoDTO boardVideoDTO) {
+        return boardService.videoUpload(boardVideoDTO);
+    }*/
 }

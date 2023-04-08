@@ -10,5 +10,6 @@ public class MemberUpdateDTO {
     private int age;
     private String email;
     private String nickname;
+    private String profileImageUrl;
 
 }

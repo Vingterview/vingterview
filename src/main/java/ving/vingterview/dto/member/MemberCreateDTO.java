@@ -12,4 +12,6 @@ public class MemberCreateDTO {
     private int age;
     private String email;
     private String nickname;
+
+    private String profileImageUrl;
 }
