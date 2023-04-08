@@ -33,10 +33,10 @@ public class Board extends EntityDate {
     private String videoUrl;
 
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
     private List<BoardMemberLike> boardMemberLikes;
 
     @Builder
