@@ -30,39 +30,51 @@ class VideoPage extends StatelessWidget {
         } else {
           // Build the widget tree with the loaded data
           List<Videos> videolist = snapshot.data;
-          return ListView.builder(
-            itemCount: videolist.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                  onTap: () async {
-                    int result = await videoApi.postVideo(1, 1, "ddddd");
-                    print(result);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      videolist[index].memberName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+          return Column(children: [
+            Expanded(
+                child: ListView.builder(
+              itemCount: videolist.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                    onTap: () async {
+                      int result =
+                          await videoApi.postVideo(1, 1, "ddddd", "~.mp4");
+                      print(result);
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      margin: EdgeInsets.symmetric(vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                       ),
-                    ),
-                  ));
-            },
-          );
+                      child: Text(
+                        videolist[index].memberName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ));
+              },
+            )),
+            IconButton(
+              icon: Icon(Icons.keyboard_arrow_right_sharp),
+              color: Color(0xFF6fa8dc),
+              onPressed: () {
+                Navigator.pushNamed(context, '/video_write');
+              },
+            ),
+          ]);
         }
       },
     );

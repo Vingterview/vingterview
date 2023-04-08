@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:capston/models/users.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserApi {
   String uri = 'https://ee-wfnlp.run.goorm.site';
@@ -40,7 +41,8 @@ class UserApi {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['member_id'];
     } else {
-      throw Exception('Failed to post video');
+      // throw Exception('Failed to post video');
+      print("회원 등록 실패");
     }
   }
 
@@ -106,17 +108,26 @@ class UserApi {
     );
 
     if (response.statusCode == 201) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLogin', true);
+      prefs.setString('id', id);
+      prefs.setString('password', password);
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      prefs.setInt('user_id', jsonMap['member_id']);
       return jsonMap['member_id'];
     } else {
-      throw Exception('Failed to post video');
+      // throw Exception('Failed to post video');
+      print("로그인 실패");
     }
   }
 
   Future<void> logoutUser() async {
     // 로그아웃 # 8
     var url = Uri.parse('$uri/logout');
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogin', false);
+    prefs.setString('id', '');
+    prefs.setString('password', '');
     var response = await http.post(
       url,
       headers: {

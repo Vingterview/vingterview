@@ -58,6 +58,15 @@ class MyPage extends StatelessWidget {
               icon: Icon(Icons.image),
               onPressed: uploadVideoApi.pickVideo,
             ),
+            IconButton(
+                icon: Icon(Icons.logout),
+                onPressed: () async {
+                  await userApi.logoutUser();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('로그아웃합니다.')),
+                  );
+                  Navigator.of(context).pushReplacementNamed('/login');
+                }),
           ]));
         }
       },

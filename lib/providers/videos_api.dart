@@ -22,14 +22,16 @@ class VideoApi {
     return videos;
   }
 
-  Future<int> postVideo(int question_id, int member_id, String content) async {
+  Future<int> postVideo(
+      int question_id, int member_id, String content, String video_url) async {
     // 게시글 등록   # 1
     final response = await http.post(
       Uri.parse('$uri/boards'),
       body: jsonEncode({
         'question_id': question_id,
         'member_id': member_id,
-        'content': content
+        'content': content,
+        'video_url': video_url
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -77,7 +79,7 @@ class VideoApi {
 
     var response = await http.patch(url, headers: headers, body: body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['board_id'];
     } else {

@@ -96,7 +96,8 @@ class HomePage extends StatelessWidget {
                     color: Color(0xFF6fa8dc),
                     onPressed: () {
                       // 수정
-                      // Navigator.pushNamed(context, '/board');
+                      Navigator.pushNamed(context, '/video_detail',
+                          arguments: 1);
                     },
                   ),
                 ],

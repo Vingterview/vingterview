@@ -1,8 +1,14 @@
+import 'package:capston/register.dart';
 import 'package:capston/screens/screen_index.dart';
 import 'package:flutter/material.dart';
 import 'tabs/tab_question.dart';
 import 'tabs/tab_video.dart';
-import 'board.dart';
+import 'video_detail.dart';
+import 'video_write.dart';
+import 'question_write.dart';
+import 'login.dart';
+import 'register.dart';
+import 'SplashScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,10 +23,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Vingterview',
       routes: {
+        '/': (context) => SplashScreen(),
         '/index': (context) => IndexScreen(),
-        '/board': (context) => Board(),
+        '/video_detail': (context) => video_detail(),
+        '/video_write': (context) => PostVideoPage(),
+        '/question_write': (context) => PostQuestionPage(),
+        '/login': (context) => login(),
+        '/register': (context) => registeruser(),
       },
-      initialRoute: '/index',
+      initialRoute: '/',
     );
   }
 }
