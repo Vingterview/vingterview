@@ -2,15 +2,16 @@ package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
-import ving.vingterview.domain.file.UploadFile;
+
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
+import ving.vingterview.service.file.FileStore;
 
-import java.util.concurrent.CompletableFuture;
+import java.time.LocalDateTime;
+
 
 @Slf4j
 @RestController
@@ -19,6 +20,8 @@ import java.util.concurrent.CompletableFuture;
 public class BoardController {
 
     private final BoardService boardService;
+    @Qualifier("videoStore")
+    private final FileStore videoStore;
 
 
     @GetMapping(value = "")
@@ -81,18 +84,20 @@ public class BoardController {
     }
 
     @PostMapping("/video")
-    public String videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        String videoUrl = boardService.videoUpload(boardVideoDTO);
-        log.info("BoardController.videoUpload Returned {}", videoUrl);
+    public ResponseEntity<String> videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
+        if (!boardVideoDTO.getVideo().isEmpty() && boardVideoDTO.getVideo() != null) {
+            String storeFileName = videoStore.createStoreFileName(boardVideoDTO.getVideo().getOriginalFilename());
 
-        return videoUrl;
+            log.info("----------uploadFile----------start {} {}", LocalDateTime.now(),Thread.currentThread().getName());
+            videoStore.uploadFile(boardVideoDTO.getVideo(),storeFileName);
+            log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(),Thread.currentThread().getName());
+
+            return ResponseEntity.ok(storeFileName);
+
+        }
+
+        return ResponseEntity.badRequest()
+                .body("잘못된 비디오 업로드 요청입니다.");
     }
 
-
-
-
-/*    @PostMapping("/{id}/video")
-    public String videoUploadByBoard(@PathVariable(name = "id") Long id,@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        return boardService.videoUpload(boardVideoDTO);
-    }*/
 }

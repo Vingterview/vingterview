@@ -3,7 +3,6 @@ package ving.vingterview.service.board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,10 +37,6 @@ public class BoardService {
     private final BoardMemberLikeRepository boardMemberLikeRepository;
 
 
-    @Qualifier("videoStore")
-    private final FileStore videoStore;
-
-
     @Transactional
     public Long save(BoardCreateDTO boardCreateDTO) {
 
@@ -73,19 +68,17 @@ public class BoardService {
     }
 
 
-    public String videoUpload(BoardVideoDTO boardVideoDTO) {
+   /* public String videoUpload(MultipartFile video) {
+        
+        UploadFile fileMeta = videoStore.storeFile(video.getOriginalFilename());
 
-        MultipartFile video = boardVideoDTO.getVideo();
+        log.info("Started uploading file {} at {} {}", fileMeta.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
+        videoStore.uploadFile(video, fileMeta.getStoreFileName());
+        log.info("Ended uploading file {} at {} {}", fileMeta.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
 
-        UploadFile uploadFile = videoStore.storeFile(video.getOriginalFilename());
+        return fileMeta.getStoreFileName();
 
-        log.info("Started uploading file {} at {} {}", uploadFile.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
-        videoStore.uploadFile(video, uploadFile.getStoreFileName());
-        log.info("Ended uploading file {} at {} {}", uploadFile.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
-
-        return uploadFile.getStoreFileName();
-
-    }
+    }*/
 
 
 

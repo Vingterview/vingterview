@@ -4,16 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ving.vingterview.domain.file.ImgFile;
 import ving.vingterview.domain.file.UploadFile;
+import ving.vingterview.domain.file.VideoFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Slf4j
@@ -34,16 +31,12 @@ public class VideoStoreMemory implements FileStore {
     public UploadFile storeFile(String originalFileName) {
 
         String storeFileName = createStoreFileName(originalFileName);
-        return new ImgFile(originalFileName, storeFileName);
+        return new VideoFile(originalFileName, storeFileName);
     }
 
     @Override
-//    @Async
+    @Async("threadPoolTaskExecutor")
     public void uploadFile(MultipartFile multipartFile, String storeFileName) {
-
-        if (multipartFile.isEmpty()) {
-            log.warn("null");
-        }
 
         try {
             log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());

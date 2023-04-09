@@ -1,11 +1,9 @@
 package ving.vingterview.service.file;
 
-import org.springframework.scheduling.annotation.Async;
+
 import org.springframework.web.multipart.MultipartFile;
 import ving.vingterview.domain.file.UploadFile;
 
-
-import java.util.List;
 import java.util.UUID;
 
 public interface FileStore {
