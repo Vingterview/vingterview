@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ving.vingterview.domain.EntityDate;
 import ving.vingterview.domain.member.Member;
+import ving.vingterview.domain.tag.Tag;
+import ving.vingterview.domain.tag.TagQuestion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +27,12 @@ public class Question extends EntityDate {
     @JoinColumn(name = "member_id")
     private Member member;
     private String content;
+
+    @OneToMany(mappedBy = "question")
+    private List<TagQuestion> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<QuestionMemberScrap> scraps = new ArrayList<>();
 
 
     @Builder
