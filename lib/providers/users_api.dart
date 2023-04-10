@@ -15,7 +15,7 @@ class UserApi {
     List<Users> users = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body);
+      List<dynamic> jsonList = jsonDecode(body)['users'];
       users = jsonList.map((json) => Users.fromJson(json)).toList();
     }
 
@@ -135,7 +135,7 @@ class UserApi {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print('Logout successful');
     } else {
       throw Exception('로그 아웃 실패');

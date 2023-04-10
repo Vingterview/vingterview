@@ -15,7 +15,7 @@ class TagApi {
     List<Tags> tags = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body);
+      List<dynamic> jsonList = jsonDecode(body)['tags'];
       tags = jsonList.map((json) => Tags.fromJson(json)).toList();
     }
 

@@ -38,12 +38,12 @@ class UploadVideoApi {
     final responseBody = await response.stream.bytesToString();
 
     // check the response status code
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final responseJson = jsonDecode(responseBody);
       final videoUrl = responseJson['video_url'];
       return videoUrl;
     } else {
-      print("에러남");
+      throw Exception('Failed to post video');
     }
   }
 

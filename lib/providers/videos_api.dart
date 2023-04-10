@@ -14,7 +14,7 @@ class VideoApi {
     List<Videos> videos = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body);
+      List<dynamic> jsonList = jsonDecode(body)['datas'];
       videos = jsonList.map((json) => Videos.fromJson(json)).toList();
     }
 
@@ -51,7 +51,7 @@ class VideoApi {
     Videos video;
 
     if (statusCode == 200) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      Map<String, dynamic> jsonMap = jsonDecode(body);
       video = Videos.fromJson(jsonMap);
     }
 
@@ -78,7 +78,7 @@ class VideoApi {
 
     var response = await http.patch(url, headers: headers, body: body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['board_id'];
     } else {
@@ -95,7 +95,7 @@ class VideoApi {
     if (response.statusCode == 200) {
       print(response.body);
     } else {
-      print('Error: ${response.statusCode}');
+      throw Exception('좋아요 실패');
     }
   }
 }

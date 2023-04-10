@@ -16,7 +16,7 @@ class QuestionApi {
     List<Questions> questions = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body);
+      List<dynamic> jsonList = jsonDecode(body)['questions'];
       questions = jsonList.map((json) => Questions.fromJson(json)).toList();
     }
 
@@ -51,9 +51,9 @@ class QuestionApi {
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("스크랩 성공");
     } else {
-      print('Error: ${response.statusCode}');
+      throw Exception('스크랩 실패');
     }
   }
 }
