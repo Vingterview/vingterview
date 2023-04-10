@@ -1,4 +1,4 @@
-package ving.vingterview;
+package ving.vingterview.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ public class SpringAsyncConfig {
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(5); // 기본 스레드 수
-        taskExecutor.setMaxPoolSize(30); // 최대 스레드 수
+        taskExecutor.setMaxPoolSize(10); // 최대 스레드 수
         taskExecutor.setQueueCapacity(100); // Queue 사이즈
         taskExecutor.setThreadNamePrefix("Executor-");
         return taskExecutor;

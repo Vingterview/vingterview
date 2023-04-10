@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
+import ving.vingterview.service.file.VideoStoreMemory;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,6 @@ public class BoardController {
     @Qualifier("videoStore")
     private final FileStore videoStore;
 
-
     @GetMapping(value = "")
     public ResponseEntity<BoardListDTO> boards() {
 
@@ -32,15 +32,15 @@ public class BoardController {
         return ResponseEntity.ok(boardListDTO);
     }
 
-    @GetMapping(value = "",params = "member_id")
-    public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id){
+    @GetMapping(value = "", params = "member_id")
+    public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id) {
 
         BoardListDTO boardListDTO = boardService.findByMember(member_id);
 
         return ResponseEntity.ok(boardListDTO);
     }
 
-    @GetMapping(value = "",params = "question_id")
+    @GetMapping(value = "", params = "question_id")
     public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id) {
         BoardListDTO boardListDTO = boardService.findByQuestion(question_id);
 
@@ -88,9 +88,9 @@ public class BoardController {
         if (!boardVideoDTO.getVideo().isEmpty() && boardVideoDTO.getVideo() != null) {
             String storeFileName = videoStore.createStoreFileName(boardVideoDTO.getVideo().getOriginalFilename());
 
-            log.info("----------uploadFile----------start {} {}", LocalDateTime.now(),Thread.currentThread().getName());
-            videoStore.uploadFile(boardVideoDTO.getVideo(),storeFileName);
-            log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(),Thread.currentThread().getName());
+            log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
+            videoStore.uploadFile(boardVideoDTO.getVideo(), storeFileName);
+            log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             return ResponseEntity.ok(storeFileName);
 
@@ -99,5 +99,4 @@ public class BoardController {
         return ResponseEntity.badRequest()
                 .body("잘못된 비디오 업로드 요청입니다.");
     }
-
 }
