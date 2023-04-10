@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionDTO;
 import ving.vingterview.dto.question.QuestionListDTO;
+import ving.vingterview.dto.question.QuestionResponseDTO;
 import ving.vingterview.service.question.QuestionService;
 
 import java.util.List;
@@ -42,9 +43,8 @@ public class QuestionController {
     }
 
     @PostMapping("")
-    public Long create(@RequestBody QuestionCreateDTO questionCreateDTO) {
-        Long id = questionService.create(questionCreateDTO);
-        return id;
+    public ResponseEntity<QuestionResponseDTO> create(@RequestBody QuestionCreateDTO questionCreateDTO) {
+        return ResponseEntity.ok(new QuestionResponseDTO(questionService.create(questionCreateDTO)));
     }
 
     @GetMapping("/{id}/scrap")
