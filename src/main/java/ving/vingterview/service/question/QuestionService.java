@@ -134,7 +134,9 @@ public class QuestionService {
         if (scrap.isEmpty()) {
             Question question = questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("질문 없음"));
             Member member = memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
-            scrapRepository.save(new QuestionMemberScrap(question, member));
+            QuestionMemberScrap questionMemberScrap = new QuestionMemberScrap(question, member);
+            questionMemberScrap.setQuestion(question);
+            scrapRepository.save(questionMemberScrap);
         } else {
             scrapRepository.delete(scrap.get());
         }

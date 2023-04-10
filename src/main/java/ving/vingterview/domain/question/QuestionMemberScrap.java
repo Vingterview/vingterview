@@ -29,4 +29,10 @@ public class QuestionMemberScrap {
         this.question = question;
         this.member = member;
     }
+
+    // 연관관계 편의 메소드
+    public void setQuestion(Question question) {
+        this.question = question;
+        question.getScraps().add(this);
+    }
 }
