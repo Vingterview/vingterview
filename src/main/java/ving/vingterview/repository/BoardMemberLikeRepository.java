@@ -11,7 +11,7 @@ public interface BoardMemberLikeRepository extends JpaRepository<BoardMemberLike
 
 
     @Query("select bml from BoardMemberLike bml where bml.board.id = :board_id and bml.member.id = :member_id")
-    Optional<BoardMemberLike> findByMemberIdAndBoardId(@Param(value = "board_id") Long board_id, @Param(value = "member_id") Long member_id);
+    Optional<BoardMemberLike> findByMemberIdAndBoardId( @Param(value = "member_id") Long member_id,@Param(value = "board_id") Long board_id);
 
 
 }

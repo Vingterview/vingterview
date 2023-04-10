@@ -2,14 +2,11 @@ package ving.vingterview.service.board;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ving.vingterview.domain.board.Board;
 import ving.vingterview.domain.board.BoardMemberLike;
 import ving.vingterview.domain.comment.Comment;
-import ving.vingterview.domain.file.UploadFile;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.question.Question;
 import ving.vingterview.dto.board.*;
@@ -17,7 +14,6 @@ import ving.vingterview.repository.BoardMemberLikeRepository;
 import ving.vingterview.repository.BoardRepository;
 import ving.vingterview.repository.MemberRepository;
 import ving.vingterview.repository.QuestionRepository;
-import ving.vingterview.service.file.FileStore;
 
 
 import java.time.LocalDateTime;
@@ -68,20 +64,6 @@ public class BoardService {
     }
 
 
-   /* public String videoUpload(MultipartFile video) {
-        
-        UploadFile fileMeta = videoStore.storeFile(video.getOriginalFilename());
-
-        log.info("Started uploading file {} at {} {}", fileMeta.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
-        videoStore.uploadFile(video, fileMeta.getStoreFileName());
-        log.info("Ended uploading file {} at {} {}", fileMeta.getStoreFileName(), LocalDateTime.now(),Thread.currentThread().getName());
-
-        return fileMeta.getStoreFileName();
-
-    }*/
-
-
-
     public void delete(Long id) {
         boardRepository.deleteById(id);
     }
@@ -100,10 +82,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void like(Long board_id) {
+    public void like(Long board_id,Long member_id) {
 
-        Long member_id = 1L;
-        Optional<BoardMemberLike> boardMemberLike = boardMemberLikeRepository.findByMemberIdAndBoardId(board_id, member_id);
+        Optional<BoardMemberLike> boardMemberLike = boardMemberLikeRepository.findByMemberIdAndBoardId(member_id, board_id);
 
         if (boardMemberLike.isEmpty()) {
             log.info("create like , board_id:  {} , member_id: {}", board_id, member_id);
@@ -133,10 +114,20 @@ public class BoardService {
 
     public BoardListDTO findByMember(Long memberId) {
 
-        List<Long> boardIds = boardRepository.findByMemberId(memberId)
+        /**
+         * 92ms
+         */
+/*        List<Long> boardIds = boardRepository.findByMemberId(memberId)
                 .stream().map(board -> board.getId()).collect(Collectors.toList());
 
         List<BoardDTO> boardDTOList = boardRepository.findByIdsWithMemberQuestion(boardIds)
+                .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());*/
+
+        /**
+         * 81ms
+         */
+
+        List<BoardDTO> boardDTOList = boardRepository.findByMemberIdWithMemberQuestion(memberId)
                 .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
 
@@ -149,10 +140,10 @@ public class BoardService {
 
     public BoardListDTO findByQuestion(Long questionId) {
 
-        List<Long> boardIds = boardRepository.findByQuestionId(questionId)
-                .stream().map(board -> board.getId()).collect(Collectors.toList());
+/*        List<Long> boardIds = boardRepository.findByQuestionId(questionId)
+                .stream().map(board -> board.getId()).collect(Collectors.toList());*/
 
-        List<BoardDTO> boardDTOList = boardRepository.findByIdsWithMemberQuestion(boardIds)
+        List<BoardDTO> boardDTOList = boardRepository.findByQuestionIdWithMemberQuestion(questionId)
                 .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
 
@@ -173,7 +164,7 @@ public class BoardService {
 
 
         return BoardDTO.builder()
-                .id(board.getId())
+                .boardId(board.getId())
                 .questionId(question.getId())
                 .questionContent(question.getContent())
                 .memberId(member.getId())

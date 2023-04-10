@@ -10,6 +10,7 @@ import ving.vingterview.domain.comment.Comment;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.question.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,10 +35,10 @@ public class Board extends EntityDate {
 
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
-    private List<BoardMemberLike> boardMemberLikes;
+    private List<BoardMemberLike> boardMemberLikes = new ArrayList<>();
 
     @Builder
     public Board(Question question, Member member, String content, String videoUrl) {

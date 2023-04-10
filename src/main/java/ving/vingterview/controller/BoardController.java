@@ -34,7 +34,10 @@ public class BoardController {
     @GetMapping(value = "", params = "member_id")
     public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id) {
 
+        Long start = System.currentTimeMillis();
         BoardListDTO boardListDTO = boardService.findByMember(member_id);
+        Long end = System.currentTimeMillis();
+        log.info("findByMember {}", end-start);
 
         return ResponseEntity.ok(boardListDTO);
     }
@@ -87,7 +90,9 @@ public class BoardController {
 
     @GetMapping("/{id}/like")
     public void like(@PathVariable(name = "id") Long id) {
-        boardService.like(id);
+
+        boardService.like(id,1L);
+
     }
 
     @PostMapping("/video")
