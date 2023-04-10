@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
-import ving.vingterview.service.file.VideoStoreMemory;
 
 import java.time.LocalDateTime;
 
@@ -48,9 +47,13 @@ public class BoardController {
     }
 
     @PostMapping("")
-    public Long create(@RequestBody BoardCreateDTO boardCreateDTO) {
+    public ResponseEntity<BoardResponseDTO> create(@RequestBody BoardCreateDTO boardCreateDTO) {
 
-        return boardService.save(boardCreateDTO); // board_id
+        Long boardId = boardService.save(boardCreateDTO);
+        BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
+        boardResponseDTO.setBoardId(boardId);
+
+        return ResponseEntity.ok(boardResponseDTO);
     }
 
     @GetMapping("/{id}")
@@ -70,10 +73,14 @@ public class BoardController {
 
 
     @PutMapping("/{id}")
-    public Long update(@PathVariable(name = "id") Long id,
+    public ResponseEntity<BoardResponseDTO> update(@PathVariable(name = "id") Long id,
                        @RequestBody BoardUpdateDTO boardUpdateDTO) {
 
-        return boardService.update(id, boardUpdateDTO);
+        Long boardId = boardService.update(id, boardUpdateDTO);
+
+        BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
+        boardResponseDTO.setBoardId(boardId);
+        return ResponseEntity.ok(boardResponseDTO);
 
     }
 
@@ -84,19 +91,24 @@ public class BoardController {
     }
 
     @PostMapping("/video")
-    public ResponseEntity<String> videoUpload(@ModelAttribute BoardVideoDTO boardVideoDTO) {
-        if (!boardVideoDTO.getVideo().isEmpty() && boardVideoDTO.getVideo() != null) {
-            String storeFileName = videoStore.createStoreFileName(boardVideoDTO.getVideo().getOriginalFilename());
+    public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO) {
+        if (!videoDTO.getVideo().isEmpty() && videoDTO.getVideo() != null) {
+            String storeFileName = videoStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
-            videoStore.uploadFile(boardVideoDTO.getVideo(), storeFileName);
+            videoStore.uploadFile(videoDTO.getVideo(), storeFileName);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
-            return ResponseEntity.ok(storeFileName);
+            VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
+            videoResponseDTO.setVideoUrl(storeFileName);
+
+            return ResponseEntity.ok(videoResponseDTO);
 
         }
 
+        VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
+        videoResponseDTO.setVideoUrl("잘못된 접근입니다.");
         return ResponseEntity.badRequest()
-                .body("잘못된 비디오 업로드 요청입니다.");
+                .body(videoResponseDTO);
     }
 }

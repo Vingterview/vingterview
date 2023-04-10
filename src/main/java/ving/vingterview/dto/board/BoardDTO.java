@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardDTO {
 
-    private Long id;
+    private Long boardId;
     private Long questionId;
     private String questionContent;
     private Long memberId;
@@ -27,8 +27,8 @@ public class BoardDTO {
 
 
     @Builder
-    public BoardDTO(Long id, Long questionId, String questionContent, Long memberId, String memberNickname, String profileImageUrl, String content, String videoUrl, int likeCount, int commentCount, LocalDateTime createTime, LocalDateTime updateTime) {
-        this.id = id;
+    public BoardDTO(Long boardId, Long questionId, String questionContent, Long memberId, String memberNickname, String profileImageUrl, String content, String videoUrl, int likeCount, int commentCount, LocalDateTime createTime, LocalDateTime updateTime) {
+        this.boardId = boardId;
         this.questionId = questionId;
         this.questionContent = questionContent;
         this.memberId = memberId;

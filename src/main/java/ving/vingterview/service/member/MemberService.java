@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ving.vingterview.domain.file.UploadFile;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.repository.MemberRepository;
@@ -31,10 +30,10 @@ public class MemberService {
     @Transactional
     public Long join(MemberCreateDTO memberCreateDTO) {
 
-        validateDuplicateMember(memberCreateDTO.getLoginId());
+        validateDuplicateMember(memberCreateDTO.getId());
         Member member = Member.builder()
                 .name(memberCreateDTO.getName())
-                .loginId(memberCreateDTO.getLoginId())
+                .loginId(memberCreateDTO.getId())
                 .password(memberCreateDTO.getPassword())
                 .age(memberCreateDTO.getAge())
                 .email(memberCreateDTO.getEmail())
@@ -64,9 +63,8 @@ public class MemberService {
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 멤버를 찾을 수 없습니다."));
 
         MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setId(member.getId());
-        memberDTO.setPassword(member.getPassword());
-        memberDTO.setLoginId(member.getLoginId());
+        memberDTO.setMemberId(member.getId());
+        memberDTO.setId(member.getLoginId());
         memberDTO.setName(member.getName());
         memberDTO.setAge(member.getAge());
         memberDTO.setEmail(member.getEmail());
@@ -112,9 +110,9 @@ public class MemberService {
 
     }
 
-    public String profileUpload(MemberProfileImageDTO memberProfileImageDTO) {
+    public String profileUpload(ProfileImageDTO profileImageDTO) {
 
-//        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(memberProfileImageDTO.getProfileImage()));
+//        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(profileImageDTO.getProfileImage()));
 //        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
         return null;
     }

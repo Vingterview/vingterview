@@ -4,12 +4,8 @@ package ving.vingterview.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ving.vingterview.domain.member.Member;
-import ving.vingterview.dto.board.BoardVideoDTO;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.service.member.MemberService;
-
-import java.util.Optional;
 
 
 @RestController
@@ -25,22 +21,24 @@ public class MemberController {
     }
 
     @PostMapping("")
-    public Long create(@RequestBody MemberCreateDTO memberCreateDTO){
+    public ResponseEntity<MemberResponseDTO> create(@RequestBody MemberCreateDTO memberCreateDTO){
 
         Long memberId = memberService.join(memberCreateDTO);
 
-        return memberId; // Member Id 반환
+        MemberResponseDTO memberResponseDTO = new MemberResponseDTO();
+        memberResponseDTO.setMemberId(memberId);
+
+        return ResponseEntity.ok(memberResponseDTO);
     }
 
     @PostMapping("/image")
-    public String profileUpload(@ModelAttribute MemberProfileImageDTO memberProfileImageDTO) {
-        return memberService.profileUpload(memberProfileImageDTO);
-    }
+    public ResponseEntity<ProfileImageResponseDTO> profileUpload(@ModelAttribute ProfileImageDTO profileImageDTO) {
+        String profileImageUrl = memberService.profileUpload(profileImageDTO);
 
-/*    @PostMapping("/{id}/image")
-    public String profileUploadByMember(@PathVariable(name = "id") Long id,@ModelAttribute MemberProfileImageDTO memberProfileImageDTO) {
-        return memberService.profileUpload(memberProfileImageDTO);
-    }*/
+        ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
+        profileImageResponseDTO.setProfileImageUrl(profileImageUrl);
+        return ResponseEntity.ok(profileImageResponseDTO);
+    }
 
 
     @GetMapping("/{id}")
@@ -56,11 +54,16 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public Long update(@PathVariable(name = "id") Long id,
+    public ResponseEntity<MemberResponseDTO> update(@PathVariable(name = "id") Long id,
                        @RequestBody MemberUpdateDTO memberUpdateDTO) {
 
         Long memberId = memberService.update(id, memberUpdateDTO);
-        return memberId;
+
+        MemberResponseDTO memberResponseDTO = new MemberResponseDTO();
+        memberResponseDTO.setMemberId(memberId);
+
+        return ResponseEntity.ok(memberResponseDTO);
+
     }
 
 
