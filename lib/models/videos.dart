@@ -33,34 +33,34 @@ class Videos {
 
   factory Videos.fromJson(Map<String, dynamic> json) {
     return Videos(
-        boardId: json['boardId'],
-        questionId: json['questionId'],
-        questionContent: json['questionContent'],
-        memberId: json['memberId'],
-        memberName: json['memberName'],
-        profileUrl: json['profileUrl'],
+        boardId: json['board_id'],
+        questionId: json['question_id'],
+        questionContent: json['question_content'],
+        memberId: json['member_id'],
+        memberName: json['member_nickname'],
+        profileUrl: json['profile_url'],
         content: json['content'],
-        videoUrl: json['videoUrl'],
-        likeCount: json['likeCount'],
-        commentCount: json['commentCount'],
-        createTime: json['createTime'],
-        updateTime: json['updateTime']);
+        videoUrl: json['video_url'],
+        likeCount: json['like_count'],
+        commentCount: json['comment_count'],
+        createTime: json['create_time'],
+        updateTime: json['update_time']);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'boardId': boardId,
-      'questionId': questionId,
-      'questionContent': questionContent,
-      'memberId': memberId,
-      'memberName': memberName,
-      'profileUrl': profileUrl,
+      'board_id': boardId,
+      'question_id': questionId,
+      'question_content': questionContent,
+      'member_id': memberId,
+      'member_nickname': memberName,
+      'profile_url': profileUrl,
       'content': content,
-      'videoUrl': videoUrl,
-      'likeCount': likeCount,
-      'commentCount': commentCount,
-      'createTime': createTime,
-      'updateTime': updateTime,
+      'video_url': videoUrl,
+      'like_count': likeCount,
+      'comment_count': commentCount,
+      'create_time': createTime,
+      'update_time': updateTime,
     };
   }
 }

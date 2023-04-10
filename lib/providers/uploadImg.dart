@@ -30,8 +30,8 @@ class UploadImageApi {
 
     // create the multipart request
     final request = http.MultipartRequest('POST', url)
-      ..fields['userId'] = '123'
-      ..files.add(http.MultipartFile.fromBytes('image', bytes,
+      ..fields['userId'] = '123' // 수정해야함
+      ..files.add(http.MultipartFile.fromBytes('profileImage', bytes,
           filename: 'example.jpg'));
 
     // send the request
@@ -44,12 +44,12 @@ class UploadImageApi {
       final videoUrl = responseJson['profile_image_url'];
       return videoUrl;
     } else {
-      throw Exception('Failed to post video');
+      throw Exception('Failed to post image');
     }
   }
 
   Future<String> updateImage(int id, XFile imageFile) async {
-    String uri = 'https://ee-wfnlp.run.goorm.site';
+    String uri = myUri;
     final url = Uri.parse('$uri/members/$id/image');
 
     // open the image file
@@ -57,7 +57,7 @@ class UploadImageApi {
 
     // create the multipart request
     final request = http.MultipartRequest('PATCH', url)
-      ..files.add(http.MultipartFile.fromBytes('image', bytes,
+      ..files.add(http.MultipartFile.fromBytes('profileImage', bytes,
           filename: 'example.jpg'));
 
     // send the request

@@ -42,8 +42,7 @@ class UserApi {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['member_id'];
     } else {
-      // throw Exception('Failed to post video');
-      print("회원 등록 실패");
+      throw Exception('회원 등록 실패');
     }
   }
 
@@ -70,7 +69,7 @@ class UserApi {
     if (response.statusCode == 204) {
       print('Delete request succeeded');
     } else {
-      print('Error: ${response.statusCode}');
+      throw Exception('회원 삭제 실패');
     }
   }
 
@@ -93,7 +92,7 @@ class UserApi {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['member_id'];
     } else {
-      throw Exception('Failed to post video');
+      throw Exception('회원 수정 실패');
     }
   }
 
@@ -117,8 +116,7 @@ class UserApi {
       prefs.setInt('user_id', jsonMap['member_id']);
       return jsonMap['member_id'];
     } else {
-      // throw Exception('Failed to post video');
-      print("로그인 실패");
+      throw Exception('로그인 실패');
     }
   }
 
@@ -140,7 +138,7 @@ class UserApi {
     if (response.statusCode == 200) {
       print('Logout successful');
     } else {
-      print('Error: ${response.statusCode}');
+      throw Exception('로그 아웃 실패');
     }
   }
 }
