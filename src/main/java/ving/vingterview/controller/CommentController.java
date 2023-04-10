@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ving.vingterview.dto.comment.CommentCreateDTO;
-import ving.vingterview.dto.comment.CommentDTO;
-import ving.vingterview.dto.comment.CommentListDTO;
-import ving.vingterview.dto.comment.CommentUpdateDTO;
+import ving.vingterview.dto.comment.*;
 import ving.vingterview.service.comment.CommentService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -32,8 +32,8 @@ public class CommentController {
     }
 
     @PostMapping(value = "")
-    public Long create(@RequestBody CommentCreateDTO commentCreateDTO) {
-        return commentService.create(commentCreateDTO);
+    public ResponseEntity<CommentResponseDTO> create(@RequestBody CommentCreateDTO commentCreateDTO) {
+        return ResponseEntity.ok(new CommentResponseDTO(commentService.create(commentCreateDTO)));
     }
 
     @GetMapping("/{id}")
@@ -48,8 +48,8 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Long update(@PathVariable Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
-        return commentService.update(id, commentUpdateDTO);
+    public ResponseEntity<CommentResponseDTO> update(@PathVariable Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
+        return ResponseEntity.ok(new CommentResponseDTO(commentService.update(id, commentUpdateDTO)));
     }
 
     @GetMapping("/{id}/like")
