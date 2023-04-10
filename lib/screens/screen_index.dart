@@ -5,8 +5,7 @@ import '../tabs/tab_profile.dart';
 import '../tabs/tab_question.dart';
 import '../tabs/tab_video.dart';
 
-
-class IndexScreen extends StatefulWidget{
+class IndexScreen extends StatefulWidget {
   @override
   _IndexScreenState createState() => _IndexScreenState();
 }
@@ -21,7 +20,7 @@ class _IndexScreenState extends State<IndexScreen> {
   ];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         child: AppBar(
@@ -76,11 +75,5 @@ class _IndexScreenState extends State<IndexScreen> {
       ),
       body: _tabs[selectIndex],
     );
-
-
   }
-
-
-
-
 }

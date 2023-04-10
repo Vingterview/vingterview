@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
+import 'package:capston/models/globals.dart';
 
 class UploadImageApi {
   Future<String> pickImage() async {
@@ -21,7 +22,7 @@ class UploadImageApi {
   }
 
   Future<String> uploadImage(XFile imageFile) async {
-    String uri = 'https://ee-wfnlp.run.goorm.site';
+    String uri = myUri;
     final url = Uri.parse('$uri/members/image');
 
     // open the image file

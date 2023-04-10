@@ -4,6 +4,7 @@ import '../providers/videos_api.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/uploadmp4.dart';
 import 'dart:io';
+import 'package:capston/models/globals.dart';
 
 // import 'package:video_player/video_player.dart';
 class PostVideoPage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _PostVideoPageState extends State<PostVideoPage> {
   String _video_url;
   UploadVideoApi uploadVideoApi = UploadVideoApi();
   File _video;
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   // Create an instance of the API class
   VideoApi _videoApi = VideoApi();

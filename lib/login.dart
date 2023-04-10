@@ -3,8 +3,8 @@ import '../models/users.dart';
 import '../models/tags.dart';
 import '../providers/users_api.dart';
 import 'package:image_picker/image_picker.dart';
-import '../providers/uploadmp4.dart';
 import 'dart:io';
+import 'package:capston/models/globals.dart';
 
 // import 'package:question_player/question_player.dart';
 class login extends StatefulWidget {
@@ -17,7 +17,7 @@ class _loginState extends State<login> {
   String _id;
   String _password;
   int member_id;
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   // Create an instance of the API class
   UserApi _userApi = UserApi();

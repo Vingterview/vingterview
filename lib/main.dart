@@ -1,13 +1,10 @@
 import 'package:capston/register.dart';
 import 'package:capston/screens/screen_index.dart';
 import 'package:flutter/material.dart';
-import 'tabs/tab_question.dart';
-import 'tabs/tab_video.dart';
 import 'video_detail.dart';
 import 'video_write.dart';
 import 'question_write.dart';
 import 'login.dart';
-import 'register.dart';
 import 'SplashScreen.dart';
 
 void main() {

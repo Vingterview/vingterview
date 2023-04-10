@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/questions.dart';
 import '../models/tags.dart';
 import '../providers/questions_api.dart';
-import 'package:image_picker/image_picker.dart';
-import '../providers/uploadmp4.dart';
 import 'dart:io';
+import 'package:capston/models/globals.dart';
 
 // import 'package:question_player/question_player.dart';
 class PostQuestionPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _PostquestionPageState extends State<PostQuestionPage> {
   List<Tags> _tags;
   int _memberId;
   String question_content;
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   // Create an instance of the API class
   QuestionApi _questionApi = QuestionApi();

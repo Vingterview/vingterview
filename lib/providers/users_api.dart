@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:capston/models/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:capston/models/globals.dart';
 
 class UserApi {
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   Future<List<Users>> getUsers() async {
     // 회원 전체 목록 # 0

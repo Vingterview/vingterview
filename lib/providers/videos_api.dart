@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:capston/models/users.dart';
-import 'package:capston/models/questions.dart';
+import 'package:capston/models/globals.dart';
 import 'package:capston/models/videos.dart';
 import 'package:http/http.dart' as http;
 
 class VideoApi {
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
   Future<List<Videos>> getVideos() async {
     // 게시글 전체 목록 # 0
     final response = await http.get(Uri.parse('$uri/boards'));

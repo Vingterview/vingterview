@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:capston/models/globals.dart';
 
 class UploadVideoApi {
   Future<String> pickVideo() async {
@@ -21,7 +22,7 @@ class UploadVideoApi {
   }
 
   Future<String> uploadVideo(XFile videoFile) async {
-    String uri = 'https://ee-wfnlp.run.goorm.site';
+    String uri = myUri;
     final url = Uri.parse('$uri/boards/video');
 
     // open the video file
@@ -47,7 +48,7 @@ class UploadVideoApi {
   }
 
   Future<String> updateVideo(int id, XFile videoFile) async {
-    String uri = 'https://ee-wfnlp.run.goorm.site';
+    String uri = myUri;
     final url = Uri.parse('$uri/boards/$id/video');
 
     // open the video file

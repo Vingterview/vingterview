@@ -5,6 +5,7 @@ import '../providers/users_api.dart';
 import '../providers/uploadImg.dart';
 import '../providers/uploadmp4.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:capston/models/globals.dart';
 
 class MyPage extends StatelessWidget {
   UserApi userApi = UserApi();
@@ -13,11 +14,10 @@ class MyPage extends StatelessWidget {
   UploadImageApi uploadImageApi = UploadImageApi();
   UploadVideoApi uploadVideoApi = UploadVideoApi();
   File _image;
-  File _video;
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   Future initUser() async {
-    user = await userApi.getUserDetail(1);
+    user = await userApi.getUserDetail(1); // 수정 필요
   }
 
   @override

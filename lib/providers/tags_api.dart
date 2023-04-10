@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:capston/models/tags.dart';
 import 'package:http/http.dart' as http;
+import 'package:capston/models/globals.dart';
 
 class TagApi {
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   Future<List<Tags>> getTags() async {
     // 질문 전체 목록 # 0

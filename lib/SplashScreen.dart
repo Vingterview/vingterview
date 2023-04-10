@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/users.dart';
 import 'providers/users_api.dart';
+import 'package:capston/models/globals.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   UserApi _userApi = UserApi();
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   Future<bool> checkLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

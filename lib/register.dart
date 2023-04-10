@@ -5,6 +5,7 @@ import '../providers/users_api.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/uploadmp4.dart';
 import 'dart:io';
+import 'package:capston/models/globals.dart';
 
 // import 'package:question_player/question_player.dart';
 class registeruser extends StatefulWidget {
@@ -13,7 +14,7 @@ class registeruser extends StatefulWidget {
 }
 
 class _registerstate extends State<registeruser> {
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();

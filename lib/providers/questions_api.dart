@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:capston/models/users.dart';
+import 'package:capston/models/globals.dart';
 import 'package:capston/models/questions.dart';
 import 'package:capston/models/tags.dart';
 import 'package:http/http.dart' as http;
 
 class QuestionApi {
-  String uri = 'https://ee-wfnlp.run.goorm.site';
+  String uri = myUri;
 
   Future<List<Questions>> getQuestions() async {
     // 질문 전체 목록 # 0
