@@ -30,4 +30,10 @@ public class TagQuestion {
         this.tag = tag;
         this.question = question;
     }
+
+    // 연관관계 편의 메소드
+    public void setQuestion(Question question) {
+        this.question = question;
+        question.getTags().add(this);
+    }
 }

@@ -51,14 +51,25 @@ public class QuestionService {
                 .forEach(tagId -> {
                     Tag tag = tagRepository.findById(tagId)
                             .orElseThrow(() -> new NoSuchElementException("태그 없음"));
-                    tagQuestionRepository.save(
-                            TagQuestion.builder()
-                                    .question(question)
-                                    .tag(tag)
-                                    .build());
+                    TagQuestion tagQuestion = TagQuestion.builder()
+                            .question(question)
+                            .tag(tag)
+                            .build();
+                    tagQuestion.setQuestion(question);
+                    tagQuestionRepository.save(tagQuestion);
                 });
 
         return question.getId();
+    }
+
+    /**
+     * 질문 id로 조회
+     * @param id
+     * @return
+     */
+    public QuestionDTO findOne(Long id) {
+        Question question = questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        return convertToQuestionDTO(question);
     }
 
     /**
