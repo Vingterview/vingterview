@@ -77,6 +77,14 @@ class MyPage extends StatelessWidget {
                   );
                   Navigator.of(context).pushReplacementNamed('/login');
                 }),
+            IconButton(
+                icon: Icon(Icons.add_reaction_outlined),
+                onPressed: () async {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('태그 목록 확인')),
+                  );
+                  Navigator.of(context).pushReplacementNamed('/tag');
+                }),
           ]));
         }
       },

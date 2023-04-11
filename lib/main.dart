@@ -6,6 +6,7 @@ import 'video_write.dart';
 import 'question_write.dart';
 import 'login.dart';
 import 'SplashScreen.dart';
+import 'tags.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/question_write': (context) => PostQuestionPage(),
         '/login': (context) => login(),
         '/register': (context) => registeruser(),
+        '/tag': (context) => tag_detail(),
       },
       initialRoute: '/',
     );
