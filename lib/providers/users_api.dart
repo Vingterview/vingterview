@@ -73,8 +73,13 @@ class UserApi {
     }
   }
 
-  Future<void> patchRequest(
-      String id, String name, int age, String email, String nickname) async {
+  Future<int> putRequest(
+      // put request인데 비밀번호 없는거 의도하신건지
+      String id,
+      String name,
+      int age,
+      String email,
+      String nickname) async {
     // 회원 정보 변경  # 5
     var url = Uri.parse('$uri/members/$id');
     var headers = {'Content-Type': 'application/json'};
@@ -86,7 +91,7 @@ class UserApi {
       'nickname': nickname
     });
 
-    var response = await http.patch(url, headers: headers, body: body);
+    var response = await http.put(url, headers: headers, body: body);
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
@@ -108,7 +113,8 @@ class UserApi {
     );
 
     if (response.statusCode == 201) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences prefs =
+          await SharedPreferences.getInstance(); // 멤버 변수 저장하기
       prefs.setBool('isLogin', true);
       prefs.setString('id', id);
       prefs.setString('password', password);

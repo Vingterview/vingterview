@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'models/users.dart';
 import 'providers/users_api.dart';
 import 'package:capston/models/globals.dart';
 

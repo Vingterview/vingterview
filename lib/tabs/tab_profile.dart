@@ -4,7 +4,6 @@ import '../models/users.dart';
 import '../providers/users_api.dart';
 import '../providers/uploadImg.dart';
 import '../providers/uploadmp4.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:capston/models/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,10 +68,6 @@ class MyPage extends StatelessWidget {
               onPressed: uploadImageApi.pickImage,
             ),
             // Image.network('$uri${user.profile_image_url}'),
-            IconButton(
-              icon: Icon(Icons.image),
-              onPressed: uploadVideoApi.pickVideo,
-            ),
             IconButton(
                 icon: Icon(Icons.logout),
                 onPressed: () async {

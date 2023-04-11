@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/questions.dart';
 import '../models/tags.dart';
 import '../providers/questions_api.dart';
-import 'dart:io';
 import 'package:capston/models/globals.dart';
 
 // import 'package:question_player/question_player.dart';

@@ -14,7 +14,7 @@ class VideoApi {
     List<Videos> videos = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['datas'];
+      List<dynamic> jsonList = jsonDecode(body)['videos'];
       videos = jsonList.map((json) => Videos.fromJson(json)).toList();
     }
 
@@ -66,17 +66,18 @@ class VideoApi {
     if (response.statusCode == 204) {
       print('Delete request succeeded');
     } else {
-      print('Error: ${response.statusCode}');
+      throw Exception('Failed to delete video');
     }
   }
 
-  Future<void> patchRequest(int id, int question_id, String content) async {
+  Future<int> putRequest(int id, int question_id, String content) async {
+    // put인데 이거만 있어도 되는지
     // 게시글 수정  # 5
     var url = Uri.parse('$uri/boards/$id');
     var headers = {'Content-Type': 'application/json'};
     var body = jsonEncode({'question_id': question_id, 'content': content});
 
-    var response = await http.patch(url, headers: headers, body: body);
+    var response = await http.put(url, headers: headers, body: body);
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);

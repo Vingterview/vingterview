@@ -56,12 +56,24 @@ class VideoPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: Text(
-                        videolist[index].memberName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            videolist[index].memberName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14, // 작은 글씨 크기
+                            ),
+                          ),
+                          SizedBox(height: 10), // 줄간격을 위한 여백 추가
+                          Text(
+                            videolist[index].content,
+                            style: TextStyle(
+                              fontSize: 16, // 줄글 글씨 크기
+                            ),
+                          ),
+                        ],
                       ),
                     ));
               },

@@ -35,34 +35,33 @@ class QuestionPage extends StatelessWidget {
               itemCount: Questionlist.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                    onTap: () async {
-                      Navigator.pushNamed(context, '/Question_detail',
-                          arguments: Questionlist[index].questionId);
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      margin: EdgeInsets.symmetric(vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        Questionlist[index].questionContent,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  onTap: () async {
+                    Navigator.pushNamed(context, '/Question_detail',
+                        arguments: Questionlist[index].questionId);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    margin: EdgeInsets.symmetric(vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
                         ),
+                      ],
+                    ),
+                    child: Text(
+                      Questionlist[index].questionContent,
+                      style: TextStyle(
+                        fontSize: 16, // 줄글 글씨 크기
                       ),
-                    ));
+                    ),
+                  ),
+                );
               },
             )),
             IconButton(

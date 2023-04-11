@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/videos.dart';
 import '../providers/videos_api.dart';
-import 'package:image_picker/image_picker.dart';
 import '../providers/uploadmp4.dart';
 import 'dart:io';
 import 'package:capston/models/globals.dart';

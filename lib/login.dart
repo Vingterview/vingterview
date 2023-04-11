@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/users.dart';
-import '../models/tags.dart';
 import '../providers/users_api.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:capston/models/globals.dart';
 
 // import 'package:question_player/question_player.dart';
