@@ -6,6 +6,7 @@ import '../providers/uploadImg.dart';
 import '../providers/uploadmp4.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:capston/models/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyPage extends StatelessWidget {
   UserApi userApi = UserApi();
@@ -17,7 +18,13 @@ class MyPage extends StatelessWidget {
   String uri = myUri;
 
   Future initUser() async {
-    user = await userApi.getUserDetail(1); // 수정 필요
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int memberId = prefs.getInt('member_id'); // 'member_id'라는 키로 저장한 값 가져오기
+    if (memberId != null) {
+      user = await userApi.getUserDetail(memberId);
+    } else {
+      user = null;
+    }
   }
 
   @override
@@ -36,6 +43,14 @@ class MyPage extends StatelessWidget {
           Users user = snapshot.data;
           return Container(
               child: ListView(children: [
+            Text(
+              user.name ?? '로그인 정보가 없습니다.',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
             Text(
               user.name,
               style: TextStyle(
