@@ -6,9 +6,13 @@ import 'package:http/http.dart' as http;
 
 class CommentApi {
   String uri = myUri;
-  Future<List<Comments>> getcomments() async {
+  Future<List<Comments>> getcomments(int query, int id) async {
     // 댓글 목록 조회 # 0
-    final response = await http.get(Uri.parse('$uri/comments'));
+    // 0 = 게시글로 필터링
+    // 1 = 작성자로 필터링
+    List<String> queries = ["?board_id=", "?member_id="];
+    final response =
+        await http.get(Uri.parse('$uri/comments${queries[query]}$id'));
     final statusCode = response.statusCode;
     final body = response.body;
     List<Comments> comments = [];
