@@ -8,9 +8,20 @@ import 'package:http/http.dart' as http;
 class QuestionApi {
   String uri = myUri;
 
-  Future<List<Questions>> getQuestions() async {
+  Future<List<Questions>> getQuestions(
+      {int query = 0, String param = ""}) async {
     // 질문 전체 목록 # 0
-    final response = await http.get(Uri.parse('$uri/questions'));
+    // 0 : 전부(default) , 1 : 태그로 필터링, 2 : 작성자로 필터링,
+    // 3 : 스크랩 필터링, 4 : 정렬 (좋아요순, 댓글순, 최신순)
+    List<String> queries = [
+      "",
+      "?tag_id=",
+      "?member_id=",
+      "?scrap_member_id=",
+      "?order_by="
+    ];
+    final response =
+        await http.get(Uri.parse('$uri/questions${queries[query]}$param'));
     final statusCode = response.statusCode;
     final body = response.body;
     List<Questions> questions = [];

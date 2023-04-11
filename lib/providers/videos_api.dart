@@ -6,15 +6,19 @@ import 'package:http/http.dart' as http;
 
 class VideoApi {
   String uri = myUri;
-  Future<List<Videos>> getVideos() async {
+  Future<List<Videos>> getVideos({int query = 0, String param = ""}) async {
+    // String으로 받는 거 기억하기!!
     // 게시글 전체 목록 # 0
-    final response = await http.get(Uri.parse('$uri/boards'));
+    // 0 : 전부(default) , 1 : 작성자로 필터링, 2 : 질문으로 필터링, 3 : 정렬 (좋아요순, 댓글순, 최신순)
+    List<String> queries = ["", "?member_id=", "?question_id=", "?order_by="];
+    final response =
+        await http.get(Uri.parse('$uri/boards${queries[query]}$param'));
     final statusCode = response.statusCode;
     final body = response.body;
     List<Videos> videos = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['videos'];
+      List<dynamic> jsonList = jsonDecode(body)['boards'];
       videos = jsonList.map((json) => Videos.fromJson(json)).toList();
     }
 

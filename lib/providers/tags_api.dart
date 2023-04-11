@@ -7,9 +7,16 @@ import 'package:capston/models/globals.dart';
 class TagApi {
   String uri = myUri;
 
-  Future<List<Tags>> getTags() async {
+  Future<List<Tags>> getTags({int query = 0, String param = ""}) async {
     // 질문 전체 목록 # 0
-    final response = await http.get(Uri.parse('$uri/tags'));
+    // 0 : 대분류 , 1 : 중, 소분류
+    List<String> queries = [
+      "",
+      "?parent_tag_id=",
+    ];
+
+    final response =
+        await http.get(Uri.parse('$uri/tags${queries[query]}$param'));
     final statusCode = response.statusCode;
     final body = response.body;
     List<Tags> tags = [];
