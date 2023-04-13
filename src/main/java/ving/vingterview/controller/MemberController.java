@@ -2,19 +2,28 @@ package ving.vingterview.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ving.vingterview.dto.board.VideoResponseDTO;
 import ving.vingterview.dto.member.*;
+import ving.vingterview.service.file.FileStore;
 import ving.vingterview.service.member.MemberService;
 
+import java.time.LocalDateTime;
 
+
+@Slf4j
 @RestController
 @RequestMapping(value = "/members", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    @Qualifier("imgStore")
+    private final FileStore imgStore;
 
     @GetMapping("")
     public ResponseEntity<MemberListDTO> list() {
@@ -34,11 +43,24 @@ public class MemberController {
 
     @PostMapping("/image")
     public ResponseEntity<ProfileImageResponseDTO> profileUpload(@ModelAttribute ProfileImageDTO profileImageDTO) {
-        String profileImageUrl = memberService.profileUpload(profileImageDTO);
+        if (!profileImageDTO.getProfileImage().isEmpty() && profileImageDTO.getProfileImage() != null) {
+            String storeFileName = imgStore.createStoreFileName(profileImageDTO.getProfileImage().getOriginalFilename());
+
+            log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
+            imgStore.uploadFile(profileImageDTO.getProfileImage(),storeFileName);
+            log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
+
+            ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
+            profileImageResponseDTO.setProfileImageUrl(storeFileName);
+
+            return new ResponseEntity<>(profileImageResponseDTO, HttpStatus.CREATED);
+
+        }
 
         ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
-        profileImageResponseDTO.setProfileImageUrl(profileImageUrl);
-        return new ResponseEntity<>(profileImageResponseDTO, HttpStatus.CREATED);
+        profileImageResponseDTO.setProfileImageUrl("잘못된 접근입니다.");
+        return ResponseEntity.badRequest()
+                .body(profileImageResponseDTO);
     }
 
 
