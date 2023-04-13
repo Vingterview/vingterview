@@ -64,16 +64,13 @@ public class BoardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BoardDTO> board(@PathVariable(name = "id") Long id) {
-
         return ResponseEntity.ok(boardService.findById(id));
-
-
     }
 
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(name = "id") Long id) {
-
         boardService.delete(id);
     }
 
@@ -87,16 +84,13 @@ public class BoardController {
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
         return new ResponseEntity<>(boardResponseDTO, HttpStatus.CREATED);
-
-
     }
 
 
     @GetMapping("/{id}/like")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void like(@PathVariable(name = "id") Long id) {
-
         boardService.like(id,1L);
-
     }
 
     @PostMapping("/video")

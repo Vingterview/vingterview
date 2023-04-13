@@ -136,7 +136,7 @@ public class CommentService {
         Optional<CommentMemberLike> like = likeRepository.findByCommentIdAndMemberId(id, member_id);
 
         if (like.isEmpty()) {
-            Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 게시물을 찾을 수 없습니다."));
+            Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다."));
             Member member = memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("해당 멤버를 찾을 수 없습니다."));
             likeRepository.save(new CommentMemberLike(comment, member));
 

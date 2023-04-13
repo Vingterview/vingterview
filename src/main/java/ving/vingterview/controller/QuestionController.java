@@ -2,6 +2,7 @@ package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.question.QuestionCreateDTO;
@@ -23,7 +24,6 @@ public class QuestionController {
 
     @GetMapping("")
     public ResponseEntity<QuestionListDTO> list() {
-
         return ResponseEntity.ok(new QuestionListDTO(questionService.findAll()));
     }
 
@@ -45,11 +45,13 @@ public class QuestionController {
 
     @PostMapping("")
     public ResponseEntity<QuestionResponseDTO> create(@RequestBody QuestionCreateDTO questionCreateDTO) {
-        return ResponseEntity.ok(new QuestionResponseDTO(questionService.create(questionCreateDTO)));
+        return new ResponseEntity<>(new QuestionResponseDTO(questionService.create(questionCreateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/scrap")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void scrap(@PathVariable Long id) {
         questionService.scrap(id);
+
     }
 }

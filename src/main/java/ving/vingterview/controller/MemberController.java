@@ -72,6 +72,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(name = "id") Long id) {
         memberService.delete(id);
     }
@@ -86,8 +87,6 @@ public class MemberController {
         memberResponseDTO.setMemberId(memberId);
 
         return new ResponseEntity<>(memberResponseDTO, HttpStatus.CREATED);
-
-
     }
 
 

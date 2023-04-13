@@ -20,8 +20,8 @@ public class LoginController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
     @PostMapping("/logout")
-    public void logout() {
+    public ResponseEntity logout() {
         // 로그아웃
-        return;
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

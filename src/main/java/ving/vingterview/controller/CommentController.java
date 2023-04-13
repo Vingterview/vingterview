@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.comment.*;
 import ving.vingterview.service.comment.CommentService;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping(value = "/comments", produces = "application/json;charset=utf8")
@@ -33,7 +30,7 @@ public class CommentController {
 
     @PostMapping(value = "")
     public ResponseEntity<CommentResponseDTO> create(@RequestBody CommentCreateDTO commentCreateDTO) {
-        return ResponseEntity.ok(new CommentResponseDTO(commentService.create(commentCreateDTO)));
+        return new ResponseEntity<>(new CommentResponseDTO(commentService.create(commentCreateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -43,16 +40,18 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         commentService.delete(id);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDTO> update(@PathVariable Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
-        return ResponseEntity.ok(new CommentResponseDTO(commentService.update(id, commentUpdateDTO)));
+        return new ResponseEntity<>(new CommentResponseDTO(commentService.update(id, commentUpdateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/like")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void like(@PathVariable Long id) {
         commentService.like(id);
     }
