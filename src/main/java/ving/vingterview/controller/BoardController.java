@@ -3,6 +3,8 @@ package ving.vingterview.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,7 @@ import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 
@@ -56,7 +59,7 @@ public class BoardController {
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
 
-        return ResponseEntity.ok(boardResponseDTO);
+        return new ResponseEntity<>(boardResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -83,7 +86,8 @@ public class BoardController {
 
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
-        return ResponseEntity.ok(boardResponseDTO);
+        return new ResponseEntity<>(boardResponseDTO, HttpStatus.CREATED);
+
 
     }
 
@@ -107,7 +111,7 @@ public class BoardController {
             VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
             videoResponseDTO.setVideoUrl(storeFileName);
 
-            return ResponseEntity.ok(videoResponseDTO);
+            return new ResponseEntity<>(videoResponseDTO, HttpStatus.CREATED);
 
         }
 

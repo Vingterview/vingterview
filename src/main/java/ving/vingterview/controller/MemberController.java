@@ -2,6 +2,7 @@ package ving.vingterview.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.dto.member.*;
@@ -28,7 +29,7 @@ public class MemberController {
         MemberResponseDTO memberResponseDTO = new MemberResponseDTO();
         memberResponseDTO.setMemberId(memberId);
 
-        return ResponseEntity.ok(memberResponseDTO);
+        return new ResponseEntity<>(memberResponseDTO, HttpStatus.CREATED);
     }
 
     @PostMapping("/image")
@@ -37,7 +38,7 @@ public class MemberController {
 
         ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
         profileImageResponseDTO.setProfileImageUrl(profileImageUrl);
-        return ResponseEntity.ok(profileImageResponseDTO);
+        return new ResponseEntity<>(profileImageResponseDTO, HttpStatus.CREATED);
     }
 
 
@@ -62,7 +63,8 @@ public class MemberController {
         MemberResponseDTO memberResponseDTO = new MemberResponseDTO();
         memberResponseDTO.setMemberId(memberId);
 
-        return ResponseEntity.ok(memberResponseDTO);
+        return new ResponseEntity<>(memberResponseDTO, HttpStatus.CREATED);
+
 
     }
 
