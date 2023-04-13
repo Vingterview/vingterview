@@ -11,11 +11,8 @@ import ving.vingterview.dto.tag.TagDTO;
 import ving.vingterview.dto.tag.TagListDTO;
 import ving.vingterview.service.tag.TagService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
-@RequestMapping("/tags")
+@RequestMapping(value = "/tags", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 public class TagController {
 

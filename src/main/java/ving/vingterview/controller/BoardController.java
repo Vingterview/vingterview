@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards")
+@RequestMapping(value = "/boards", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 public class BoardController {
 

@@ -12,6 +12,4 @@ public interface TagRepository extends JpaRepository<Tag,Long> {
     public List<Tag> findAllByCategoryIn(TagType... categories);
 
     public List<Tag> findAllByParentId(Long parentId);
-
-    public List<Tag> findAllByIdIn(List<Long> tags);
 }

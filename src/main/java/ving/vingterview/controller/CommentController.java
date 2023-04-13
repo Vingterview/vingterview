@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/comments")
+@RequestMapping(value = "/comments", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 public class CommentController {
 
