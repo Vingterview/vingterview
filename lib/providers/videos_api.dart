@@ -14,11 +14,11 @@ class VideoApi {
     final response =
         await http.get(Uri.parse('$uri/boards${queries[query]}$param'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     List<Videos> videos = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['boards'];
+      List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['boards'];
       videos = jsonList.map((json) => Videos.fromJson(json)).toList();
     }
 
@@ -40,7 +40,8 @@ class VideoApi {
     );
 
     if (response.statusCode == 201) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      final bodyBytes = response.bodyBytes;
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['board_id'];
     } else {
       throw Exception('Failed to post video');
@@ -51,11 +52,11 @@ class VideoApi {
     // 게시글 조회 # 3
     final response = await http.get(Uri.parse('$uri/boards/$id'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     Videos video;
 
     if (statusCode == 200) {
-      Map<String, dynamic> jsonMap = jsonDecode(body);
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       video = Videos.fromJson(jsonMap);
     }
 
@@ -84,7 +85,8 @@ class VideoApi {
     var response = await http.put(url, headers: headers, body: body);
 
     if (response.statusCode == 201) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      final bodyBytes = response.bodyBytes;
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['board_id'];
     } else {
       throw Exception('Failed to post video');
@@ -98,7 +100,8 @@ class VideoApi {
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print(response.body);
+      final bodyBytes = response.bodyBytes;
+      print(utf8.decode(bodyBytes));
     } else {
       throw Exception('좋아요 실패');
     }

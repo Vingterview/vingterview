@@ -23,11 +23,12 @@ class QuestionApi {
     final response =
         await http.get(Uri.parse('$uri/questions${queries[query]}$param'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes; // 한국어 깨짐 해결용 수정
     List<Questions> questions = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['questions'];
+      List<dynamic> jsonList =
+          jsonDecode(utf8.decode(bodyBytes))['questions']; // 한국어
       questions = jsonList.map((json) => Questions.fromJson(json)).toList();
     }
 

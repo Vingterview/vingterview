@@ -18,11 +18,11 @@ class TagApi {
     final response =
         await http.get(Uri.parse('$uri/tags${queries[query]}$param'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     List<Tags> tags = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['tags'];
+      List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['tags'];
       tags = jsonList.map((json) => Tags.fromJson(json)).toList();
     }
 

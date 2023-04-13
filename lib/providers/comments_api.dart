@@ -14,11 +14,11 @@ class CommentApi {
     final response =
         await http.get(Uri.parse('$uri/comments${queries[query]}$id'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     List<Comments> comments = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['comments'];
+      List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['comments'];
       comments = jsonList.map((json) => Comments.fromJson(json)).toList();
     }
 
@@ -36,12 +36,16 @@ class CommentApi {
       }),
       headers: {'Content-Type': 'application/json'},
     );
+    print(member_id);
+    print(board_id);
+    print(content);
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['comment_id'];
     } else {
-      throw Exception('Failed to post comment');
+      // throw Exception('Failed to post comment');
+
     }
   }
 
@@ -49,11 +53,11 @@ class CommentApi {
     // 댓글 조회 # 3
     final response = await http.get(Uri.parse('$uri/comments/$id'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     Comments comment;
 
     if (statusCode == 200) {
-      Map<String, dynamic> jsonMap = jsonDecode(body);
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       comment = Comments.fromJson(jsonMap);
     }
 
@@ -79,9 +83,10 @@ class CommentApi {
     var body = jsonEncode(comment.toJson());
 
     var response = await http.put(url, headers: headers, body: body);
+    final bodyBytes = response.bodyBytes;
 
     if (response.statusCode == 201) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['comment_id'];
     } else {
       throw Exception('Failed to post comment');
@@ -93,9 +98,10 @@ class CommentApi {
     var url = Uri.parse('$uri/boards/$id/like');
 
     var response = await http.get(url);
+    final bodyBytes = response.bodyBytes;
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print(utf8.decode(bodyBytes));
     } else {
       throw Exception('좋아요 실패');
     }

@@ -11,11 +11,11 @@ class UserApi {
     // 회원 전체 목록 # 0
     final response = await http.get(Uri.parse('$uri/members'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     List<Users> users = [];
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(body)['users'];
+      List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['users'];
       users = jsonList.map((json) => Users.fromJson(json)).toList();
     }
 
@@ -39,7 +39,8 @@ class UserApi {
     );
 
     if (response.statusCode == 201) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      final bodyBytes = response.bodyBytes;
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['member_id'];
     } else {
       throw Exception('회원 등록 실패');
@@ -50,11 +51,11 @@ class UserApi {
     // 회원 조회 # 3
     final response = await http.get(Uri.parse('$uri/members/$id'));
     final statusCode = response.statusCode;
-    final body = response.body;
+    final bodyBytes = response.bodyBytes;
     Users user;
 
     if (statusCode == 200) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       user = Users.fromJson(jsonMap);
     }
 
@@ -93,8 +94,9 @@ class UserApi {
 
     var response = await http.put(url, headers: headers, body: body);
 
+    final bodyBytes = response.bodyBytes;
     if (response.statusCode == 201) {
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['member_id'];
     } else {
       throw Exception('회원 수정 실패');
@@ -118,8 +120,9 @@ class UserApi {
       prefs.setBool('isLogin', true);
       prefs.setString('id', id);
       prefs.setString('password', password);
-      Map<String, dynamic> jsonMap = jsonDecode(response.body);
-      prefs.setInt('user_id', jsonMap['member_id']);
+      final bodyBytes = response.bodyBytes;
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
+      prefs.setInt('member_id', jsonMap['member_id']);
       return jsonMap['member_id'];
     } else {
       throw Exception('로그인 실패');

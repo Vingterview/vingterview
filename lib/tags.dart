@@ -44,7 +44,7 @@ class tag_detail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start, // Align left
                     children: [
                       Text(
-                        tag.tagName,
+                        tag.tagName ?? '태그 정보가 없습니다.',
                         style: TextStyle(
                           fontSize: 16,
                         ),
