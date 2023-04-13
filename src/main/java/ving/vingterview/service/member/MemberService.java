@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.member.Member;
+import ving.vingterview.domain.question.Question;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.repository.MemberRepository;
 import ving.vingterview.service.file.FileStore;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -89,15 +89,19 @@ public class MemberService {
     /**
      * 멤버 삭제
      */
+    @Transactional
     public void delete(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
+        List<Question> questions = member.getQuestions();
+        questions.stream().forEach(question -> question.setMemberNull());
+
         memberRepository.deleteById(id);
     }
 
     @Transactional
     public Long update(Long id, MemberUpdateDTO memberUpdateDTO) {
 
-        Optional<Member> findMember = memberRepository.findById(id);
-        Member member = findMember.orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
+        Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
 
         imgStore.deleteFile(member.getProfileImageUrl());
 

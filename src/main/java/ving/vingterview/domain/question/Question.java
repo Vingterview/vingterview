@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ving.vingterview.domain.EntityDate;
 import ving.vingterview.domain.member.Member;
-import ving.vingterview.domain.tag.Tag;
 import ving.vingterview.domain.tag.TagQuestion;
 
 import java.util.ArrayList;
@@ -40,4 +39,9 @@ public class Question extends EntityDate {
         this.member = member;
         this.content = content;
     }
+
+    public void setMemberNull() {
+        member = null;
+    }
+
 }
