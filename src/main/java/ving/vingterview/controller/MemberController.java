@@ -9,7 +9,7 @@ import ving.vingterview.service.member.MemberService;
 
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping(value = "/members", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 public class MemberController {
 

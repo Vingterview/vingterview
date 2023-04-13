@@ -13,7 +13,7 @@ import ving.vingterview.service.question.QuestionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questions")
+@RequestMapping(value = "/questions", produces = "application/json;charset=utf8")
 @RequiredArgsConstructor
 @Slf4j
 public class QuestionController {
@@ -22,24 +22,25 @@ public class QuestionController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<QuestionDTO>> list() {
-        return ResponseEntity.ok(questionService.findAll());
+    public ResponseEntity<QuestionListDTO> list() {
+
+        return ResponseEntity.ok(new QuestionListDTO(questionService.findAll()));
     }
 
     @GetMapping(params = "tag_id")
-    public ResponseEntity<List<QuestionDTO>> findByTag(@RequestParam(name = "tag_id") List<Long> tagId) {
-        return ResponseEntity.ok(questionService.findByTags(tagId));
+    public ResponseEntity<QuestionListDTO> findByTag(@RequestParam(name = "tag_id") List<Long> tagId) {
+        return ResponseEntity.ok(new QuestionListDTO(questionService.findByTags(tagId)));
     }
 
 
     @GetMapping(params = "member_id")
-    public ResponseEntity<List<QuestionDTO>> findByMember(@RequestParam(name = "member_id") Long memberId) {
-        return ResponseEntity.ok(questionService.findByMember(memberId));
+    public ResponseEntity<QuestionListDTO> findByMember(@RequestParam(name = "member_id") Long memberId) {
+        return ResponseEntity.ok(new QuestionListDTO(questionService.findByMember(memberId)));
     }
 
     @GetMapping(params = "scrap_member_id")
-    public ResponseEntity<List<QuestionDTO>> findScraps(@RequestParam(name = "scrap_member_id") Long scrapMemberId) {
-        return ResponseEntity.ok(questionService.findByScrap(scrapMemberId));
+    public ResponseEntity<QuestionListDTO> findScraps(@RequestParam(name = "scrap_member_id") Long scrapMemberId) {
+        return ResponseEntity.ok(new QuestionListDTO(questionService.findByScrap(scrapMemberId)));
     }
 
     @PostMapping("")
