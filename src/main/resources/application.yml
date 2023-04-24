@@ -13,6 +13,8 @@ spring:
         format_sql: true
         default_batch_fetch_size: 500
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
   servlet:
     multipart:
