@@ -68,6 +68,7 @@ public class QuestionService {
      * @param id
      * @return
      */
+    @Transactional(readOnly = true)
     public QuestionDTO findOne(Long id) {
         Question question = questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
         return convertToQuestionDTO(question);
@@ -77,6 +78,7 @@ public class QuestionService {
      * 전체 질문 목록 조회
      * @return
      */
+    @Transactional(readOnly = true)
     public List<QuestionDTO> findAll() {
         List<Question> questions = questionRepository.findAll();
 
@@ -90,6 +92,7 @@ public class QuestionService {
      * @param memberId
      * @return
      */
+    @Transactional(readOnly = true)
     public List<QuestionDTO> findByMember(Long memberId) {
         List<Question> questions = questionRepository.findAllByMemberId(memberId);
         return questions.stream()
@@ -103,6 +106,7 @@ public class QuestionService {
      * @param tagId
      * @return
      */
+    @Transactional(readOnly = true)
     public List<QuestionDTO> findByTags(List<Long> tagId) {
         List<TagQuestion> result = tagQuestionRepository.findAllQuestionByTagId(tagId);
         return result.stream()
@@ -116,6 +120,7 @@ public class QuestionService {
      * @param scrapMemberId
      * @return
      */
+    @Transactional(readOnly = true)
     public List<QuestionDTO> findByScrap(Long scrapMemberId) {
         List<QuestionMemberScrap> result = scrapRepository.findAllQuestionByMemberId(scrapMemberId);
         return result.stream()
