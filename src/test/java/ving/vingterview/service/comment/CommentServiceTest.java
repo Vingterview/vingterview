@@ -31,56 +31,56 @@ class CommentServiceTest {
     @Test
     void create() {
         CommentCreateDTO dto = new CommentCreateDTO();
-        dto.setMemberId(1L);
+//        dto.setMemberId(1L);
         dto.setBoardId(1L);
         dto.setContent("첫번째 댓글입니다");
 
-        Long commentId = commentService.create(dto);
+        Long commentId = commentService.create(1L, dto);
 
         CommentDTO foundDto = commentService.findOne(commentId);
 
-        assertThat(dto.getMemberId()).isEqualTo(foundDto.getMemberId());
-        assertThat(dto.getBoardId()).isEqualTo(foundDto.getBoardId());
-        assertThat(dto.getContent()).isEqualTo(foundDto.getContent());
+        assertThat(foundDto.getMemberId()).isEqualTo(1L);
+        assertThat(foundDto.getBoardId()).isEqualTo(dto.getBoardId());
+        assertThat(foundDto.getContent()).isEqualTo(dto.getContent());
     }
 
     // 같은 게시글에 두번 댓글을 다는 경우
     @Test
     void createDuplicate() {
         CommentCreateDTO dto1 = new CommentCreateDTO();
-        dto1.setMemberId(1L);
+//        dto1.setMemberId(1L);
         dto1.setBoardId(1L);
         dto1.setContent("첫번째 댓글입니다");
 
         CommentCreateDTO dto2 = new CommentCreateDTO();
-        dto2.setMemberId(1L);
+//        dto2.setMemberId(1L);
         dto2.setBoardId(1L);
         dto2.setContent("같은 게시글의 두번째 댓글입니다");
 
-        Long commentId1 = commentService.create(dto1);
-        Long commentId2 = commentService.create(dto2);
+        Long commentId1 = commentService.create(1L, dto1);
+        Long commentId2 = commentService.create(1L, dto2);
 
         CommentDTO foundDto1 = commentService.findOne(commentId1);
         CommentDTO foundDto2 = commentService.findOne(commentId2);
 
-        assertThat(dto1.getMemberId()).isEqualTo(foundDto1.getMemberId());
-        assertThat(dto1.getBoardId()).isEqualTo(foundDto1.getBoardId());
-        assertThat(dto1.getContent()).isEqualTo(foundDto1.getContent());
+        assertThat(foundDto1.getMemberId()).isEqualTo(1L);
+        assertThat(foundDto1.getBoardId()).isEqualTo(dto1.getBoardId());
+        assertThat(foundDto1.getContent()).isEqualTo(dto1.getContent());
 
-        assertThat(dto2.getMemberId()).isEqualTo(foundDto2.getMemberId());
-        assertThat(dto2.getBoardId()).isEqualTo(foundDto2.getBoardId());
-        assertThat(dto2.getContent()).isEqualTo(foundDto2.getContent());
+        assertThat(foundDto2.getMemberId()).isEqualTo(1L);
+        assertThat(foundDto2.getBoardId()).isEqualTo(dto2.getBoardId());
+        assertThat(foundDto2.getContent()).isEqualTo(dto2.getContent());
     }
 
     // 댓글 수정
     @Test
     void update() {
         CommentCreateDTO dto = new CommentCreateDTO();
-        dto.setMemberId(1L);
+//        dto.setMemberId(1L);
         dto.setBoardId(1L);
         dto.setContent("첫번째 댓글입니다");
 
-        Long commentId = commentService.create(dto);
+        Long commentId = commentService.create(1L, dto);
 
         CommentUpdateDTO updateDTO = new CommentUpdateDTO();
         updateDTO.setContent("수정한 댓글입니다");
@@ -95,11 +95,11 @@ class CommentServiceTest {
     @Test
     void delete() {
         CommentCreateDTO dto = new CommentCreateDTO();
-        dto.setMemberId(1L);
+//        dto.setMemberId(1L);
         dto.setBoardId(1L);
         dto.setContent("첫번째 댓글입니다");
 
-        Long commentId = commentService.create(dto);
+        Long commentId = commentService.create(1L, dto);
 
         commentService.delete(commentId);
 
@@ -229,7 +229,7 @@ class CommentServiceTest {
                 .isInstanceOf(NoSuchElementException.class);
     }
 
-    // 새로운 댓글에 좋아요를 누른 경우
+    // 새로운 댓글에 좋아요를 누르고, 다시 한번 눌러 좋아요를 취소한 경우
     @Test
     void like() {
         Member member = Member.builder().name("testMember1").build();
@@ -242,30 +242,14 @@ class CommentServiceTest {
         em.flush();
         em.clear();
 
-        commentService.like(comment.getId());
-        em.flush();
+        commentService.like(member.getId(), comment.getId());
 
-        CommentDTO dto = commentService.findOne(comment.getId());
-        assertThat(dto.getLikeCount()).isEqualTo(1);
-    }
+        CommentDTO like = commentService.findOne(comment.getId());
+        assertThat(like.getLikeCount()).isEqualTo(1);
 
-    // 같은 사용자가 같은 댓글에 좋아요를 두번 누른 경우
-    @Test
-    void unlike() {
-        Member member = Member.builder().name("testMember1").build();
-        Board board = Board.builder().member(member).content("testBoard").build();
-        Comment comment = Comment.builder().member(member).board(board).content("testComment").build();
-        em.persist(member);
-        em.persist(board);
-        em.persist(comment);
+        commentService.like(member.getId(),comment.getId());
 
-        em.flush();
-        em.clear();
-
-        commentService.like(comment.getId());
-        commentService.like(comment.getId());
-
-        CommentDTO dto = commentService.findOne(comment.getId());
-        assertThat(dto.getLikeCount()).isEqualTo(0);
+        CommentDTO unlike = commentService.findOne(comment.getId());
+        assertThat(unlike.getLikeCount()).isEqualTo(0);
     }
 }

@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ving.vingterview.annotation.LoginMember;
+import ving.vingterview.dto.auth.SessionMember;
 import ving.vingterview.dto.comment.*;
 import ving.vingterview.service.comment.CommentService;
 
@@ -29,8 +31,9 @@ public class CommentController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<CommentResponseDTO> create(@RequestBody CommentCreateDTO commentCreateDTO) {
-        return new ResponseEntity<>(new CommentResponseDTO(commentService.create(commentCreateDTO)), HttpStatus.CREATED);
+    public ResponseEntity<CommentResponseDTO> create(@RequestBody CommentCreateDTO commentCreateDTO,
+                                                     @LoginMember SessionMember member) {
+        return new ResponseEntity<>(new CommentResponseDTO(commentService.create(member.getId(), commentCreateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -52,7 +55,8 @@ public class CommentController {
 
     @GetMapping("/{id}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void like(@PathVariable Long id) {
-        commentService.like(id);
+    public void like(@PathVariable Long id,
+                     @LoginMember SessionMember member) {
+        commentService.like(member.getId(), id);
     }
 }

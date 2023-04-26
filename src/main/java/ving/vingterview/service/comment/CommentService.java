@@ -36,11 +36,11 @@ public class CommentService {
      * @param commentCreateDTO
      * @return
      */
-    public Long create(CommentCreateDTO commentCreateDTO) {
+    public Long create(Long memberId, CommentCreateDTO commentCreateDTO) {
         Board board = boardRepository.findById(commentCreateDTO.getBoardId())
                 .orElseThrow(()->new NoSuchElementException("게시글 없음"));
-        Member member = memberRepository.findById(commentCreateDTO.getMemberId())
-                .orElseThrow(()->new NoSuchElementException("회원 없음"));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("회원 없음"));
         String content = commentCreateDTO.getContent();
 
         Comment comment = new Comment(board, member, content);
@@ -128,16 +128,16 @@ public class CommentService {
     }
 
     /**
-     * 좋아요
-     * @param id
+     * 좋야요
+     * @param memberId
+     * @param boardId
      */
-    public void like(Long id) {
-        Long member_id = 1L;
-        Optional<CommentMemberLike> like = likeRepository.findByCommentIdAndMemberId(id, member_id);
+    public void like(Long memberId, Long boardId) {
+        Optional<CommentMemberLike> like = likeRepository.findByCommentIdAndMemberId(boardId, memberId);
 
         if (like.isEmpty()) {
-            Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다."));
-            Member member = memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("해당 멤버를 찾을 수 없습니다."));
+            Comment comment = commentRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다."));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException("해당 멤버를 찾을 수 없습니다."));
             likeRepository.save(new CommentMemberLike(comment, member));
 
         } else {

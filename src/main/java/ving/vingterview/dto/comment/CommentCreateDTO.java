@@ -6,6 +6,6 @@ import lombok.Data;
 public class CommentCreateDTO {
 
     private Long boardId;
-    private Long memberId;
+//    private Long memberId;
     private String content;
 }
