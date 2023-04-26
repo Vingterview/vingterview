@@ -33,9 +33,8 @@ public class BoardService {
 
 
     @Transactional
-    public Long save(BoardCreateDTO boardCreateDTO) {
+    public Long save(Long memberId, BoardCreateDTO boardCreateDTO) {
 
-        Long memberId = boardCreateDTO.getMemberId();
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다"));
 
         Long questionId = boardCreateDTO.getQuestionId();
@@ -81,14 +80,14 @@ public class BoardService {
     }
 
     @Transactional
-    public void like(Long board_id,Long member_id) {
+    public void like(Long memberId, Long boardId) {
 
-        Optional<BoardMemberLike> boardMemberLike = boardMemberLikeRepository.findByMemberIdAndBoardId(member_id, board_id);
+        Optional<BoardMemberLike> boardMemberLike = boardMemberLikeRepository.findByMemberIdAndBoardId(memberId, boardId);
 
         if (boardMemberLike.isEmpty()) {
-            log.info("create like , board_id:  {} , member_id: {}", board_id, member_id);
-            Board board = boardRepository.findById(board_id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-            Member member = memberRepository.findById(member_id).orElseThrow(() -> new RuntimeException("해당 멤버를 찾을 수 없습니다."));
+            log.info("create like , board_id:  {} , member_id: {}", boardId, memberId);
+            Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 멤버를 찾을 수 없습니다."));
             boardMemberLikeRepository.save(new BoardMemberLike(board, member));
 
         }else{

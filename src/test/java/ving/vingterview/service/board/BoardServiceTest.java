@@ -65,10 +65,9 @@ class BoardServiceTest {
         em.flush();
 
         BoardCreateDTO boardCreateDTO = new BoardCreateDTO();
-        boardCreateDTO.setMemberId(member.getId());
         boardCreateDTO.setQuestionId(question.getId());
 
-        Long boardId = boardService.save(boardCreateDTO);
+        Long boardId = boardService.save(member.getId(), boardCreateDTO);
 
         Board board = em.find(Board.class, boardId);
 
@@ -98,9 +97,8 @@ class BoardServiceTest {
         List<Long> boardIds = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             BoardCreateDTO boardCreateDTO = new BoardCreateDTO();
-            boardCreateDTO.setMemberId(member.getId());
             boardCreateDTO.setQuestionId(question.getId());
-            Long boardId = boardService.save(boardCreateDTO);
+            Long boardId = boardService.save(member.getId(), boardCreateDTO);
             boardIds.add(boardId);
         }
 
@@ -133,10 +131,9 @@ class BoardServiceTest {
         em.persist(question);
 
         BoardCreateDTO boardCreateDTO = new BoardCreateDTO();
-        boardCreateDTO.setMemberId(member.getId());
         boardCreateDTO.setQuestionId(question.getId());
 
-        Long savedId = boardService.save(boardCreateDTO);
+        Long savedId = boardService.save(member.getId(), boardCreateDTO);
 
         BoardDTO boardDTO = boardService.findById(savedId);
         Long findId = boardDTO.getBoardId();
@@ -192,18 +189,18 @@ class BoardServiceTest {
         em.persist(question);
         em.persist(board);
         
-        boardService.like(board.getId(),member.getId());
+        boardService.like(member.getId(), board.getId());
 
         BoardMemberLike findLike = boardMemberLikeRepository.findByMemberIdAndBoardId(member.getId(), board.getId()).get();
         assertThat(findLike.getLikeStatus()).isEqualTo(LikeType.LIKE);
 
-        boardService.like(board.getId(),member.getId());
+        boardService.like(member.getId(), board.getId());
         assertThat(findLike.getLikeStatus()).isEqualTo(LikeType.UNLIKE);
 
-        boardService.like(board.getId(),member.getId());
+        boardService.like(member.getId(), board.getId());
         assertThat(findLike.getLikeStatus()).isEqualTo(LikeType.LIKE);
 
-        boardService.like(board.getId(),member.getId());
+        boardService.like(member.getId(), board.getId());
         assertThat(findLike.getLikeStatus()).isEqualTo(LikeType.UNLIKE);
 
 

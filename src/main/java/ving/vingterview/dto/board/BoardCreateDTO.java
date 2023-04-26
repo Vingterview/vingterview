@@ -6,7 +6,7 @@ import lombok.Data;
 public class BoardCreateDTO {
 
     private Long questionId;
-    private Long memberId;
+//    private Long memberId;
     private String content;
     private String videoUrl;
 }

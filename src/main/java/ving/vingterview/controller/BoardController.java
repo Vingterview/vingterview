@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ving.vingterview.annotation.LoginMember;
+import ving.vingterview.dto.auth.SessionMember;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
@@ -53,9 +55,10 @@ public class BoardController {
     }
 
     @PostMapping("")
-    public ResponseEntity<BoardResponseDTO> create(@RequestBody BoardCreateDTO boardCreateDTO) {
+    public ResponseEntity<BoardResponseDTO> create(@RequestBody BoardCreateDTO boardCreateDTO,
+                                                   @LoginMember SessionMember member) {
 
-        Long boardId = boardService.save(boardCreateDTO);
+        Long boardId = boardService.save(member.getId(), boardCreateDTO);
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
 
@@ -89,8 +92,8 @@ public class BoardController {
 
     @GetMapping("/{id}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void like(@PathVariable(name = "id") Long id) {
-        boardService.like(id,1L);
+    public void like(@PathVariable(name = "id") Long id, @LoginMember SessionMember member) {
+        boardService.like(member.getId(), id);
     }
 
     @PostMapping("/video")
