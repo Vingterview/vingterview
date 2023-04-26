@@ -89,6 +89,7 @@ class QuestionServiceTest {
     void clear() {
         members.clear();
         questions.clear();
+        tags.clear();
     }
 
     // 질문 생성
@@ -101,11 +102,10 @@ class QuestionServiceTest {
         tags.add(12L);
 
         QuestionCreateDTO dto = new QuestionCreateDTO();
-        dto.setMemberId(1L);
         dto.setQuestionContent("testQuestion1");
         dto.setTags(tags);
 
-        Long questionId = questionService.create(dto);
+        Long questionId = questionService.create(1L, dto);
 
         QuestionDTO foundDTO = questionService.findOne(questionId);
 
@@ -123,11 +123,10 @@ class QuestionServiceTest {
         tags.add(8L);
 
         QuestionCreateDTO dto = new QuestionCreateDTO();
-        dto.setMemberId(100L);
         dto.setQuestionContent("testQuestion1");
         dto.setTags(tags);
 
-        assertThatThrownBy(() -> questionService.create(dto)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.create(100L, dto)).isInstanceOf(NoSuchElementException.class);
     }
 
     // 태그가 없는 경우
@@ -137,11 +136,10 @@ class QuestionServiceTest {
         tags.add(100L);
 
         QuestionCreateDTO dto = new QuestionCreateDTO();
-        dto.setMemberId(1L);
         dto.setQuestionContent("testQuestion1");
         dto.setTags(tags);
 
-        assertThatThrownBy(() -> questionService.create(dto)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.create(1L, dto)).isInstanceOf(NoSuchElementException.class);
     }
 
     // 단건 조회 - 결과가 없는 경우
@@ -230,13 +228,14 @@ class QuestionServiceTest {
     // 스크랩, 스크랩 취소
     @Test
     void scrap() {
+        Member member = members.get(0);
         Question question = Question.builder()
                 .content("testQuestion")
-                .member(members.get(0))
+                .member(member)
                 .build();
         em.persist(question);
 
-        questionService.scrap(question.getId());
+        questionService.scrap(member.getId(), question.getId());
 
         QuestionDTO scrap = questionService.findOne(question.getId());
         assertThat(scrap.getScrapCount()).isEqualTo(1);
@@ -244,7 +243,7 @@ class QuestionServiceTest {
         em.flush();
         em.clear();
 
-        questionService.scrap(question.getId());
+        questionService.scrap(member.getId(), question.getId());
         QuestionDTO unScrap = questionService.findOne(question.getId());
         assertThat(unScrap.getScrapCount()).isEqualTo(0);
     }

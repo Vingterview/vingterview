@@ -8,6 +8,6 @@ import java.util.List;
 public class QuestionCreateDTO {
 
     private List<Long> tags;
-    private Long memberId;
+//    private Long memberId;
     private String questionContent;
 }

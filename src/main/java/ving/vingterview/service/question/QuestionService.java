@@ -34,11 +34,12 @@ public class QuestionService {
 
     /**
      * 질문 생성
+     * @param memberId
      * @param questionCreateDTO
      * @return
      */
-    public Long create(QuestionCreateDTO questionCreateDTO) {
-        Member member = memberRepository.findById(questionCreateDTO.getMemberId())
+    public Long create(Long memberId, QuestionCreateDTO questionCreateDTO) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
 
         Question question = questionRepository.save(
@@ -125,15 +126,15 @@ public class QuestionService {
 
     /**
      * 질문 스크랩
-     * @param id
+     * @param memberId
+     * @param questionId
      */
-    public void scrap(Long id) {
-        Long member_id = 1L;
-        Optional<QuestionMemberScrap> scrap = scrapRepository.findByQuestionIdAndMemberId(id, member_id);
+    public void scrap(Long memberId, Long questionId) {
+        Optional<QuestionMemberScrap> scrap = scrapRepository.findByQuestionIdAndMemberId(questionId, memberId);
 
         if (scrap.isEmpty()) {
-            Question question = questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("질문 없음"));
-            Member member = memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
+            Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("질문 없음"));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
             QuestionMemberScrap questionMemberScrap = new QuestionMemberScrap(question, member);
             questionMemberScrap.setQuestion(question);
             scrapRepository.save(questionMemberScrap);
