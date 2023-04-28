@@ -2,14 +2,18 @@ package ving.vingterview.service.file;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import ving.vingterview.domain.file.UploadFile;
-import ving.vingterview.domain.file.VideoFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 
@@ -28,23 +32,34 @@ public class VideoStoreMemory implements FileStore {
 
 
     @Override
-    public UploadFile storeFile(String originalFileName) {
+    public void uploadFile(MultipartFile multipartFile, String storeName) {
 
-        String storeFileName = createStoreFileName(originalFileName);
-        return new VideoFile(originalFileName, storeFileName);
     }
 
     @Override
     @Async("threadPoolTaskExecutor")
-    public void uploadFile(MultipartFile multipartFile, String storeFileName) {
+    public void uploadFile(String storeFileName) {
 
         try {
             log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
-            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("videoPath", getFullPath(storeFileName));
+            body.add("name", storeFileName);
+            body.add("bucket", "bucketAddress");
+            HttpEntity<?> request = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:5000/boards/video", request, String.class);
+
+            log.info("Response from flask server {}", response);
             log.info("Ended uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
 
-        } catch (IOException e) {
-            log.warn("업로드 폴더 생성 실패 {}", e.getMessage());
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         }
     }
 
