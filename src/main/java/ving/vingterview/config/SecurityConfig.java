@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import ving.vingterview.service.auth.OAuth2MemberService;
 
 @Configuration
@@ -23,11 +24,12 @@ public class SecurityConfig {
                 .headers().frameOptions().disable()
                 .and()
                     .authorizeHttpRequests()
-                        .requestMatchers("/login", "/", "/logout-success").permitAll()
+                        .requestMatchers("/login", "/auth", "/logout-success").permitAll()
                         .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                        .loginPage("/login")
+                    .exceptionHandling()
+//                        .authenticationEntryPoint((request, response, exception) -> response.sendRedirect("/login"))
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .and()
                     .logout()
                         .logoutSuccessUrl("/logout-success")

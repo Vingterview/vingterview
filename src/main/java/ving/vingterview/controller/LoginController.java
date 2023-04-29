@@ -1,5 +1,6 @@
 package ving.vingterview.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ving.vingterview.annotation.LoginMember;
 import ving.vingterview.dto.auth.SessionMember;
 import ving.vingterview.dto.login.LoginResponseDTO;
+import ving.vingterview.dto.login.LoginUrlDTO;
 
 @Slf4j
 @RestController
@@ -26,5 +28,15 @@ public class LoginController {
     @GetMapping("/logout-success")
     public ResponseEntity<String> logoutSuccess() {
         return ResponseEntity.ok("logout");
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<LoginUrlDTO> login(HttpServletRequest request) {
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+
+        LoginUrlDTO dto = new LoginUrlDTO();
+        dto.setLoginUrl(baseUrl + "/oauth2/authorization/google");
+
+        return ResponseEntity.ok(dto);
     }
 }

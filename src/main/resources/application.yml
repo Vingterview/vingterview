@@ -29,8 +29,6 @@ logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
 
-
-
 img:
 #  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\img\
   dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/img/

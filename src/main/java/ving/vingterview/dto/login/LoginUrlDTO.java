@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class LoginDTO {
+public class LoginUrlDTO {
 
-    @JsonProperty("id")
-    private String loginId;
-    private String password;
+    private String loginUrl;
 
 }

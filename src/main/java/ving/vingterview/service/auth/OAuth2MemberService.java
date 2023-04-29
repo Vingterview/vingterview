@@ -37,6 +37,7 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest,
         log.info("UserNameAttributeName: {}", userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName());
         log.info("ClientName: {}", userRequest.getClientRegistration().getClientName());
         log.info("AdditionalParameters: {}", userRequest.getAdditionalParameters().values());
+        log.info("AccessTokenIssuedAt: {}", userRequest.getAccessToken().getIssuedAt());
         //////////////////////////////////////////////////////////////////////////////////////////////////
 
         OAuth2UserService delegate = new DefaultOAuth2UserService();

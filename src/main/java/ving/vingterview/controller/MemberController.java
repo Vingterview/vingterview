@@ -88,6 +88,4 @@ public class MemberController {
 
         return new ResponseEntity<>(memberResponseDTO, HttpStatus.CREATED);
     }
-
-
 }
