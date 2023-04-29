@@ -1,8 +1,7 @@
-package ving.vingterview.dto.auth;
+package ving.vingterview.auth.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import ving.vingterview.domain.member.Member;
 
 import java.util.Map;
 
@@ -29,13 +28,6 @@ public class OAuthAttributes {
                 .email(attributes.get("email").toString())
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
-                .build();
-    }
-
-    public Member toEntity() {
-        return Member.builder()
-                .name(name)
-                .email(email)
                 .build();
     }
 }

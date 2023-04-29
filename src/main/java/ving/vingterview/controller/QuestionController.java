@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ving.vingterview.annotation.LoginMember;
-import ving.vingterview.dto.auth.SessionMember;
+import ving.vingterview.annotation.LoginMemberId;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionListDTO;
 import ving.vingterview.dto.question.QuestionResponseDTO;
@@ -46,13 +45,13 @@ public class QuestionController {
 
     @PostMapping("")
     public ResponseEntity<QuestionResponseDTO> create(@RequestBody QuestionCreateDTO questionCreateDTO,
-                                                      @LoginMember SessionMember member) {
-        return new ResponseEntity<>(new QuestionResponseDTO(questionService.create(member.getId(), questionCreateDTO)), HttpStatus.CREATED);
+                                                      @LoginMemberId Long memberId) {
+        return new ResponseEntity<>(new QuestionResponseDTO(questionService.create(memberId, questionCreateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/scrap")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void scrap(@PathVariable Long id, @LoginMember SessionMember member) {
-        questionService.scrap(member.getId(), id);
+    public void scrap(@PathVariable Long id, @LoginMemberId Long memberId) {
+        questionService.scrap(memberId, id);
     }
 }
