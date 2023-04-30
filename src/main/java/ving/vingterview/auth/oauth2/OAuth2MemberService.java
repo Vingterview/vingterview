@@ -19,7 +19,7 @@ public class OAuth2MemberService implements OAuth2UserService<OAuth2UserRequest,
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
