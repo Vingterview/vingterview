@@ -14,4 +14,17 @@ public class MemberDTO {
     private String nickname;
     private String profileImageUrl;
 
+
+    public MemberDTO() {
+    }
+
+    public MemberDTO(Long memberId, String id, String name, int age, String email, String nickname, String profileImageUrl) {
+        this.memberId = memberId;
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
 }

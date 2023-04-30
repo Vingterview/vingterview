@@ -15,6 +15,7 @@ import ving.vingterview.service.file.FileStore;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 
 @Slf4j
@@ -51,6 +52,25 @@ public class BoardController {
         BoardListDTO boardListDTO = boardService.findByQuestion(question_id);
 
         return ResponseEntity.ok(boardListDTO);
+    }
+
+    @GetMapping(value = "", params = {"order_by","sort"})
+    public ResponseEntity<BoardListDTO> filterByOrder(@RequestParam(name = "order_by") String order,@RequestParam(name="sort") String sort) {
+
+        if (order == "좋아요") {
+            boardService.orderByLike(sort);
+        } else if (order =="댓글") {
+
+        } else if (order == "최신") {
+
+        }
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(new ArrayList<>());
+
+        return ResponseEntity.badRequest().body(boardListDTO);
+
+
     }
 
     @PostMapping("")
@@ -97,7 +117,7 @@ public class BoardController {
 
     @PostMapping("/video")
     public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO) {
-        if (!videoDTO.getVideo().isEmpty() && videoDTO.getVideo() != null) {
+        if (videoDTO.getVideo() != null && !videoDTO.getVideo().isEmpty()) {
             String storeFileName = videoStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
@@ -121,7 +141,7 @@ public class BoardController {
 
         VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
         videoResponseDTO.setVideoUrl("잘못된 접근입니다.");
-        return ResponseEntity.badRequest()
-                .body(videoResponseDTO);
+        return new ResponseEntity<>(videoResponseDTO, HttpStatus.BAD_REQUEST);
+
     }
 }

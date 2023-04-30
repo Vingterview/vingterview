@@ -83,7 +83,7 @@ public class MemberService {
     public MemberListDTO findAll() {
         List<Member> members = memberRepository.findAll();
         MemberListDTO memberListDTO = new MemberListDTO();
-        memberListDTO.setMembers(members.stream().map(m -> new MemberDTO()).toList());
+        memberListDTO.setMembers(members.stream().map(m -> new MemberDTO(m.getId(),m.getLoginId(),m.getName(),m.getAge(),m.getEmail(),m.getNickname(),m.getProfileImageUrl())).toList());
         return memberListDTO;
     }
 

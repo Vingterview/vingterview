@@ -179,7 +179,10 @@ public class BoardService {
     }
 
 
+    public BoardListDTO orderByLike(String sort) {
+//        boardRepository.orderByLike(sort);
 
 
-
+        return null;
+    }
 }
