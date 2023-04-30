@@ -98,6 +98,6 @@ jobs:
         --application-name vingterview \
         --deployment-group-name vingterview-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=deploy-vingterview.bundleType=zip,key=vingterview-build.zip \
+        --s3-location bucket=deploy-vingterview,bundleType=zip,key=vingterview-build.zip \
         --region ap-northeast-2
         
