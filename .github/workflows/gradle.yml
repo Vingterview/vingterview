@@ -36,6 +36,7 @@ jobs:
         cd ./src/main/resources
         rm ./application.yml
         mv ./application-deploy.yml ./application.yml
+        cat application.yml
           
     - name: Make application-secret.yml
       env:
@@ -61,6 +62,7 @@ jobs:
         jwt:
           secret: $JWT_TOKEN_SECRET
         " > application-secret.yml
+        cat application-secret.yml
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
