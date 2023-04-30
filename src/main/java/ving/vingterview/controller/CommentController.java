@@ -18,14 +18,18 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping(params = "board_id")
-    public ResponseEntity<CommentListDTO> findByBoard(@RequestParam(name = "board_id") Long boardId) {
-        CommentListDTO result = commentService.findByBoard(boardId);
+    public ResponseEntity<CommentListDTO> findByBoard(@RequestParam(name = "board_id") Long boardId,
+                                                      @RequestParam(name="page",defaultValue ="0")int page,
+                                                      @RequestParam(name="size", defaultValue="20")int size) {
+        CommentListDTO result = commentService.findByBoard(boardId,page,size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(params = "member_id")
-    public ResponseEntity<CommentListDTO> findByMember(@RequestParam(name = "member_id") Long memberId) {
-        CommentListDTO result = commentService.findByMember(memberId);
+    public ResponseEntity<CommentListDTO> findByMember(@RequestParam(name = "member_id") Long memberId,
+                                                       @RequestParam(name="page",defaultValue ="0")int page,
+                                                       @RequestParam(name="size", defaultValue="20")int size) {
+        CommentListDTO result = commentService.findByMember(memberId,page,size);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

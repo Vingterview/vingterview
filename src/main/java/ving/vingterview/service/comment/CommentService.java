@@ -2,6 +2,9 @@ package ving.vingterview.service.comment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.LikeType;
@@ -70,10 +73,16 @@ public class CommentService {
      * @return
      */
     @Transactional(readOnly = true)
-    public CommentListDTO findByBoard(Long boardId) {
+    public CommentListDTO findByBoard(Long boardId,int page,int size) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("게시글 없음"));
-        List<Comment> comments = commentRepository.findAllByBoard(board);
+
+        /****페이징 추가 부분 ******/
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        Slice<Comment> comments = commentRepository.findSliceByBoard(board,pageRequest);
+        /*****페이징 추가 부분 *****/
+
+
         List<CommentDTO> results = comments.stream()
                 .map(comment -> {
                     Member member = comment.getMember();
@@ -81,7 +90,10 @@ public class CommentService {
                     return convertToCommentDTO(comment, member, board, likeCount);
                 })
                 .toList();
-        return new CommentListDTO(results);
+
+        /*****페이징 추가 부분 *****/
+        return new CommentListDTO(results,page+1,comments.hasNext());
+        /*****페이징 추가 부분 *****/
     }
 
     /**
@@ -90,11 +102,14 @@ public class CommentService {
      * @return
      */
     @Transactional(readOnly = true)
-    public CommentListDTO findByMember(Long memberId) {
+    public CommentListDTO findByMember(Long memberId,int page,int size) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("회원 없음"));
-        List<Comment> comments = commentRepository.findAllByMember(member);
 
+        /****페이징 추가 부분 ******/
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        Slice<Comment> comments = commentRepository.findSliceByMember(member,pageRequest);
+        /*****페이징 추가 부분 *****/
 
         List<CommentDTO> results = comments.stream()
                 .map((comment) -> {
@@ -103,7 +118,10 @@ public class CommentService {
                     return convertToCommentDTO(comment, member, board, likeCount);
                 })
                 .toList();
-        return new CommentListDTO(results);
+
+        /*****페이징 추가 부분 *****/
+        return new CommentListDTO(results,page+1,comments.hasNext());
+        /*****페이징 추가 부분 *****/
     }
 
     /**

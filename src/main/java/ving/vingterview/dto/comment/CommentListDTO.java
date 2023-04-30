@@ -14,4 +14,10 @@ public class CommentListDTO {
 //    public CommentListDTO(List<CommentDTO> comments) {
 //        this.comments = comments;
 //    }
+
+    /**
+     * 페이징 기능 구현 용도
+     */
+    private int nextPage;
+    private boolean hasNext;
 }
