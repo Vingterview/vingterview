@@ -14,7 +14,7 @@ import ving.vingterview.auth.jwt.JwtUserDetails;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
