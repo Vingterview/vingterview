@@ -1,5 +1,8 @@
 package ving.vingterview.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,23 +31,38 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     @Query("select b from Board  b " +
             " join fetch b.member m " +
-            " join fetch b.question  q" +
+            " join fetch b.question  q " +
             " where " +
             " m.id = :memberId")
-    List<Board> findByMemberIdWithMemberQuestion(@Param(value = "memberId") Long memberId);
+    Slice<Board> findByMemberIdWithMemberQuestion(@Param(value = "memberId") Long memberId,Pageable pageable);
 
     @Query("select b from Board  b " +
             " join fetch b.member m " +
-            " join fetch b.question  q" +
+            " join fetch b.question  q " +
             " where " +
             " q.id = :questionId")
-    List<Board> findByQuestionIdWithMemberQuestion(@Param(value = "questionId") Long questionId);
+    Slice<Board> findByQuestionIdWithMemberQuestion(@Param(value = "questionId") Long questionId,Pageable pageable);
 
+    Page<Board> findPageBy(Pageable pageable);
+    Slice<Board> findSliceBy(Pageable pageable);
 
-    List<Board> findByMemberId(Long memberId);
+    @Query("select b from Board b " +
+            " left outer join b.boardMemberLikes bml " +
+            " join fetch b.member m " +
+            " join fetch b.question q " +
+            " group by b.id " +
+            " order by count(bml.id) desc, b.createTime desc ")
+    Slice<Board> orderSliceByLike(Pageable pageable);
 
-
-    List<Board> findByQuestionId(Long questionId);
+    @Query("select b from Board b " +
+            " left outer join b.comments c " +
+            " join fetch b.member m " +
+            " join fetch b.question q " +
+            " group by b.id " +
+            " order by count(c.id) desc, b.createTime desc ")
+    Slice<Board> orderSliceByComment(Pageable pageable);
 
     int countByQuestion(Question question);
+
+
 }
