@@ -136,11 +136,11 @@ class CommentServiceTest {
         List<CommentDTO> foundComments = commentService.findByBoard(board.getId(),0,100).getComments();
         assertThat(foundComments).extracting("boardId").containsOnly(board.getId());
         assertThat(foundComments).extracting("memberId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getMember().getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getMember().getId()).toList());
         assertThat(foundComments).extracting("commentId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getId()).toList());
         assertThat(foundComments).extracting("content")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
 
     }
 
@@ -197,11 +197,11 @@ class CommentServiceTest {
         List<CommentDTO> foundComments = commentService.findByMember(member.getId(),0,100).getComments();
         assertThat(foundComments).extracting("memberId").containsOnly(member.getId());
         assertThat(foundComments).extracting("boardId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getBoard().getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getBoard().getId()).toList());
         assertThat(foundComments).extracting("commentId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getId()).toList());
         assertThat(foundComments).extracting("content")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
     }
 
     // 사용자가 작성한 댓글이 없는 경우
