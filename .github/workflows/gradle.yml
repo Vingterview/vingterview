@@ -9,7 +9,7 @@ name: Spring Boot & Gradle CI/CD
 
 on:
   push:
-    branches: [ "backend", "main" ]
+    branches: [ "backend" ]
 
 permissions:
   contents: read
@@ -29,7 +29,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-        
+    
+    - name: change application.yml
+      run: |
+          rm ./src/main/resources/application.yml
+          mv ./src/main/resources/application-deploy.yml ./src/main/resources/application.yml
+    
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
