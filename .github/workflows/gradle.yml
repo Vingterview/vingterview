@@ -10,7 +10,7 @@ name: Spring Boot & Gradle CI/CD
 on:
   push:
     branches:
-      - backend
+      - main
 
 permissions:
   contents: read
@@ -31,12 +31,60 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
     
-    - name: change application.yml
+    - name: Change application.yml to deploy version
       run: |
-          rm ./src/main/resources/application.yml
-          mv ./src/main/resources/application-deploy.yml ./src/main/resources/application.yml
-    
+        cd ./src/main/resources
+        rm ./application.yml
+        mv ./application-deploy.yml ./application.yml
+          
+    - name: Make application-secret.yml
+      env:
+        GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+        GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+        JWT_TOKEN_SECRET: ${{secrets.JWT_TOKEN_SECRET }}
+      run: |
+        cd ./src/main/resources
+        echo -e \
+        "
+        spring:
+          security:
+            oauth2:
+              client:
+                registration:
+                  google:
+                    client-id: $GOOGLE_OAUTH_CLIENT_ID
+                    cliend-secret: $GOOGLE_OAUTH_CLIENT_SECRET
+                    scope:
+                      - profile
+                      - email
+
+        jwt:
+          secret: $JWT_TOKEN_SECRET
+        " > application-secret.yml
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
+      run: ./gradlew clean build
+    
+    - name: Make Directory for deliver
+      run: mkdir deploy
+    
+    - name: Copy Jar
+      run: cp ./build/libs/*.jar ./deploy/
+    
+    - name : Make zip file
+      run: zip -r -qq -j ./vingterview-build.zip ./deploy
+      
+    - name: Deliver to AWS S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+      run: |
+        aws s3 cp \
+        --region ap-northeast-2 \
+        --acl private \
+        ./vingterview-build.zip s3://deploy-vingterview/
+        
+    
