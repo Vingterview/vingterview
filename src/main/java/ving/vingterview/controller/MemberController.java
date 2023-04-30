@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ving.vingterview.dto.board.VideoResponseDTO;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.service.file.FileStore;
 import ving.vingterview.service.member.MemberService;

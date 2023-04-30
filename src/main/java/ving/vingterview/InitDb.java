@@ -96,6 +96,15 @@ public class InitDb {
             em.persist(question4);
             em.persist(question5);
 
+            for (int i = 0; i < 100; i++) {
+                Question question = createQuestion(null, "forPaging" + i);
+                em.persist(question);
+                em.persist(createTagQuestion(tag1,question));
+                em.persist(createTagQuestion(tag4,question));
+                em.persist(createTagQuestion(tag9,question));
+
+            }
+
             Board board1 = createBoard(question1,member1,"본문1","url1");
             Board board2 = createBoard(question4,member1,"본문2","url2");
             Board board3 = createBoard(question2,member2,"본문3","url3");
@@ -106,6 +115,11 @@ public class InitDb {
             em.persist(board3);
             em.persist(board4);
 
+            for (int i = 0; i < 1000; i++) {
+                Board board = createBoard(question2,member3,"forPaging","forPaging");
+                em.persist(board);
+            }
+
             Comment comment1 = createComment(board1, member1, "댓글1");
             Comment comment2 = createComment(board1, member2, "댓글2");
             Comment comment3 = createComment(board2, member3, "댓글3");
@@ -115,6 +129,15 @@ public class InitDb {
             em.persist(comment2);
             em.persist(comment3);
             em.persist(comment4);
+
+            for (int i = 0; i < 10; i++) {
+                Comment comment = createComment(board1, member1, "forPaging");
+                em.persist(comment);
+            }
+            for (int i = 0; i < 20; i++) {
+                Comment comment = createComment(board2, member1, "forPaging");
+                em.persist(comment);
+            }
 
 
             em.persist(createBoardMemberLike(board3, member1));

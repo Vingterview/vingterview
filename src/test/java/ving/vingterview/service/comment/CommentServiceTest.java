@@ -133,14 +133,14 @@ class CommentServiceTest {
             comments.add(comment);
         }
 
-        List<CommentDTO> foundComments = commentService.findByBoard(board.getId()).getComments();
+        List<CommentDTO> foundComments = commentService.findByBoard(board.getId(),0,100).getComments();
         assertThat(foundComments).extracting("boardId").containsOnly(board.getId());
         assertThat(foundComments).extracting("memberId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getMember().getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getMember().getId()).toList());
         assertThat(foundComments).extracting("commentId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getId()).toList());
         assertThat(foundComments).extracting("content")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
 
     }
 
@@ -152,7 +152,7 @@ class CommentServiceTest {
         em.persist(member);
         em.persist(board);
 
-        List<CommentDTO> comments = commentService.findByBoard(board.getId()).getComments();
+        List<CommentDTO> comments = commentService.findByBoard(board.getId(),0,100).getComments();
 
         assertThat(comments.size()).isEqualTo(0);
     }
@@ -165,7 +165,7 @@ class CommentServiceTest {
         em.persist(member);
         em.persist(board);
 
-        assertThatThrownBy(() -> commentService.findByBoard(board.getId() + 100L))
+        assertThatThrownBy(() -> commentService.findByBoard(board.getId() + 100L,0,100))
                 .isInstanceOf(NoSuchElementException.class);
     }
 
@@ -194,14 +194,14 @@ class CommentServiceTest {
             comments.add(comment);
         }
 
-        List<CommentDTO> foundComments = commentService.findByMember(member.getId()).getComments();
+        List<CommentDTO> foundComments = commentService.findByMember(member.getId(),0,100).getComments();
         assertThat(foundComments).extracting("memberId").containsOnly(member.getId());
         assertThat(foundComments).extracting("boardId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getBoard().getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getBoard().getId()).toList());
         assertThat(foundComments).extracting("commentId")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getId()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getId()).toList());
         assertThat(foundComments).extracting("content")
-                .containsExactlyElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
+                .containsExactlyInAnyOrderElementsOf(comments.stream().map(comment -> comment.getContent()).toList());
     }
 
     // 사용자가 작성한 댓글이 없는 경우
@@ -212,7 +212,7 @@ class CommentServiceTest {
         em.persist(member);
         em.persist(board);
 
-        List<CommentDTO> comments = commentService.findByMember(member.getId()).getComments();
+        List<CommentDTO> comments = commentService.findByMember(member.getId(),0,100).getComments();
 
         assertThat(comments.size()).isEqualTo(0);
     }
@@ -225,7 +225,7 @@ class CommentServiceTest {
         em.persist(member);
         em.persist(board);
 
-        assertThatThrownBy(() -> commentService.findByMember(member.getId() + 100L))
+        assertThatThrownBy(() -> commentService.findByMember(member.getId() + 100L,0,100))
                 .isInstanceOf(NoSuchElementException.class);
     }
 

@@ -2,6 +2,9 @@ package ving.vingterview.service.board;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.board.Board;
@@ -97,20 +100,33 @@ public class BoardService {
 
     }
 
+    /**
+     *
+     * @param page 현재 페이지
+     * @param size 페이지 크기
+     * @return BoardListDTO
+     * 최근 생성된 게시물 순
+     */
+    public BoardListDTO findAll(int page,int size,boolean desc) {
+        PageRequest pageRequest;
+        if (desc) {
+            pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        }else{
+            pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
+        }
 
-    public BoardListDTO findAll() {
-        List<Board> boards = boardRepository.findAll();
-        List<BoardDTO> boardDTOList = boards.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
-
+        Slice<Board> boardSlice = boardRepository.findSliceBy(pageRequest);
+        List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
         BoardListDTO boardListDTO = new BoardListDTO();
         boardListDTO.setBoards(boardDTOList);
+        boardListDTO.setHasNext(boardSlice.hasNext());
+        boardListDTO.setNextPage(page + 1); // 최대 페이지 넘게 요청하면 애초에 아무것도 반환이 안 됨.
 
         return boardListDTO;
     }
 
-
-    public BoardListDTO findByMember(Long memberId) {
+    public BoardListDTO findByMember(Long memberId, int page,int size) {
 
         /**
          * 92ms
@@ -124,33 +140,69 @@ public class BoardService {
         /**
          * 81ms
          */
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
 
-        List<BoardDTO> boardDTOList = boardRepository.findByMemberIdWithMemberQuestion(memberId)
-                .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+        Slice<Board> boardSlice = boardRepository.findByMemberIdWithMemberQuestion(memberId,pageRequest);
+
+        List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
 
         BoardListDTO boardListDTO = new BoardListDTO();
         boardListDTO.setBoards(boardDTOList);
+        boardListDTO.setHasNext(boardSlice.hasNext());
+        boardListDTO.setNextPage(page+1);
+
 
         return boardListDTO;
 
     }
 
-    public BoardListDTO findByQuestion(Long questionId) {
+    public BoardListDTO findByQuestion(Long questionId,int page,int size) {
 
-/*        List<Long> boardIds = boardRepository.findByQuestionId(questionId)
-                .stream().map(board -> board.getId()).collect(Collectors.toList());*/
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
 
-        List<BoardDTO> boardDTOList = boardRepository.findByQuestionIdWithMemberQuestion(questionId)
-                .stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+        Slice<Board> boardSlice = boardRepository.findByQuestionIdWithMemberQuestion(questionId,pageRequest);
+        List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
 
         BoardListDTO boardListDTO = new BoardListDTO();
         boardListDTO.setBoards(boardDTOList);
+        boardListDTO.setHasNext(boardSlice.hasNext());
+        boardListDTO.setNextPage(page+1);
 
         return boardListDTO;
     }
 
+
+    public BoardListDTO orderByLike(int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Slice<Board> boardSlice = boardRepository.orderSliceByLike(pageRequest);
+        List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(boardDTOList);
+        boardListDTO.setHasNext(boardSlice.hasNext());
+        boardListDTO.setNextPage(page+1);
+
+        return boardListDTO;
+
+    }
+
+    public BoardListDTO orderByComment(int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Slice<Board> boardSlice = boardRepository.orderSliceByComment(pageRequest);
+        List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(boardDTOList);
+        boardListDTO.setHasNext(boardSlice.hasNext());
+        boardListDTO.setNextPage(page+1);
+
+        return boardListDTO;
+
+    }
 
     private BoardDTO transferBoardDTO(Board board) {
 
@@ -179,10 +231,5 @@ public class BoardService {
     }
 
 
-    public BoardListDTO orderByLike(String sort) {
-//        boardRepository.orderByLike(sort);
 
-
-        return null;
-    }
 }

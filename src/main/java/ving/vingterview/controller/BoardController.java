@@ -29,18 +29,21 @@ public class BoardController {
     private final FileStore videoStore;
 
     @GetMapping(value = "")
-    public ResponseEntity<BoardListDTO> boards() {
+    public ResponseEntity<BoardListDTO> boards(@RequestParam(name="page",defaultValue ="0")int page,
+                                               @RequestParam(name="size", defaultValue="20")int size) {
 
-        BoardListDTO boardListDTO = boardService.findAll();
+        BoardListDTO boardListDTO = boardService.findAll(page,size,true);
 
         return ResponseEntity.ok(boardListDTO);
     }
 
     @GetMapping(value = "", params = "member_id")
-    public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id) {
+    public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id,
+                                                       @RequestParam(name="page", defaultValue ="0")int page,
+                                                       @RequestParam(name="size", defaultValue="20")int size) {
 
         Long start = System.currentTimeMillis();
-        BoardListDTO boardListDTO = boardService.findByMember(member_id);
+        BoardListDTO boardListDTO = boardService.findByMember(member_id,page,size);
         Long end = System.currentTimeMillis();
         log.info("findByMember {}", end-start);
 
@@ -48,25 +51,36 @@ public class BoardController {
     }
 
     @GetMapping(value = "", params = "question_id")
-    public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id) {
-        BoardListDTO boardListDTO = boardService.findByQuestion(question_id);
+    public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id,
+                                                         @RequestParam(name="page",defaultValue ="0")int page,
+                                                         @RequestParam(name="size", defaultValue="20")int size) {
+        BoardListDTO boardListDTO = boardService.findByQuestion(question_id,page,size);
 
         return ResponseEntity.ok(boardListDTO);
     }
 
-    @GetMapping(value = "", params = {"order_by","sort"})
-    public ResponseEntity<BoardListDTO> filterByOrder(@RequestParam(name = "order_by") String order,@RequestParam(name="sort") String sort) {
+    @GetMapping(value = "", params = "order_by")
+    public ResponseEntity<BoardListDTO> filterByOrder(@RequestParam(name = "order_by") String order_by,
+                                                      @RequestParam(name="page",defaultValue ="0")int page,
+                                                      @RequestParam(name="size", defaultValue="20")int size) {
 
-        if (order == "좋아요") {
-            boardService.orderByLike(sort);
-        } else if (order =="댓글") {
+        if (order_by.equals("like")) {
+            BoardListDTO boardListDTO = boardService.orderByLike(page, size);
+            return ResponseEntity.ok(boardListDTO);
 
-        } else if (order == "최신") {
+        } else if (order_by.equals("comment")) {
+            BoardListDTO boardListDTO = boardService.orderByComment(page, size);
+            return ResponseEntity.ok(boardListDTO);
 
+        } else if (order_by.equals("old")) {
+            BoardListDTO boardListDTO = boardService.findAll(page, size,false);
+            return ResponseEntity.ok(boardListDTO);
         }
 
         BoardListDTO boardListDTO = new BoardListDTO();
         boardListDTO.setBoards(new ArrayList<>());
+        boardListDTO.setHasNext(false);
+        boardListDTO.setNextPage(0);
 
         return ResponseEntity.badRequest().body(boardListDTO);
 

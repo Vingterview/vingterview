@@ -10,4 +10,10 @@ import java.util.List;
 public class QuestionListDTO {
 
     private List<QuestionDTO> questions;
+
+    /**
+     * 페이징 기능 구현 용도
+     */
+    private int nextPage;
+    private boolean hasNext;
 }
