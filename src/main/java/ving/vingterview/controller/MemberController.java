@@ -43,7 +43,7 @@ public class MemberController {
 
     @PostMapping("/image")
     public ResponseEntity<ProfileImageResponseDTO> profileUpload(@ModelAttribute ProfileImageDTO profileImageDTO) {
-        if (!profileImageDTO.getProfileImage().isEmpty() && profileImageDTO.getProfileImage() != null) {
+        if (profileImageDTO.getProfileImage() != null && !profileImageDTO.getProfileImage().isEmpty()) {
             String storeFileName = imgStore.createStoreFileName(profileImageDTO.getProfileImage().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
