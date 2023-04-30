@@ -9,7 +9,8 @@ name: Spring Boot & Gradle CI/CD
 
 on:
   push:
-    branches: [ "backend" ]
+    branches:
+      - backend
 
 permissions:
   contents: read
