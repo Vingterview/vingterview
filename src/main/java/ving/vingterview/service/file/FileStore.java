@@ -11,10 +11,12 @@ public interface FileStore {
 
     String getFullPath(String fileName);
 
-    UploadFile storeFile(String originalFileName);
 
 
     void uploadFile(MultipartFile multipartFile,String storeName);
+
+    void uploadFile(String storeName);
+
 
     void deleteFile(String fileName);
 

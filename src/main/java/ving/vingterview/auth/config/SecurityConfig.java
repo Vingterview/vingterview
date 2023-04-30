@@ -1,20 +1,28 @@
-package ving.vingterview.config;
+package ving.vingterview.auth.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import ving.vingterview.service.auth.OAuth2MemberService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ving.vingterview.auth.jwt.JwtAuthFilter;
+import ving.vingterview.auth.jwt.JwtTokenProvider;
+import ving.vingterview.auth.oauth2.OAuth2MemberService;
+import ving.vingterview.auth.oauth2.OAuth2SuccessHandler;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity  // SpringSecurity 설정 활성화
 public class SecurityConfig {
 
-    private final OAuth2MemberService customOAuth2UserService;
+    private final OAuth2MemberService oAuth2MemberService;
+
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final JwtTokenProvider tokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -23,21 +31,24 @@ public class SecurityConfig {
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                     .authorizeHttpRequests()
-                        .requestMatchers("/login", "/auth", "/logout-success").permitAll()
+                        .requestMatchers("/login", "/auth", "/logout-success", "/token/**").permitAll()
                         .anyRequest().authenticated()
                 .and()
                     .exceptionHandling()
-//                        .authenticationEntryPoint((request, response, exception) -> response.sendRedirect("/login"))
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .and()
                     .logout()
                         .logoutSuccessUrl("/logout-success")
                 .and()
                     .oauth2Login()
-                        .defaultSuccessUrl("/login-success")
+                        .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint()
-                            .userService(customOAuth2UserService);
+                            .userService(oAuth2MemberService);
+
+        http.addFilterBefore(new JwtAuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

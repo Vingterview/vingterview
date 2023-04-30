@@ -2,4 +2,4 @@
 .gradle
 /build
 /out
-application-oauth.yml
+application-security.yml

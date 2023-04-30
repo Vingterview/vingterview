@@ -4,17 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ving.vingterview.annotation.LoginMember;
-import ving.vingterview.dto.auth.SessionMember;
+import ving.vingterview.annotation.LoginMemberId;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
 
-import java.net.URI;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 
@@ -56,9 +55,9 @@ public class BoardController {
 
     @PostMapping("")
     public ResponseEntity<BoardResponseDTO> create(@RequestBody BoardCreateDTO boardCreateDTO,
-                                                   @LoginMember SessionMember member) {
+                                                   @LoginMemberId Long memberId) {
 
-        Long boardId = boardService.save(member.getId(), boardCreateDTO);
+        Long boardId = boardService.save(memberId, boardCreateDTO);
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
 
@@ -92,8 +91,8 @@ public class BoardController {
 
     @GetMapping("/{id}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void like(@PathVariable(name = "id") Long id, @LoginMember SessionMember member) {
-        boardService.like(member.getId(), id);
+    public void like(@PathVariable(name = "id") Long id, @LoginMemberId Long memberId) {
+        boardService.like(memberId, id);
     }
 
     @PostMapping("/video")
@@ -102,7 +101,15 @@ public class BoardController {
             String storeFileName = videoStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
-            videoStore.uploadFile(videoDTO.getVideo(), storeFileName);
+
+            try {
+                videoDTO.getVideo().transferTo(new File(videoStore.getFullPath(storeFileName)));
+                log.info("파일 임시 업로드 성공");
+            } catch (IOException e) {
+                log.warn("파일 임시 업로드 실패 {}" , e.getMessage());
+            }
+
+            videoStore.uploadFile(storeFileName);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
