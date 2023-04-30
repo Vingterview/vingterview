@@ -1,7 +1,6 @@
 package ving.vingterview.service.question;
 
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionDTO;
 import ving.vingterview.dto.tag.TagDTO;
-import ving.vingterview.repository.QuestionMemberScrapRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -145,13 +142,13 @@ class QuestionServiceTest {
     // 단건 조회 - 결과가 없는 경우
     @Test
     void findNothing() {
-        assertThatThrownBy(() -> questionService.findOne(100L)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.findOne(1000L)).isInstanceOf(NoSuchElementException.class);
     }
 
     // 질문 전체 조회
     @Test
     void findAll() {
-        List<QuestionDTO> questionDTOList = questionService.findAll();
+        List<QuestionDTO> questionDTOList = questionService.findAll(0,100,true).getQuestions();
         List<Long> ids = questionDTOList.stream().map(QuestionDTO::getQuestionId).toList();
         List<String> contents = questionDTOList.stream().map(QuestionDTO::getQuestionContent).toList();
 
@@ -163,7 +160,7 @@ class QuestionServiceTest {
     @Test
     void findByMember() {
         Member member = members.get(0);
-        List<QuestionDTO> questionDTOList = questionService.findByMember(member.getId());
+        List<QuestionDTO> questionDTOList = questionService.findByMember(member.getId(),0,100).getQuestions();
 
         List<Long> ids = questionDTOList.stream().map(QuestionDTO::getQuestionId).toList();
 
@@ -175,7 +172,7 @@ class QuestionServiceTest {
     // 없는 회원으로 필터링
     @Test
     void findByWrongMember() {
-        List<QuestionDTO> questionDTOList = questionService.findByMember(100L);
+        List<QuestionDTO> questionDTOList = questionService.findByMember(100L,0,100).getQuestions();
         assertThat(questionDTOList.size()).isEqualTo(0);
     }
 
@@ -186,7 +183,7 @@ class QuestionServiceTest {
 
         List<Long> tagIds = tagList.stream().map(Tag::getId).toList();
 
-        List<QuestionDTO> questionDTOList = questionService.findByTags(tagIds);
+        List<QuestionDTO> questionDTOList = questionService.findByTags(tagIds,0,100).getQuestions();
         questionDTOList.stream().forEach(questionDTO -> {
             List<Long> ids = questionDTO.getTags().stream().map(TagDTO::getTagId).toList();
             assertThat(ids).containsAnyElementsOf(tagIds);
@@ -198,7 +195,7 @@ class QuestionServiceTest {
     void findByWrongTag() {
         List<Long> tagIds = new ArrayList<>(Arrays.asList(100L));
 
-        List<QuestionDTO> questionDTOList = questionService.findByTags(tagIds);
+        List<QuestionDTO> questionDTOList = questionService.findByTags(tagIds,0,100).getQuestions();
 
         assertThat(questionDTOList.size()).isEqualTo(0);
     }
@@ -207,7 +204,7 @@ class QuestionServiceTest {
     @Test
     void findByScrap() {
         Member scrapMember = members.get(0);
-        List<QuestionDTO> questionDTOList = questionService.findByScrap(scrapMember.getId());
+        List<QuestionDTO> questionDTOList = questionService.findByScrap(scrapMember.getId(),0,100).getQuestions();
         List<Long> ids = questionDTOList.stream().map(QuestionDTO::getQuestionId).toList();
         assertThat(ids).containsExactlyInAnyOrderElementsOf(
                 scraps.stream()
@@ -221,7 +218,7 @@ class QuestionServiceTest {
     // 없는 회원으로 필터링
     @Test
     void findByWrongScrapMember() {
-        List<QuestionDTO> questionDTOList = questionService.findByScrap(100L);
+        List<QuestionDTO> questionDTOList = questionService.findByScrap(100L,0,100).getQuestions();
         assertThat(questionDTOList.size()).isEqualTo(0);
     }
 

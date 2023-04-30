@@ -96,6 +96,15 @@ public class InitDb {
             em.persist(question4);
             em.persist(question5);
 
+            for (int i = 0; i < 100; i++) {
+                Question question = createQuestion(null, "forPaging" + i);
+                em.persist(question);
+                em.persist(createTagQuestion(tag1,question));
+                em.persist(createTagQuestion(tag4,question));
+                em.persist(createTagQuestion(tag9,question));
+
+            }
+
             Board board1 = createBoard(question1,member1,"본문1","url1");
             Board board2 = createBoard(question4,member1,"본문2","url2");
             Board board3 = createBoard(question2,member2,"본문3","url3");

@@ -2,6 +2,9 @@ package ving.vingterview.service.question;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.member.Member;
@@ -11,6 +14,7 @@ import ving.vingterview.domain.tag.Tag;
 import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionDTO;
+import ving.vingterview.dto.question.QuestionListDTO;
 import ving.vingterview.dto.tag.TagDTO;
 import ving.vingterview.repository.*;
 
@@ -79,12 +83,21 @@ public class QuestionService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<QuestionDTO> findAll() {
-        List<Question> questions = questionRepository.findAll();
+    public QuestionListDTO findAll(int page,int size,boolean desc) {
+        PageRequest pageRequest;
+        if(desc){
+            pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        }else{
+            pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
 
-        return questions.stream()
+        }
+        Slice<Question> questions = questionRepository.findSliceBy(pageRequest);
+
+        List<QuestionDTO> result = questions.stream()
                 .map(this::convertToQuestionDTO)
                 .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
     }
 
     /**
@@ -93,11 +106,15 @@ public class QuestionService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<QuestionDTO> findByMember(Long memberId) {
-        List<Question> questions = questionRepository.findAllByMemberId(memberId);
-        return questions.stream()
+    public QuestionListDTO findByMember(Long memberId,int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        Slice<Question> questions = questionRepository.findAllByMemberId(memberId,pageRequest);
+
+        List<QuestionDTO> result = questions.stream()
                 .map(this::convertToQuestionDTO)
                 .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
     }
 
 
@@ -107,12 +124,16 @@ public class QuestionService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<QuestionDTO> findByTags(List<Long> tagId) {
-        List<TagQuestion> result = tagQuestionRepository.findAllQuestionByTagId(tagId);
-        return result.stream()
+    public QuestionListDTO findByTags(List<Long> tagId,int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Slice<TagQuestion> questions = tagQuestionRepository.findAllQuestionByTagId(tagId,pageRequest);
+
+        List<QuestionDTO> result = questions.stream()
                 .map(TagQuestion::getQuestion)
                 .map(this::convertToQuestionDTO)
                 .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
     }
 
     /**
@@ -121,13 +142,43 @@ public class QuestionService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<QuestionDTO> findByScrap(Long scrapMemberId) {
-        List<QuestionMemberScrap> result = scrapRepository.findAllQuestionByMemberId(scrapMemberId);
-        return result.stream()
+    public QuestionListDTO findByScrap(Long scrapMemberId,int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Slice<QuestionMemberScrap> questions = scrapRepository.findAllQuestionByMemberId(scrapMemberId,pageRequest);
+        List<QuestionDTO> result = questions.stream()
                 .map(QuestionMemberScrap::getQuestion)
                 .map(this::convertToQuestionDTO)
                 .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
     }
+
+    /**
+     * 스크랩 개수 많은 순으로 조회
+     * @param page
+     * @param size
+     * @return
+     */
+    public QuestionListDTO orderByScrap(int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Slice<Question> questions = questionRepository.orderByScrap(pageRequest);
+        List<QuestionDTO> result = questions.stream()
+                .map(this::convertToQuestionDTO)
+                .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
+    }
+
+    public QuestionListDTO orderByVideo(int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Slice<Question> questions = questionRepository.orderByVideo(pageRequest);
+        List<QuestionDTO> result = questions.stream()
+                .map(this::convertToQuestionDTO)
+                .toList();
+
+        return new QuestionListDTO(result, page + 1, questions.hasNext());
+    }
+
 
     /**
      * 질문 스크랩
@@ -147,6 +198,8 @@ public class QuestionService {
             scrapRepository.delete(scrap.get());
         }
     }
+
+
 
     // 유틸리티 메소드
     /**
@@ -170,7 +223,10 @@ public class QuestionService {
                 .tags(tagDTOList)
                 .boardCount(boardRepository.countByQuestion(question))
                 .scrapCount(scrapRepository.countByQuestion(question))
+                .createTime(question.getCreateTime())
                 .build();
     }
+
+
 
 }
