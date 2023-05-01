@@ -75,6 +75,9 @@ jobs:
     
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy/
+      
+    - name: Copy AppSpec
+      run: cp ./appspec.yml ./deploy/
     
     - name : Make zip file
       run: zip -r -qq -j ./vingterview-build.zip ./deploy
