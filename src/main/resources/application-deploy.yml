@@ -20,7 +20,7 @@ spring:
 
 logging:
   level:
-    root: warn
+    root: info
   file:
     path: ${user.home}/logs/
 
