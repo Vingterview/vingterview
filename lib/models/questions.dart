@@ -7,7 +7,8 @@ class Questions {
   final String questionContent;
   final int scrapCount;
   final int commentCount;
-  final DateTime createTime;
+  final String createTime;
+  final int boardCount;
   final List<Tags> tags;
 
   Questions({
@@ -16,18 +17,23 @@ class Questions {
     this.scrapCount,
     this.commentCount,
     this.createTime,
+    this.boardCount,
     this.tags,
   });
 
   factory Questions.fromJson(Map<String, dynamic> json) {
     List<dynamic> jsonTags = json['tags'];
-    List<Tags> _tags = jsonTags.map((tag) => Tags.fromJson(tag)).toList();
+    // print(jsonTags);
+    List<Tags> _tags = jsonTags != null
+        ? jsonTags.map((tag) => Tags.fromJson(tag)).toList()
+        : [];
     return Questions(
-        questionId: json['questionId'],
-        questionContent: json['questionContent'],
-        scrapCount: json['scrapCount'],
-        commentCount: json['commentCount'],
-        createTime: json['createTime'],
+        questionId: json['question_id'],
+        questionContent: json['question_content'],
+        scrapCount: json['scrap_count'],
+        commentCount: json['comment_count'],
+        createTime: json['create_time'],
+        boardCount: json['board_count'],
         tags: _tags);
   }
 }

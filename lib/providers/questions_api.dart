@@ -4,6 +4,7 @@ import 'package:capston/models/globals.dart';
 import 'package:capston/models/questions.dart';
 import 'package:capston/models/tags.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuestionApi {
   String uri = myUri;
@@ -13,15 +14,20 @@ class QuestionApi {
     // 질문 전체 목록 # 0
     // 0 : 전부(default) , 1 : 태그로 필터링, 2 : 작성자로 필터링,
     // 3 : 스크랩 필터링, 4 : 정렬 (좋아요순, 댓글순, 최신순)
+
     List<String> queries = [
-      "",
+      "?page=1",
       "?tag_id=",
       "?member_id=",
       "?scrap_member_id=",
       "?order_by="
     ];
-    final response =
-        await http.get(Uri.parse('$uri/questions${queries[query]}$param'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    final response = await http.get(
+      Uri.parse('$uri/questions${queries[query]}$param'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes; // 한국어 깨짐 해결용 수정
     List<Questions> questions = [];
@@ -35,17 +41,15 @@ class QuestionApi {
     return questions;
   }
 
-  Future<int> postQuestion(
-      List<Tags> tags, int member_id, String question_content) async {
+  Future<int> postQuestion(List<Tags> tags, String question_content) async {
     // 질문 등록   # 1
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+
     final response = await http.post(
       Uri.parse('$uri/questions'),
-      body: jsonEncode({
-        'tags': tags,
-        'member_id': member_id,
-        'question_content': question_content
-      }),
-      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'tags': tags, 'question_content': question_content}),
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 201) {
@@ -59,8 +63,10 @@ class QuestionApi {
   Future<void> scrap(int id) async {
     // 스크랩  # 3
     var url = Uri.parse('$uri/questions/$id/scrap');
-
-    var response = await http.get(url);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    var response =
+        await http.get(url, headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print("스크랩 성공");

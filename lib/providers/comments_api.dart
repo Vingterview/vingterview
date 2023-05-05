@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:capston/models/globals.dart';
 import 'package:capston/models/comments.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CommentApi {
   String uri = myUri;
@@ -10,9 +11,13 @@ class CommentApi {
     // 댓글 목록 조회 # 0
     // 0 = 게시글로 필터링
     // 1 = 작성자로 필터링
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     List<String> queries = ["?board_id=", "?member_id="];
-    final response =
-        await http.get(Uri.parse('$uri/comments${queries[query]}$id'));
+    final response = await http.get(
+      Uri.parse('$uri/comments${queries[query]}$id'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
     List<Comments> comments = [];
@@ -25,18 +30,18 @@ class CommentApi {
     return comments;
   }
 
-  Future<int> postcomment(int board_id, int member_id, String content) async {
+  Future<int> postcomment(int board_id, String content) async {
     // 댓글 등록   # 1
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     final response = await http.post(
       Uri.parse('$uri/comments'),
       body: jsonEncode({
         'board_id': board_id,
-        'member_id': member_id,
         'content': content,
       }),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Authorization': 'Bearer $token'},
     );
-    print(member_id);
     print(board_id);
     print(content);
 
@@ -51,7 +56,12 @@ class CommentApi {
 
   Future<Comments> getcommentDetail(int id) async {
     // 댓글 조회 # 3
-    final response = await http.get(Uri.parse('$uri/comments/$id'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    final response = await http.get(
+      Uri.parse('$uri/comments/$id'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
     Comments comment;
@@ -66,8 +76,13 @@ class CommentApi {
 
   Future<void> deletecomment(int id) async {
     // 댓글 삭제 # 4
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     var url = Uri.parse('$uri/comments/$id');
-    var response = await http.delete(url);
+    var response = await http.delete(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
 
     if (response.statusCode == 204) {
       print('Delete request succeeded');
@@ -78,8 +93,10 @@ class CommentApi {
 
   Future<int> putRequest(Comments comment) async {
     // 댓글 수정  # 5
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     var url = Uri.parse('$uri/boards/${comment.commentId}');
-    var headers = {'Content-Type': 'application/json'};
+    var headers = {'Authorization': 'Bearer $token'};
     var body = jsonEncode(comment.toJson());
 
     var response = await http.put(url, headers: headers, body: body);
@@ -95,9 +112,14 @@ class CommentApi {
 
   Future<void> like(int id) async {
     // 라이크  # 7
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     var url = Uri.parse('$uri/boards/$id/like');
 
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final bodyBytes = response.bodyBytes;
 
     if (response.statusCode == 200) {

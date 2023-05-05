@@ -96,7 +96,7 @@ class _PostVideoPageState extends State<PostVideoPage> {
                     _formKey.currentState.save();
                     try {
                       int boardId = await _videoApi.postVideo(
-                          _questionId, _memberId, _content, _video_url);
+                          _questionId, _content, _video_url);
                       print(boardId);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Video posted with ID $boardId')));

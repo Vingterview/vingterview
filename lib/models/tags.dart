@@ -13,8 +13,8 @@ class Tags {
 
   factory Tags.fromJson(Map<String, dynamic> json) {
     return Tags(
-      tagId: json['tagId'],
-      tagName: json['tagName'],
+      tagId: json['tag_id'],
+      tagName: json['tag_name'],
     );
   }
 }

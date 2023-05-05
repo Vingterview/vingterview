@@ -72,7 +72,7 @@ class _PostquestionPageState extends State<PostQuestionPage> {
                     _formKey.currentState.save();
                     try {
                       int questionId = await _questionApi.postQuestion(
-                          _tags, _memberId, question_content);
+                          _tags, question_content);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content:
                               Text('question posted with ID $questionId')));

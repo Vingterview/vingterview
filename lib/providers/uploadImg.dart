@@ -30,9 +30,10 @@ class UploadImageApi {
 
     // create the multipart request
     final request = http.MultipartRequest('POST', url)
-      ..fields['userId'] = '123' // 수정해야함
       ..files.add(http.MultipartFile.fromBytes('profileImage', bytes,
           filename: 'example.jpg'));
+
+    // print(request);
 
     // send the request
     final response = await request.send();
@@ -41,8 +42,8 @@ class UploadImageApi {
     // check the response status code
     if (response.statusCode == 201) {
       final responseJson = jsonDecode(responseBody);
-      final videoUrl = responseJson['profile_image_url'];
-      return videoUrl;
+      final imageUrl = responseJson['profile_image_url'];
+      return imageUrl;
     } else {
       throw Exception('Failed to post image');
     }
@@ -68,6 +69,7 @@ class UploadImageApi {
     if (response.statusCode == 201) {
       final responseJson = jsonDecode(responseBody);
       final videoUrl = responseJson['profile_image_url'];
+      print(videoUrl);
       return videoUrl;
     } else {
       throw Exception('Failed to post video');

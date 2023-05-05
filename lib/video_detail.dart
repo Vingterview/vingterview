@@ -31,6 +31,7 @@ class video_detail extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('영상 게시판 글 세부'),
       ),
@@ -136,7 +137,7 @@ class video_detail extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 String commentContent = _commentController.text;
-                commentApi.postcomment(index, memberId, commentContent);
+                commentApi.postcomment(index, commentContent);
                 _commentController.clear();
               },
               child: Text('Submit'),

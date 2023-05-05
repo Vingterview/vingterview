@@ -10,6 +10,7 @@ class QuestionPage extends StatelessWidget {
   QuestionApi questionApi = QuestionApi();
   List<Questions> QuestionList;
   bool isLoading = true;
+  String textData;
 
   Future initQuestion() async {
     QuestionList = await questionApi.getQuestions();
@@ -36,7 +37,7 @@ class QuestionPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () async {
-                    Navigator.pushNamed(context, '/Question_detail',
+                    Navigator.pushNamed(context, '/video_write',
                         arguments: Questionlist[index].questionId);
                   },
                   child: Container(
@@ -55,7 +56,7 @@ class QuestionPage extends StatelessWidget {
                       ],
                     ),
                     child: Text(
-                      Questionlist[index].questionContent,
+                      textData ?? Questionlist[index].questionContent,
                       style: TextStyle(
                         fontSize: 16, // 줄글 글씨 크기
                       ),

@@ -3,6 +3,7 @@ import 'package:capston/models/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capston/models/globals.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserApi {
   String uri = myUri;
@@ -104,7 +105,29 @@ class UserApi {
   }
 
   Future<int> userLogin(String id, String password) async {
-    // 로그인   # 7
+    // 로그인 #7
+    // final String url = '$uri/login';
+    // final headers = {
+    //   'Authorization': 'Bearer $token',
+    //   'Content-Type': 'application/json',
+    // };
+    // final response = await http.get(Uri.parse(url));
+    // if (response.statusCode == 200) {
+    //   // login successful
+    //   return true;
+    //   // use the access token as needed
+    // } else if (response.statusCode == 302) {
+    //   final loginUrl = json.decode(response.body)['login_url'];
+    //   final loginResponse = await http.get(Uri.parse(loginUrl));
+    //   if (loginResponse.statusCode == 200) {
+    //     // login successful
+    //     final accessToken = json.decode(loginResponse.body)['access_token'];
+    //     // use the access token as needed
+    //   } else {
+    //     // handle login error
+    //   }
+    // }
+
     final response = await http.post(
       Uri.parse('$uri/login'),
       body: jsonEncode({
@@ -144,7 +167,7 @@ class UserApi {
       },
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 204) {
       print('Logout successful');
     } else {
       throw Exception('로그 아웃 실패');

@@ -50,14 +50,14 @@ class MyPage extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            Text(
-              user.name,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
+            // Text(
+            //   user.name,
+            //   style: TextStyle(
+            //     color: Colors.black,
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 12,
+            //   ),
+            // ),
             IconButton(
               icon: Icon(Icons.image),
               onPressed: uploadImageApi.pickImage,
@@ -83,7 +83,7 @@ class MyPage extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('태그 목록 확인')),
                   );
-                  Navigator.of(context).pushReplacementNamed('/tag');
+                  Navigator.pushNamed(context, '/tag');
                 }),
           ]));
         }

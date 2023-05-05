@@ -12,6 +12,7 @@ class IndexScreen extends StatefulWidget {
 
 class _IndexScreenState extends State<IndexScreen> {
   int selectIndex = 0;
+  List<String> namelist = ["홈", "영상 게시판", "질문 게시판", "마이 페이지"];
   final List<Widget> _tabs = [
     getHomePage(),
     getVideoPage(),
@@ -27,9 +28,9 @@ class _IndexScreenState extends State<IndexScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Container(
-              margin: EdgeInsets.only(top: 12),
+              margin: EdgeInsets.only(top: 16),
               child: Text(
-                '홈',
+                namelist[selectIndex],
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
