@@ -2,19 +2,13 @@ package ving.vingterview.service.member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ving.vingterview.domain.file.UploadFile;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.domain.question.Question;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.repository.MemberRepository;
-import ving.vingterview.service.file.FileStore;
-
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +16,6 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    @Qualifier("imgStore")
-    private final FileStore imgStore;
 
 
     /**
@@ -104,9 +96,6 @@ public class MemberService {
     public Long update(Long id, MemberUpdateDTO memberUpdateDTO) {
 
         Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("찾을 수 없는 회원입니다."));
-
-        imgStore.deleteFile(member.getProfileImageUrl());
-
         member.update(memberUpdateDTO.getName(), memberUpdateDTO.getAge(), memberUpdateDTO.getEmail(),
                 memberUpdateDTO.getNickname(),
                 memberUpdateDTO.getProfileImageUrl());
@@ -115,11 +104,4 @@ public class MemberService {
 
 
     }
-
-/*    public String profileUpload(ProfileImageDTO profileImageDTO) {
-
-        Optional<UploadFile> uploadFile = Optional.ofNullable(imgStore.storeFile(profileImageDTO.getProfileImage()));
-        return uploadFile.orElse(new UploadFile(null, null)).getStoreFileName();
-        return null;
-    }*/
 }

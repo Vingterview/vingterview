@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 
 
 @Slf4j
-@Component("videoStore")
+//@Component("videoStore")
 public class VideoStoreMemory implements FileStore {
 
     @Value("${video.dir}")

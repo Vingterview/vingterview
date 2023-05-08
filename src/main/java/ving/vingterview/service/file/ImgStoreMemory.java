@@ -3,17 +3,14 @@ package ving.vingterview.service.file;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import ving.vingterview.domain.file.UploadFile;
-import ving.vingterview.domain.file.VideoFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Slf4j
-@Component("imgStore")
+//@Component("imgStore")
 public class ImgStoreMemory implements FileStore{
 
     @Value("${img.dir}")
