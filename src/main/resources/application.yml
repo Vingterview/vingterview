@@ -36,3 +36,20 @@ img:
 video:
 #  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\video\
   dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/video/
+
+
+
+cloud:
+  aws:
+    credentials:
+#      accessKey: AWS_ACCESS_KEY
+#      secretKey: AWS_SECRET_KEY
+
+  s3:
+    bucket: vingterview
+    dir_image : image/
+    dir_video : video/
+
+  region : ap-northeast-2
+  stack :
+    auto : false

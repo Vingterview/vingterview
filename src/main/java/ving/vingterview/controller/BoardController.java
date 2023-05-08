@@ -2,7 +2,6 @@ package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +24,7 @@ import java.util.ArrayList;
 public class BoardController {
 
     private final BoardService boardService;
-    @Qualifier("videoStore")
-    private final FileStore videoStore;
+    private final FileStore fileStore;
 
     @GetMapping(value = "")
     public ResponseEntity<BoardListDTO> boards(@RequestParam(name="page",defaultValue ="0")int page,
@@ -132,18 +130,18 @@ public class BoardController {
     @PostMapping("/video")
     public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO) {
         if (videoDTO.getVideo() != null && !videoDTO.getVideo().isEmpty()) {
-            String storeFileName = videoStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
+            String storeFileName = fileStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             try {
-                videoDTO.getVideo().transferTo(new File(videoStore.getFullPath(storeFileName)));
+                videoDTO.getVideo().transferTo(new File(fileStore.getFullPath(storeFileName)));
                 log.info("파일 임시 업로드 성공");
             } catch (IOException e) {
                 log.warn("파일 임시 업로드 실패 {}" , e.getMessage());
             }
 
-            videoStore.uploadFile(storeFileName);
+            fileStore.uploadFile(storeFileName);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             VideoResponseDTO videoResponseDTO = new VideoResponseDTO();

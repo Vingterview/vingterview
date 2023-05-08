@@ -3,7 +3,6 @@ package ving.vingterview.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,7 @@ import java.time.LocalDateTime;
 public class MemberController {
 
     private final MemberService memberService;
-    @Qualifier("imgStore")
-    private final FileStore imgStore;
+    private final FileStore fileStore;
 
     @GetMapping("")
     public ResponseEntity<MemberListDTO> list() {
@@ -43,14 +41,14 @@ public class MemberController {
     @PostMapping("/image")
     public ResponseEntity<ProfileImageResponseDTO> profileUpload(@ModelAttribute ProfileImageDTO profileImageDTO) {
         if (profileImageDTO.getProfileImage() != null && !profileImageDTO.getProfileImage().isEmpty()) {
-            String storeFileName = imgStore.createStoreFileName(profileImageDTO.getProfileImage().getOriginalFilename());
+            String storeFileName = fileStore.createStoreFileName(profileImageDTO.getProfileImage().getOriginalFilename());
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
-            imgStore.uploadFile(profileImageDTO.getProfileImage(),storeFileName);
+            fileStore.uploadFile(profileImageDTO.getProfileImage(),storeFileName);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
-            profileImageResponseDTO.setProfileImageUrl(storeFileName);
+            profileImageResponseDTO.setProfileImageUrl(fileStore.getFullPath(storeFileName));
 
             return new ResponseEntity<>(profileImageResponseDTO, HttpStatus.CREATED);
 
