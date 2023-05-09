@@ -115,9 +115,9 @@ class _QuestionPageState extends State<QuestionPage> {
                     // Navigator.pushNamed(context, '/question_write',
                     //     arguments: Questionlist[index].questionId);
                   },
-                  onLongPress: () {
-                    // 이 질문으로 글 쓰기 기능
-                    // 길게 누르는 이벤트 처리
+                  onLongPress: () async {
+                    Navigator.pushNamed(context, '/video_write',
+                        arguments: Questionlist[index]);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),

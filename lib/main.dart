@@ -7,6 +7,7 @@ import 'question_write.dart';
 import 'login.dart';
 import 'SplashScreen.dart';
 import 'tags.dart';
+import 'pick_question.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => login(),
         '/register': (context) => registeruser(),
         '/tag': (context) => tag_detail(),
+        '/question_pick': (context) => pick_question(),
       },
       initialRoute: '/',
     );
