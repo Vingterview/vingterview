@@ -43,7 +43,7 @@ class CommentApi {
       headers: {'Authorization': 'Bearer $token'},
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
       return jsonMap['commentId'];
     } else {
@@ -100,7 +100,7 @@ class CommentApi {
     var response = await http.put(url, headers: headers, body: body);
     final bodyBytes = response.bodyBytes;
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['commentId'];
     } else {
@@ -120,7 +120,7 @@ class CommentApi {
     );
     final bodyBytes = response.bodyBytes;
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       print(utf8.decode(bodyBytes));
     } else {
       throw Exception('좋아요 실패');

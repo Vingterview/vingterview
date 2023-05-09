@@ -34,7 +34,7 @@ class UploadVideoApi {
           filename: 'example.mp4'));
 
     // send the request
-    final response = await request.send();
+    final response = await request.send(); // 에러 생기는 지점 (파일 형태 때문인가??)
     final responseBody = await response.stream.bytesToString();
 
     // check the response status code
@@ -43,7 +43,8 @@ class UploadVideoApi {
       final videoUrl = responseJson['video_url'];
       return videoUrl;
     } else {
-      throw Exception('Failed to post video');
+      // throw Exception('Failed to post video');
+      print(response.statusCode);
     }
   }
 

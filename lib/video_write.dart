@@ -13,7 +13,6 @@ class PostVideoPage extends StatefulWidget {
 class _PostVideoPageState extends State<PostVideoPage> {
   // Define variables for the form fields
   int _questionId;
-  int _memberId;
   String _content;
   String _video_url;
   UploadVideoApi uploadVideoApi = UploadVideoApi();
@@ -54,19 +53,6 @@ class _PostVideoPageState extends State<PostVideoPage> {
                 },
                 onSaved: (value) {
                   _questionId = int.parse(value);
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Member ID'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter a member ID';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _memberId = int.parse(value);
                 },
               ),
               TextFormField(

@@ -48,13 +48,13 @@ class QuestionApi {
 
     final response = await http.post(
       Uri.parse('$uri/questions'),
-      body: jsonEncode({'tags': tags, 'question_content': question_content}),
+      body: jsonEncode({'tags': tags, 'questionContent': question_content}),
       headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
-      return jsonMap['question_id'];
+      return jsonMap['questionId'];
     } else {
       throw Exception('Failed to post question');
     }
@@ -68,7 +68,7 @@ class QuestionApi {
     var response =
         await http.get(url, headers: {'Authorization': 'Bearer $token'});
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       print("스크랩 성공");
     } else {
       throw Exception('스크랩 실패');

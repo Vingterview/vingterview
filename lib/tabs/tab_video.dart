@@ -53,7 +53,6 @@ class _VideoPageState extends State<VideoPage> {
       default:
         videoList = await videoApi.getVideos();
         return (videoList);
-        print("디폴트");
         break;
     }
   }

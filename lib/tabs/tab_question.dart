@@ -6,20 +6,60 @@ Widget getQuestionPage() {
   return QuestionPage();
 }
 
-class QuestionPage extends StatelessWidget {
+enum SortingOption { latest, scrap, video, old }
+
+class QuestionPage extends StatefulWidget {
+  @override
+  _QuestionPageState createState() => _QuestionPageState();
+}
+
+class _QuestionPageState extends State<QuestionPage> {
   QuestionApi questionApi = QuestionApi();
   List<Questions> QuestionList;
   bool isLoading = true;
   String textData;
+  SortingOption _sortingOption = SortingOption.latest;
 
   Future initQuestion() async {
     QuestionList = await questionApi.getQuestions();
   }
 
+  void _updateSortingOption(SortingOption newValue) async {
+    setState(() {
+      _sortingOption = newValue;
+    });
+  }
+
+  Future<List<Questions>> _updateWithSorting(SortingOption newValue) async {
+    switch (_sortingOption) {
+      case SortingOption.latest:
+        QuestionList = await questionApi.getQuestions();
+        return (QuestionList);
+        break;
+      case SortingOption.scrap:
+        QuestionList = await questionApi.getQuestions(query: 4, param: "scrap");
+        return (QuestionList);
+        break;
+      case SortingOption.video:
+        QuestionList = await questionApi.getQuestions(query: 4, param: "video");
+        return (QuestionList);
+
+        break;
+      case SortingOption.old:
+        QuestionList = await questionApi.getQuestions(query: 4, param: "old");
+        return (QuestionList);
+        break;
+      default:
+        QuestionList = await questionApi.getQuestions();
+        return (QuestionList);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Questions>>(
-      future: questionApi.getQuestions(),
+      future: _updateWithSorting(_sortingOption),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading spinner if the data is not yet available
@@ -31,14 +71,53 @@ class QuestionPage extends StatelessWidget {
           // Build the widget tree with the loaded data
           List<Questions> Questionlist = snapshot.data;
           return Column(children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '질문 게시판',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<SortingOption>(
+                    value: _sortingOption,
+                    onChanged: _updateSortingOption,
+                    items: [
+                      DropdownMenuItem(
+                        value: SortingOption.latest,
+                        child: Text('최신순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.scrap,
+                        child: Text('스크랩순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.video,
+                        child: Text('영상순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.old,
+                        child: Text('오래된순'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Expanded(
                 child: ListView.builder(
               itemCount: Questionlist.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () async {
-                    Navigator.pushNamed(context, '/video_write',
-                        arguments: Questionlist[index].questionId);
+                    // 이 질문만 모아보기 기능
+                    // Navigator.pushNamed(context, '/question_write',
+                    //     arguments: Questionlist[index].questionId);
+                  },
+                  onLongPress: () {
+                    // 이 질문으로 글 쓰기 기능
+                    // 길게 누르는 이벤트 처리
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
