@@ -7,19 +7,61 @@ Widget getVideoPage() {
   return VideoPage();
 }
 
-class VideoPage extends StatelessWidget {
+class VideoPage extends StatefulWidget {
+  @override
+  _VideoPageState createState() => _VideoPageState();
+}
+
+enum SortingOption { latest, like, comment, old }
+
+class _VideoPageState extends State<VideoPage> {
   VideoApi videoApi = VideoApi();
   List<Videos> videoList;
   bool isLoading = true;
+  SortingOption _sortingOption = SortingOption.latest;
 
   Future initVideo() async {
     videoList = await videoApi.getVideos();
+    print("init");
+  }
+
+  void _updateSortingOption(SortingOption newValue) async {
+    setState(() {
+      _sortingOption = newValue;
+    });
+  }
+
+  Future<List<Videos>> _updateWithSorting(SortingOption newValue) async {
+    switch (_sortingOption) {
+      case SortingOption.latest:
+        videoList = await videoApi.getVideos();
+        return (videoList);
+        break;
+      case SortingOption.like:
+        videoList = await videoApi.getVideos(query: 3, param: "like");
+        return (videoList);
+        break;
+      case SortingOption.comment:
+        videoList = await videoApi.getVideos(query: 3, param: "comment");
+        return (videoList);
+
+        break;
+      case SortingOption.old:
+        videoList = await videoApi.getVideos(query: 3, param: "old");
+        return (videoList);
+        break;
+      default:
+        videoList = await videoApi.getVideos();
+        return (videoList);
+        print("디폴트");
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Videos>>(
-      future: videoApi.getVideos(),
+      future: _updateWithSorting(_sortingOption),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading spinner if the data is not yet available
@@ -31,8 +73,43 @@ class VideoPage extends StatelessWidget {
           // Build the widget tree with the loaded data
           List<Videos> videolist = snapshot.data;
           return Column(children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '영상 게시판',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<SortingOption>(
+                    value: _sortingOption,
+                    onChanged: _updateSortingOption,
+                    items: [
+                      DropdownMenuItem(
+                        value: SortingOption.latest,
+                        child: Text('최신순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.like,
+                        child: Text('좋아요순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.comment,
+                        child: Text('댓글순'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.old,
+                        child: Text('오래된순'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // 나머지 내용 추가
             Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
               itemCount: videolist.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -41,41 +118,140 @@ class VideoPage extends StatelessWidget {
                           arguments: videolist[index].boardId);
                     },
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      margin: EdgeInsets.symmetric(vertical: 3),
+                      margin: EdgeInsets.symmetric(horizontal: 30),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
+                        border: Border.all(color: Color(0xFFD9D9D9), width: 1),
+                        borderRadius: BorderRadius.circular(5),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            videolist[index].memberName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14, // 작은 글씨 크기
+                          Container(
+                            padding: EdgeInsets.only(top: 20, left: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU'),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      videolist[index].memberName,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      videolist[index].createTime,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 10), // 줄간격을 위한 여백 추가
-                          Text(
-                            videolist[index].content,
-                            style: TextStyle(
-                              fontSize: 16, // 줄글 글씨 크기
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                videolist[index].content,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 30),
+                            width: 300,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFEEEEEE),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '   Q.',
+                                    style: TextStyle(
+                                      color: Color(0xFF3D85C6),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: ' 왜 지원하셨나요?',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.favorite_border_outlined,
+                                        size: 18, color: Color(0xFFDE50A4)),
+                                    SizedBox(width: 5),
+                                    Text(videolist[index].likeCount.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                  ],
+                                ),
+                                SizedBox(width: 5),
+                                Row(
+                                  children: [
+                                    Icon(Icons.comment_outlined,
+                                        size: 18, color: Color(0xFF3D85C6)),
+                                    SizedBox(width: 5),
+                                    Text(
+                                        videolist[index]
+                                            .commentCount
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ));
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(height: 10);
               },
             )),
             IconButton(

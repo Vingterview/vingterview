@@ -20,6 +20,7 @@ class video_detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int index = ModalRoute.of(context).settings.arguments;
+    print(index);
 
     bool _isPlaying = false;
 
@@ -53,35 +54,131 @@ class video_detail extends StatelessWidget {
                 if (index == 0) {
                   // Display video details in the first item
                   return Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 3),
+                    margin: EdgeInsets.symmetric(horizontal: 30),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
+                        border: BorderDirectional(
+                      bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    )),
                     child: Column(
                       children: [
-                        Text(
-                          video.videoUrl,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                        Container(
+                          padding: EdgeInsets.only(top: 20, left: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 30,
+                                height: 30,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU'),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    video.memberName,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 1),
+                                  Text(
+                                    video.createTime,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          video.content,
-                          style: TextStyle(
-                            fontSize: 14,
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              video.content,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          width: 300,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFEEEEEE),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '   Q.',
+                                  style: TextStyle(
+                                    color: Color(0xFF3D85C6),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' 왜 지원하셨나요?',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.favorite_border_outlined,
+                                      size: 18, color: Color(0xFFDE50A4)),
+                                  SizedBox(width: 5),
+                                  Text(video.likeCount.toString(),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                ],
+                              ),
+                              SizedBox(width: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.comment_outlined,
+                                      size: 18, color: Color(0xFF3D85C6)),
+                                  SizedBox(width: 5),
+                                  Text(video.commentCount.toString(),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   );

@@ -37,20 +37,18 @@ class CommentApi {
     final response = await http.post(
       Uri.parse('$uri/comments'),
       body: jsonEncode({
-        'board_id': board_id,
+        'boardId': board_id,
         'content': content,
       }),
       headers: {'Authorization': 'Bearer $token'},
     );
-    print(board_id);
-    print(content);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
-      return jsonMap['comment_id'];
+      return jsonMap['commentId'];
     } else {
-      // throw Exception('Failed to post comment');
-
+      print(response.statusCode);
+      print("err");
     }
   }
 
@@ -102,9 +100,9 @@ class CommentApi {
     var response = await http.put(url, headers: headers, body: body);
     final bodyBytes = response.bodyBytes;
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
-      return jsonMap['comment_id'];
+      return jsonMap['commentId'];
     } else {
       throw Exception('Failed to post comment');
     }

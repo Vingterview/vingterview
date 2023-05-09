@@ -18,7 +18,10 @@ class VideoApi {
       Uri.parse('$uri/boards${queries[query]}$param'),
       headers: {'Authorization': 'Bearer $token'},
     );
+    print('$uri/boards${queries[query]}$param');
+
     final statusCode = response.statusCode;
+    print(statusCode);
     final bodyBytes = response.bodyBytes;
     List<Videos> videos = [];
 
