@@ -7,8 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:video_player/video_player.dart';
 
 // 영상 재생할 수 있게 하기 + 댓글 가져오기
+class video_detail extends StatefulWidget {
+  @override
+  _VideoDetailState createState() => _VideoDetailState();
+}
 
-class video_detail extends StatelessWidget {
+class _VideoDetailState extends State<video_detail> {
   VideoApi videoApi = VideoApi();
   Videos video;
   CommentApi commentApi = CommentApi();
@@ -16,6 +20,16 @@ class video_detail extends StatelessWidget {
   int memberId;
   bool isLoading = true;
   TextEditingController _commentController = TextEditingController();
+
+  Future<void> _postComment(int index) async {
+    String commentContent = _commentController.text;
+    await commentApi.postcomment(index, commentContent);
+    _commentController.clear();
+    List<Comments> updatedComments = await commentApi.getcomments(0, index);
+    setState(() {
+      commentList = updatedComments;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,8 +247,7 @@ class video_detail extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                String commentContent = _commentController.text;
-                commentApi.postcomment(index, commentContent);
+                _postComment(index);
                 _commentController.clear();
               },
               child: Text('Submit'),
