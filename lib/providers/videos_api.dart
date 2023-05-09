@@ -124,7 +124,8 @@ class VideoApi {
       final bodyBytes = response.bodyBytes;
       print(utf8.decode(bodyBytes));
     } else {
-      throw Exception('좋아요 실패');
+      // throw Exception('좋아요 실패');
+      print(response.body);
     }
   }
 }

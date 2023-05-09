@@ -20,6 +20,8 @@ class _VideoDetailState extends State<video_detail> {
   int memberId;
   bool isLoading = true;
   TextEditingController _commentController = TextEditingController();
+  bool isLiked = false; // 글 마다 받아와야 함
+  int likeCount;
 
   Future<void> _postComment(int index) async {
     String commentContent = _commentController.text;
@@ -43,6 +45,7 @@ class _VideoDetailState extends State<video_detail> {
       commentList = await commentApi.getcomments(0, index); // 게시글로 필터링
       SharedPreferences prefs = await SharedPreferences.getInstance();
       memberId = prefs.getInt('member_id');
+      likeCount = video.likeCount;
     }
 
     return Scaffold(
@@ -64,8 +67,8 @@ class _VideoDetailState extends State<video_detail> {
             return ListView.builder(
               itemCount: commentList.length +
                   1, // Add 1 for the video details Container
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
+              itemBuilder: (BuildContext context, int idx) {
+                if (idx == 0) {
                   // Display video details in the first item
                   return Container(
                     margin: EdgeInsets.symmetric(horizontal: 30),
@@ -149,7 +152,7 @@ class _VideoDetailState extends State<video_detail> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' 왜 지원하셨나요?',
+                                  text: video.questionContent,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -170,7 +173,7 @@ class _VideoDetailState extends State<video_detail> {
                                   Icon(Icons.favorite_border_outlined,
                                       size: 18, color: Color(0xFFDE50A4)),
                                   SizedBox(width: 5),
-                                  Text(video.likeCount.toString(),
+                                  Text(likeCount.toString(),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -190,6 +193,37 @@ class _VideoDetailState extends State<video_detail> {
                                       )),
                                 ],
                               ),
+                              SizedBox(width: 5), // 수정
+                              GestureDetector(
+                                onTap: () async {
+                                  print("라이크$index");
+                                  videoApi.like(index);
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                    likeCount += 1;
+                                  });
+                                  print(likeCount);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        isLiked
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isLiked ? Colors.red : null,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('좋아요'),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         )
@@ -199,7 +233,7 @@ class _VideoDetailState extends State<video_detail> {
                 } else {
                   // Display comments from commentList
                   Comments comment = commentList[
-                      index - 1]; // Subtract 1 to account for video details
+                      idx - 1]; // Subtract 1 to account for video details
                   return Container(
                     padding: EdgeInsets.fromLTRB(
                         10, 5, 10, 10), // Set appropriate margins
@@ -209,7 +243,7 @@ class _VideoDetailState extends State<video_detail> {
                       children: [
                         Text(
                           comment.memberNickname ??
-                              '비로그인 사용자', // Display userNickname in small letters
+                              '비회원 사용자', // Display userNickname in small letters
                           style: TextStyle(
                             fontSize: 12,
                           ),
