@@ -37,15 +37,18 @@ class CommentApi {
     final response = await http.post(
       Uri.parse('$uri/comments'),
       body: jsonEncode({
-        'boardId': board_id,
+        'board_id': board_id,
         'content': content,
       }),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
     );
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
-      return jsonMap['commentId'];
+      return jsonMap['comment_id'];
     } else {
       print(response.statusCode);
       print("err");
@@ -102,7 +105,7 @@ class CommentApi {
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
-      return jsonMap['commentId'];
+      return jsonMap['comment_id'];
     } else {
       throw Exception('Failed to post comment');
     }

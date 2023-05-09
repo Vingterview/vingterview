@@ -194,8 +194,8 @@ class video_detail extends StatelessWidget {
                           CrossAxisAlignment.start, // Align left
                       children: [
                         Text(
-                          comment
-                              .memberNickname, // Display userNickname in small letters
+                          comment.memberNickname ??
+                              '비로그인 사용자', // Display userNickname in small letters
                           style: TextStyle(
                             fontSize: 12,
                           ),

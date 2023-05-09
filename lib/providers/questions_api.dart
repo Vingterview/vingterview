@@ -54,7 +54,7 @@ class QuestionApi {
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);
-      return jsonMap['questionId'];
+      return jsonMap['question_id'];
     } else {
       throw Exception('Failed to post question');
     }

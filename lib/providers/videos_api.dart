@@ -42,9 +42,9 @@ class VideoApi {
     final response = await http.post(
       Uri.parse('$uri/boards'),
       body: jsonEncode({
-        'questionId': question_id,
+        'question_id': question_id,
         'content': content,
-        'videoUrl': video_url
+        'video_url': video_url
       }),
       headers: {'Authorization': 'Bearer $token'},
     );
@@ -52,7 +52,7 @@ class VideoApi {
     if (response.statusCode == 201) {
       final bodyBytes = response.bodyBytes;
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
-      return jsonMap['boardId'];
+      return jsonMap['board_id'];
     } else {
       throw Exception('Failed to post video');
     }
@@ -106,7 +106,7 @@ class VideoApi {
     if (response.statusCode == 201) {
       final bodyBytes = response.bodyBytes;
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
-      return jsonMap['boardId'];
+      return jsonMap['board_id'];
     } else {
       throw Exception('Failed to post video');
     }
