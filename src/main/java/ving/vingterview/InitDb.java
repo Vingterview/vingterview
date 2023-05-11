@@ -28,6 +28,7 @@ public class InitDb {
     @PostConstruct
     public void InitDb() {
         initService.dbInit();
+
     }
 
 
@@ -42,8 +43,8 @@ public class InitDb {
         public void dbInit() {
 
             Member member1 = createMember("User1","PassWord1","임동현","Impala",25,"dla33834051@gmail.com","profileUrl1");
-            Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"email2","profileUrl2");
-            Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"email3","profileUrl3");
+            Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"jungchanyoung32@gmail.com","profileUrl2");
+            Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"","profileUrl3");
 
             em.persist(member1);
             em.persist(member2);
