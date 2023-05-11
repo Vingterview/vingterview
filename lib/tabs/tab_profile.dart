@@ -42,6 +42,133 @@ class MyPage extends StatelessWidget {
           Users user = snapshot.data;
           return Container(
               child: ListView(children: [
+            Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Text(
+                  '마이 페이지',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                )),
+            Padding(
+              padding: EdgeInsets.all(30.0), // 여백 크기를 지정합니다
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 16),
+                    Text(
+                      '내 활동',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        // 작성한 글에 대한 동작 처리
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '작성한 글',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        // 댓글 단 글에 대한 동작 처리
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '댓글 단 글',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        // 좋아요한 글에 대한 동작 처리
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '좋아요한 글',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        // 스크랩한 질문에 대한 동작 처리
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '스크랩한 질문',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+
+            Container(
+              color: Colors.purple, // 박스의 배경색
+              padding: EdgeInsets.all(16), // 안쪽 여백 설정
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.stretch, // 수평축에서 어디에 맞출지 설정
+                children: [
+                  Text(
+                    // 제목
+                    '설정',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16), // 제목과 내용 사이 여백
+                  ElevatedButton(
+                    // 문의하기 버튼
+                    onPressed: () {},
+                    child: Text('문의하기'),
+                  ),
+                  SizedBox(height: 16), // 버튼과 버튼 사이 여백
+                  ElevatedButton(
+                    // 공지사항 버튼
+                    onPressed: () {},
+                    child: Text('공지사항'),
+                  ),
+                ],
+              ),
+            ),
+
             Text(
               user.name ?? '로그인 정보가 없습니다.',
               style: TextStyle(
