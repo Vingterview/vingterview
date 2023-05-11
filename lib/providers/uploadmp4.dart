@@ -9,7 +9,8 @@ class UploadVideoApi {
     // 영상 업로드  # 2
     final picker = ImagePicker();
     final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
-    final video_url = uploadVideo(pickedFile);
+    final File file = File(pickedFile.path);
+    final video_url = uploadVideo(file);
     return video_url;
   }
 
@@ -21,7 +22,8 @@ class UploadVideoApi {
     return video_url;
   }
 
-  Future<String> uploadVideo(XFile videoFile) async {
+  Future<String> uploadVideo(File videoFile) async {
+    //XFile에서 File로 바꿈
     String uri = myUri;
     final url = Uri.parse('$uri/boards/video');
 

@@ -4,6 +4,8 @@ import 'package:capston/models/tags.dart';
 import 'package:http/http.dart' as http;
 import 'package:capston/models/globals.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class TagApi {
   String uri = myUri;
 
@@ -15,8 +17,13 @@ class TagApi {
       "?parent_tag_id=",
     ];
 
-    final response =
-        await http.get(Uri.parse('$uri/tags${queries[query]}$param'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+
+    final response = await http.get(
+      Uri.parse('$uri/tags${queries[query]}$param'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
     List<Tags> tags = [];
@@ -25,6 +32,9 @@ class TagApi {
       List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['tags'];
       tags = jsonList.map((json) => Tags.fromJson(json)).toList();
     }
+
+    print(statusCode);
+    print(tags);
 
     return tags;
   }

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:capston/models/globals.dart';
 import 'package:capston/models/questions.dart';
 import 'pick_question.dart';
+import 'record_video.dart';
 
 // import 'package:video_player/video_player.dart';
 class PostVideoPage extends StatefulWidget {
@@ -113,6 +114,13 @@ class _PostVideoPageState extends State<PostVideoPage> {
                 onPressed: () async {
                   _video_url = await uploadVideoApi.pickVideo();
                   print(_video_url);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.camera),
+                onPressed: () async {
+                  _video_url = await Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => RecordVideoPage()));
                 },
               ),
               SizedBox(height: 16),

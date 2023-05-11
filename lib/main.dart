@@ -8,6 +8,8 @@ import 'login.dart';
 import 'SplashScreen.dart';
 import 'tags.dart';
 import 'pick_question.dart';
+import 'pick_tags.dart';
+import 'record_video.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => registeruser(),
         '/tag': (context) => tag_detail(),
         '/question_pick': (context) => pick_question(),
+        '/tags_pick': (context) => pick_tags(),
+        '/record_video': (context) => RecordVideoPage(),
       },
       initialRoute: '/',
     );
