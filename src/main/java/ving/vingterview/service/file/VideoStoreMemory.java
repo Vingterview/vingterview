@@ -24,7 +24,7 @@ public class VideoStoreMemory implements FileStore {
     private String fileDir;
 
     @Override
-    public String getFullPath(String fileName) {
+    public String getFullPath(String fileName,boolean isImg) {
         return fileDir + fileName;
     }
 
@@ -48,7 +48,7 @@ public class VideoStoreMemory implements FileStore {
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("videoPath", getFullPath(storeFileName));
+            body.add("videoPath", getFullPath(storeFileName,false));
             body.add("name", storeFileName);
             body.add("bucket", "bucketAddress");
             HttpEntity<?> request = new HttpEntity<>(body, headers);
@@ -66,7 +66,7 @@ public class VideoStoreMemory implements FileStore {
 
     @Override
     public void deleteFile(String fileName) {
-        File file = new File(getFullPath(fileName));
+        File file = new File(getFullPath(fileName,false));
         if (file.exists()) {
             file.delete();
         }

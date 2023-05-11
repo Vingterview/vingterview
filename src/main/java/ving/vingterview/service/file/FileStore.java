@@ -2,15 +2,13 @@ package ving.vingterview.service.file;
 
 
 import org.springframework.web.multipart.MultipartFile;
-import ving.vingterview.domain.file.UploadFile;
 
 import java.util.UUID;
 
 public interface FileStore {
 
 
-    String getFullPath(String fileName);
-
+    String getFullPath(String fileName,boolean isImg);
 
 
     void uploadFile(MultipartFile multipartFile,String storeName);

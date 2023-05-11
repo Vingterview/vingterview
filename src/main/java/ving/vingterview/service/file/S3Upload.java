@@ -25,16 +25,23 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service("S3Upload")
 public class S3Upload implements FileStore{
+    @Value("${video.dir}")
+    private String tempDir;
 
     @Value("${cloud.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.s3.dir_image}")
-    private String dir;
+
     private final AmazonS3 amazonS3;
 
     @Override
-    public String getFullPath(String fileName) {
+    public String getFullPath(String fileName,boolean isImg) {
+        String dir;
+        if (isImg) {
+            dir = "image/";
+        }else{
+            dir = "video/";
+        }
         return amazonS3.getUrl(bucket, dir+fileName).toString();
     }
 
@@ -42,6 +49,8 @@ public class S3Upload implements FileStore{
     @Async("threadPoolTaskExecutor")
     public void uploadFile(MultipartFile multipartFile, String storeName) {
         ObjectMetadata objMetaData = new ObjectMetadata();
+        String dir = "image/";
+
         try {
             objMetaData.setContentLength(multipartFile.getInputStream().available());
             amazonS3.putObject(new PutObjectRequest(bucket,dir+storeName,multipartFile.getInputStream() ,objMetaData).withCannedAcl(CannedAccessControlList.PublicRead));
@@ -65,7 +74,7 @@ public class S3Upload implements FileStore{
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("videoPath", getFullPath(storeName));
+        body.add("videoPath", tempDir+storeName);
         body.add("name", storeName);
         body.add("bucket", "bucketAddress");
         HttpEntity<?> request = new HttpEntity<>(body, headers);
@@ -78,6 +87,9 @@ public class S3Upload implements FileStore{
 
     @Override
     public void deleteFile(String storeName) {
-        amazonS3.deleteObject(bucket,dir+storeName);
+
+//        amazonS3.deleteObject(bucket,dir+storeName);
     }
 }
+
+

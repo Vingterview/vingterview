@@ -48,7 +48,7 @@ public class MemberController {
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             ProfileImageResponseDTO profileImageResponseDTO = new ProfileImageResponseDTO();
-            profileImageResponseDTO.setProfileImageUrl(fileStore.getFullPath(storeFileName));
+            profileImageResponseDTO.setProfileImageUrl(fileStore.getFullPath(storeFileName,true));
 
             return new ResponseEntity<>(profileImageResponseDTO, HttpStatus.CREATED);
 
