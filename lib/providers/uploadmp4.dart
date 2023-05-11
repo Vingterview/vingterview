@@ -4,13 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:capston/models/globals.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class UploadVideoApi {
   Future<String> pickVideo() async {
     // 영상 업로드  # 2
     final picker = ImagePicker();
     final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
-    final File file = File(pickedFile.path);
-    final video_url = uploadVideo(file);
+    if (pickedFile == null) {
+      return "";
+    }
+    final video_url = uploadVideo(pickedFile);
     return video_url;
   }
 
@@ -22,21 +26,25 @@ class UploadVideoApi {
     return video_url;
   }
 
-  Future<String> uploadVideo(File videoFile) async {
+  Future<String> uploadVideo(XFile videoFile) async {
     //XFile에서 File로 바꿈
     String uri = myUri;
     final url = Uri.parse('$uri/boards/video');
 
     // open the video file
     final bytes = await videoFile.readAsBytes();
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     // create the multipart request
+
     final request = http.MultipartRequest('POST', url)
       ..files.add(http.MultipartFile.fromBytes('video', bytes,
           filename: 'example.mp4'));
 
+    request.headers['Authorization'] = 'Bearer $token';
+
     // send the request
-    final response = await request.send(); // 에러 생기는 지점 (파일 형태 때문인가??)
+    final response = await request.send(); // 에러 생기는 지점
     final responseBody = await response.stream.bytesToString();
 
     // check the response status code

@@ -65,8 +65,15 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
       isLoading = true;
     });
     // Stop recording a video.
-    await _controller.stopVideoRecording();
-    videoUrl = await uploadVideoApi.uploadVideo(_videoFile);
+    final XFile video = await _controller.stopVideoRecording();
+    final directory = await getApplicationDocumentsDirectory();
+    _videoFile = File('${directory.path}/video.mp4');
+    // print('path is ${video.path}');
+    // print(_videoFile.path);
+
+    final bool exists = await _videoFile.exists();
+
+    videoUrl = await uploadVideoApi.uploadVideo(video);
     print(videoUrl);
 
     // Pop the page and return the video URL.
@@ -152,8 +159,6 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
                     height: 500,
                   ),
                 ),
-                Spacer(),
-                SizedBox(height: 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

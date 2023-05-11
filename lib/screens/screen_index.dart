@@ -25,22 +25,23 @@ class _IndexScreenState extends State<IndexScreen> {
     return Scaffold(
       appBar: PreferredSize(
         child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Container(
-              margin: EdgeInsets.only(top: 16),
-              child: Text(
-                namelist[selectIndex],
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              )),
-          centerTitle: true,
-          // other app bar properties
-        ),
-        preferredSize: Size.fromHeight(64),
+            // backgroundColor: Colors.white,
+            // elevation: 0,
+            // title: Container(
+            //     margin: EdgeInsets.only(top: 16),
+            //     child: Text(
+            //       namelist[selectIndex],
+            //       style: TextStyle(
+            //         fontSize: 14,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.black,
+            //       ),
+            //     )),
+            // centerTitle: true,
+            // other app bar properties
+            ),
+        // preferredSize: Size.fromHeight(64),
+        preferredSize: Size.fromHeight(0),
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xFF3D85C6),
