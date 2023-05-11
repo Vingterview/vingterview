@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Chat</title>
+    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+    <script src="/app.js"></script>
+    <script src="/app-video.js"></script>
+</head>
+<body>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect</button>
+                    <button id="subscribe" class="btn btn-default" type="submit" >Subscribe</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">What is your name?</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">Send Name to Subscriber</button>
+
+
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Greetings</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <table id="conversationVideo" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Videos</th>
+        </tr>
+        </thead>
+        <tbody id="videos">
+            <video id="video" autoplay></video>
+            <video id="receivedVideo" autoplay></video>
+        </tbody>
+    </table>
+    <button id="subscribeVideo" class="btn btn-default" type="submit">Subscribe video</button>
+    <button id="videoOn" class="btn btn-default" type="submit">Video ON</button>
+
+    <button id="sendVideo" class="btn btn-default" type="submit">Send VideoStream to Subscriber</button>
+</div>
+</body>
+</html>
