@@ -17,7 +17,7 @@ public class ImgStoreMemory implements FileStore{
     private String fileDir;
 
     @Override
-    public String getFullPath(String fileName) {
+    public String getFullPath(String fileName,boolean isImg) {
         return fileDir + fileName;
     }
 
@@ -29,7 +29,7 @@ public class ImgStoreMemory implements FileStore{
 
         try {
             log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
-            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+            multipartFile.transferTo(new File(getFullPath(storeFileName,true)));
             log.info("Ended uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
 
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class ImgStoreMemory implements FileStore{
 
     @Override
     public void deleteFile(String fileName) {
-        File file = new File(getFullPath(fileName));
+        File file = new File(getFullPath(fileName,false));
         if (file.exists()) {
             file.delete();
         }
