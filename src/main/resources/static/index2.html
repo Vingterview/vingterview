@@ -147,6 +147,23 @@
 
   }
 
+  function sendPoll() {
+    type = "POLL";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+  function sendPollFinish() {
+    type = "FINISH_POLL";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendNext() {
+    type = "NEXT";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
   function videoOn() {
     navigator.mediaDevices.getUserMedia(
             {video: true,audio:true})
@@ -196,6 +213,9 @@
         <th><button onclick="sendVideoFinish()" id="startBtn">비디오 종료</button></th>
         <th><button onclick="sendParticipateFinish()" id="sendBtn">참가하기 종료</button></th>
         <th><button onclick="sendParticipate()" id="participateBtn">참가하기</button></th>
+        <th><button onclick="sendPoll()" id="pollBtn">투퓨</button></th>
+        <th><button onclick="sendPollFinish()" id="pollFinishBtn">투표 종료</button></th>
+        <th><button onclick="sendNext()" id="pollSendBtn">다음 라운드</button></th>
       </tr>
     </table>
   </div>

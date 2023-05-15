@@ -17,9 +17,20 @@ public class GameRoom {
     private Set<WebSocketSession> sessions = new HashSet<>();
     private GameInfo gameInfo;
 
+    private boolean finishParticipate = false;
+    private boolean finishPoll = false;
+
     public GameRoom(String roomId) {
         this.roomId = roomId;
         this.gameInfo = new GameInfo();
+    }
+
+    public void setFinishParticipate(boolean finishParticipate) {
+        this.finishParticipate = finishParticipate;
+    }
+
+    public void setFinishPoll(boolean finishPoll) {
+        this.finishPoll = finishPoll;
     }
 
     public String getResult() {
@@ -53,6 +64,9 @@ public class GameRoom {
     public void initGameInfo() {
         gameInfo.setParticipant(new ArrayList<>());
         gameInfo.setOrder(new ArrayList<>());
+        gameInfo.setPoll(new ArrayList<>());
+        finishParticipate = false;
+        finishPoll = false;
     }
 
 
@@ -80,10 +94,7 @@ public class GameRoom {
 
 
         } else if (gameMessage.getType() == MessageType.RESULT) {
-
             send(gameMessage, objectMapper);
-
-
         } else {
             send(gameMessage, objectMapper);
         }

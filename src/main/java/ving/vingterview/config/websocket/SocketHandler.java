@@ -95,11 +95,15 @@ public class SocketHandler extends TextWebSocketHandler {
             }
             case FINISH_PARTICIPATE -> {
                 log.info("CLIENT SEND PARTICIPANT FINISH");
-                gameRoom.setRandomOrder();
-                gameInfo.increaseRound();
-                GameMessage infoGameMessage = new GameMessage();
-                infoGameMessage.infoGameMessage(roomId, gameInfo);
-                gameRoom.handleMessage(infoGameMessage,objectMapper);
+                if(!gameRoom.isFinishParticipate()){
+                    gameRoom.setFinishParticipate(true);
+                    gameRoom.setRandomOrder();
+                    gameInfo.increaseRound();
+                    GameMessage infoGameMessage = new GameMessage();
+                    infoGameMessage.infoGameMessage(roomId, gameInfo);
+                    gameRoom.handleMessage(infoGameMessage,objectMapper);
+
+                }
             }
             case FINISH_VIDEO ->{
 
@@ -122,11 +126,14 @@ public class SocketHandler extends TextWebSocketHandler {
             }
             case FINISH_POLL ->{
                 log.info("CLIENT SEND POLL FINISH");
-                GameMessage resultGameMessage = new GameMessage();
-                String winner = gameRoom.getResult();
-                resultGameMessage.setMessage(winner);
-                resultGameMessage.resultGameMessage(roomId, gameInfo);
-                gameRoom.handleMessage(resultGameMessage, objectMapper);
+                if (!gameRoom.isFinishPoll()) {
+                    gameRoom.setFinishPoll(true);
+                    GameMessage resultGameMessage = new GameMessage();
+                    String winner = gameRoom.getResult();
+                    resultGameMessage.setMessage(winner);
+                    resultGameMessage.resultGameMessage(roomId, gameInfo);
+                    gameRoom.handleMessage(resultGameMessage, objectMapper);
+                }
             }
             case NEXT->{
                 log.info("CLIENT SEND NEXT");
@@ -142,6 +149,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
                 }else{
                     log.info("GO NEXT ROUND");
+                    gameRoom.initGameInfo();
                     //next round
                     GameMessage questionGameMessage = new GameMessage();
                     questionGameMessage.questionGameMessage(roomId,gameInfo);
