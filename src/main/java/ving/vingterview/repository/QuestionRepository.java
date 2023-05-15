@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ving.vingterview.domain.question.Question;
 
+import java.util.List;
+
 
 public interface QuestionRepository extends JpaRepository<Question,Long> {
 
@@ -25,4 +27,7 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
             "group by q.id " +
             "order by count(b.id) desc , q.createTime desc")
     Slice<Question> orderByVideo(PageRequest pageRequest);
+
+    @Query("select q from Question  q order by rand() limit 3")
+    List<Question> findRandom();
 }

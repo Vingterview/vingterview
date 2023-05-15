@@ -57,15 +57,21 @@
   var curSize =0;
   var receivedChunks = [];
 
+
+  var content ;
+  var roomId;
+  var type ;
+  var gameInfo;
+  var sessionId;
   function wsEvt() {
     ws.onopen = function(data){
       //소켓이 열리면 초기화 세팅하기
       console.log(data);
 
     }
-    ws.onmessage = function(data) {
+    ws.onmessage = function(e) {
 
-      if(data.data instanceof Blob){
+      if(e.data instanceof Blob){
        /* setInterval(function () {
           receivedChunks.push(data.data);
           appendToSourceBuffer();
@@ -98,6 +104,17 @@
           cnt += 1;
         }
 
+      }else{
+
+        content = JSON.parse(e.data);
+        console.log(content)
+        roomId = content.roomId;
+        type = content.type;
+        gameInfo = content.gameInfo;
+        sessionId = content.sessionId;
+
+        document.body.append(roomId+" " + type +" " + gameInfo)
+
       }
 
     }
@@ -109,23 +126,25 @@
     });
   }
 
-  function chatName(){
-    var userName = $("#userName").val();
-    if(userName == null || userName.trim() == ""){
-      alert("사용자 이름을 입력해주세요.");
-      $("#userName").focus();
-    }else{
-      wsOpen();
-      $("#yourName").hide();
-      $("#yourMsg").show();
-    }
+  function sendVideoFinish() {
+
+    type = "FINISH_VIDEO";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
   }
 
-  function send() {
-    var uN = $("#userName").val();
-    var msg = $("#chatting").val();
-    ws.send(uN+" : "+msg);
-    $('#chatting').val("");
+  function sendParticipateFinish() {
+
+    type = "FINISH_PARTICIPATE";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendParticipate() {
+
+    type = "PARTICIPATE";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
   }
 
   function videoOn() {
@@ -174,18 +193,9 @@
   <div id="yourName">
     <table class="inputTable">
       <tr>
-        <th>사용자명</th>
-        <th><input type="text" name="userName" id="userName"></th>
-        <th><button onclick="chatName()" id="startBtn">이름 등록</button></th>
-      </tr>
-    </table>
-  </div>
-  <div id="yourMsg">
-    <table class="inputTable">
-      <tr>
-        <th>메시지</th>
-        <th><input id="chatting" placeholder="보내실 메시지를 입력하세요."></th>
-        <th><button onclick="send()" id="sendBtn">보내기</button></th>
+        <th><button onclick="sendVideoFinish()" id="startBtn">비디오 종료</button></th>
+        <th><button onclick="sendParticipateFinish()" id="sendBtn">참가하기 종료</button></th>
+        <th><button onclick="sendParticipate()" id="participateBtn">참가하기</button></th>
       </tr>
     </table>
   </div>
