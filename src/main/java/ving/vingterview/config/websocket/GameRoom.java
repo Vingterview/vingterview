@@ -13,7 +13,7 @@ import java.util.*;
 @Getter
 public class GameRoom {
 
-    private String roomId;
+    private String  roomId;
     private Set<WebSocketSession> sessions = new HashSet<>();
     private GameInfo gameInfo;
 
