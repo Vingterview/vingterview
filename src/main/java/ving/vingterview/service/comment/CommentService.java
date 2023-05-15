@@ -78,7 +78,7 @@ public class CommentService {
                 .orElseThrow(() -> new NoSuchElementException("게시글 없음"));
 
         /****페이징 추가 부분 ******/
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
         Slice<Comment> comments = commentRepository.findSliceByBoard(board,pageRequest);
         /*****페이징 추가 부분 *****/
 
@@ -107,7 +107,7 @@ public class CommentService {
                 .orElseThrow(() -> new NoSuchElementException("회원 없음"));
 
         /****페이징 추가 부분 ******/
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
         Slice<Comment> comments = commentRepository.findSliceByMember(member,pageRequest);
         /*****페이징 추가 부분 *****/
 
@@ -181,6 +181,8 @@ public class CommentService {
                 .memberNickname(member.getNickname())
                 .profileImageUrl(member.getProfileImageUrl())
                 .likeCount(likeCount)
+                .createTime(comment.getCreateTime())
+                .updateTime(comment.getUpdateTime())
                 .build();
     }
 }
