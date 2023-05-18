@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ving.vingterview.domain.LikeType;
 import ving.vingterview.domain.board.Board;
 import ving.vingterview.domain.board.BoardMemberLike;
 import ving.vingterview.domain.comment.Comment;
@@ -210,7 +211,10 @@ public class BoardService {
         Member member = board.getMember();
 
         List<Comment> comments = board.getComments();
-        List<BoardMemberLike> boardMemberLikes = board.getBoardMemberLikes();
+
+        int likeCount = boardMemberLikeRepository.countByBoardAndLikeStatus(board, LikeType.LIKE);
+//        List<BoardMemberLike> boardMemberLikes = board.getBoardMemberLikes();
+//        int likeCount = (int)boardMemberLikes.stream().filter(bml -> bml.getLikeStatus() == LikeType.LIKE).count();
 
 
         return BoardDTO.builder()
@@ -222,7 +226,7 @@ public class BoardService {
                 .profileImageUrl(member.getProfileImageUrl())
                 .content(board.getContent())
                 .videoUrl(board.getVideoUrl())
-                .likeCount(boardMemberLikes.size())
+                .likeCount(likeCount)
                 .commentCount(comments.size())
                 .createTime(LocalDateTime.now())
                 .updateTime(board.getUpdateTime())

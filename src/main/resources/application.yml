@@ -1,9 +1,9 @@
 spring:
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/ving
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/ving
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
@@ -30,20 +30,16 @@ logging.level:
   org.hibernate.type: trace
 
 img:
-#  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\img\
-  dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/img/
+  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\img\
+#  dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/img/
 
 video:
-#  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\video\
-  dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/video/
+  dir: C:\Users\lms06\Documents\project\vingterview\src\main\resources\video\
+#  dir: /Users/impala/Desktop/capstone 2023/backend/vingterview/src/main/resources/video/
 
 
 
 cloud:
-  aws:
-    credentials:
-#      accessKey: AWS_ACCESS_KEY
-#      secretKey: AWS_SECRET_KEY
 
   s3:
     bucket: vingterview
