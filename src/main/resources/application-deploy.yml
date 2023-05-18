@@ -29,3 +29,15 @@ img:
 
 video:
   dir: ${user.home}/video/
+
+
+cloud:
+
+  s3:
+    bucket: vingterview
+    dir_image : image/
+    dir_video : video/
+
+  region : ap-northeast-2
+  stack :
+    auto : false
