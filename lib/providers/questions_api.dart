@@ -24,7 +24,6 @@ class QuestionApi {
     ];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
-    print('$uri/questions${queries[query]}$param');
     final response = await http.get(
       Uri.parse('$uri/questions${queries[query]}$param'),
       headers: {'Authorization': 'Bearer $token'},
@@ -37,7 +36,6 @@ class QuestionApi {
       List<dynamic> jsonList =
           jsonDecode(utf8.decode(bodyBytes))['questions']; // 한국어
       questions = jsonList.map((json) => Questions.fromJson(json)).toList();
-      print(questions[0].questionContent);
     }
 
     return questions;
