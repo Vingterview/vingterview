@@ -8,6 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:async';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 // import 'package:question_player/question_player.dart';
 class login extends StatefulWidget {
@@ -100,6 +101,47 @@ class _loginState extends State<login> {
       await prefs.setBool('isLogin', true);
       prefs.setString('access_token',
           "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDM5NDgzMCwiZXhwIjoxNjkyMTcwODMwfQ.k8fXo5Z82ddPfTNCO_Wzj_pRQ6GfV0_UtKkeqwDV5Ts");
+
+      String _decodeBase64(String str) {
+        String output = str.replaceAll('-', '+').replaceAll('_', '/');
+
+        switch (output.length % 4) {
+          case 0:
+            break;
+          case 2:
+            output += '==';
+            break;
+          case 3:
+            output += '=';
+            break;
+          default:
+            throw Exception('Illegal base64url string!"');
+        }
+
+        return utf8.decode(base64Url.decode(output));
+      }
+
+      Map<String, dynamic> parseJwtPayLoad(String token) {
+        final parts = token.split('.');
+        if (parts.length != 3) {
+          throw Exception('invalid token');
+        }
+
+        final payload = _decodeBase64(parts[1]);
+        final payloadMap = json.decode(payload);
+        if (payloadMap is! Map<String, dynamic>) {
+          throw Exception('invalid payload');
+        }
+
+        return payloadMap;
+      }
+
+      Map<String, dynamic> tokenContent = parseJwtPayLoad(
+          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDM5NDgzMCwiZXhwIjoxNjkyMTcwODMwfQ.k8fXo5Z82ddPfTNCO_Wzj_pRQ6GfV0_UtKkeqwDV5Ts");
+      print(tokenContent);
+      prefs.setInt('member_id', int.parse(tokenContent['memberId']));
+      print(tokenContent['memberId']);
+
       Navigator.pushReplacementNamed(context, '/index');
       setState(() {
         // print(accessToken);

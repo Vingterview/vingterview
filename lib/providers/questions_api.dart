@@ -16,7 +16,7 @@ class QuestionApi {
     // 3 : 스크랩 필터링, 4 : 정렬 (좋아요순, 댓글순, 최신순)
 
     List<String> queries = [
-      "?page=1",
+      "?",
       "?tag_id=",
       "?member_id=",
       "?scrap_member_id=",
