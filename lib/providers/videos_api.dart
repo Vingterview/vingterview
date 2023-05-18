@@ -46,7 +46,10 @@ class VideoApi {
         'content': content,
         'video_url': video_url
       }),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
     );
 
     if (response.statusCode == 201) {
@@ -98,7 +101,10 @@ class VideoApi {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
     var url = Uri.parse('$uri/boards/$id');
-    var headers = {'Authorization': 'Bearer $token'};
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json;charset=UTF-8'
+    };
     var body = jsonEncode({'question_id': question_id, 'content': content});
 
     var response = await http.put(url, headers: headers, body: body);

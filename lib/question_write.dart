@@ -12,12 +12,11 @@ class PostQuestionPage extends StatefulWidget {
 
 class _PostquestionPageState extends State<PostQuestionPage> {
   // Define variables for the form fields
-  List<Tags> _tags;
-  int _memberId;
   String question_content;
   String uri = myUri;
-  List<Tags> selectedTags;
-  String buttonText = "질문을 선택하세요";
+  List<Tags> selectedTags = [];
+  List<String> tagContents;
+  String buttonText = "태그를 선택하세요";
 
   // Create an instance of the API class
   QuestionApi _questionApi = QuestionApi();
@@ -29,15 +28,14 @@ class _PostquestionPageState extends State<PostQuestionPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void pickTags(BuildContext context) async {
-    selectedTags = await Navigator.push<List<Tags>>(
-        context, MaterialPageRoute(builder: (context) => pick_tags()));
+    selectedTags = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => pick_tags(selectedTags: selectedTags)));
     if (selectedTags != null) {
       // Tags 객체를 전달받으면 처리
       print(selectedTags);
-      setState(() {
-        // buttonText = selectedTags.; //
-        // _questionId = selectedTags.questionId;
-      });
+      setState(() {}); // 변경 적용
     }
   }
 
@@ -62,33 +60,69 @@ class _PostquestionPageState extends State<PostQuestionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              GestureDetector(
-                onTap: () async {
-                  pickTags(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+              if (selectedTags != null && selectedTags.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: selectedTags.length,
+                    itemBuilder: (context, index) {
+                      // 태그를 터치할 때 pickTags() 메서드 호출
+                      return Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                        margin: EdgeInsets.symmetric(vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          selectedTags[index].tagName,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  child: Text(
-                    buttonText,
-                    style: TextStyle(
-                      fontSize: 16, // 줄글 글씨 크기
+                ),
+              if (selectedTags == null || selectedTags.isEmpty)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () async {
+                      pickTags(context);
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      margin: EdgeInsets.symmetric(vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        '태그를 선택해주세요,',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Content'),
                 validator: (value) {
@@ -109,10 +143,11 @@ class _PostquestionPageState extends State<PostQuestionPage> {
                     _formKey.currentState.save();
                     try {
                       int questionId = await _questionApi.postQuestion(
-                          _tags, question_content);
+                          selectedTags, question_content);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content:
                               Text('question posted with ID $questionId')));
+                      Navigator.pop(context);
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Failed to post question: $e')));

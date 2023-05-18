@@ -24,6 +24,7 @@ class QuestionApi {
     ];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
+    print('$uri/questions${queries[query]}$param');
     final response = await http.get(
       Uri.parse('$uri/questions${queries[query]}$param'),
       headers: {'Authorization': 'Bearer $token'},
@@ -36,6 +37,7 @@ class QuestionApi {
       List<dynamic> jsonList =
           jsonDecode(utf8.decode(bodyBytes))['questions']; // 한국어
       questions = jsonList.map((json) => Questions.fromJson(json)).toList();
+      print(questions[0].questionContent);
     }
 
     return questions;
@@ -43,14 +45,23 @@ class QuestionApi {
 
   Future<int> postQuestion(List<Tags> tags, String question_content) async {
     // 질문 등록   # 1
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
-
+    List<int> postTags = [];
+    for (int i = 0; i < postTags.length; i++) {
+      postTags.add(tags[i].tagId);
+    }
     final response = await http.post(
       Uri.parse('$uri/questions'),
-      body: jsonEncode({'tags': tags, 'questionContent': question_content}),
-      headers: {'Authorization': 'Bearer $token'},
+      body:
+          jsonEncode({'tags': postTags, 'question_content': question_content}),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
     );
+    print(response.statusCode);
 
     if (response.statusCode == 201) {
       Map<String, dynamic> jsonMap = jsonDecode(response.body);

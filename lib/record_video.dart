@@ -6,6 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class RecordVideoPage extends StatefulWidget {
+  final String buttonText;
+  RecordVideoPage({@required this.buttonText});
+
   @override
   _RecordVideoPageState createState() => _RecordVideoPageState();
 }
@@ -19,6 +22,8 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
   UploadVideoApi uploadVideoApi = UploadVideoApi();
   String videoUrl;
   bool isLoading = false;
+  String question;
+  String _buttonText;
 
   // Define a method to initialize the camera.
   Future<void> initCamera() async {
@@ -97,6 +102,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
 
   @override
   void initState() {
+    _buttonText = widget.buttonText;
     super.initState();
     initCamera().then((_) {
       // initCamera()가 완료될 때까지 기다린 후에 build() 메서드를 호출함
@@ -143,7 +149,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
                     ],
                   ),
                   child: Text(
-                    "지원하신 이유가 뭔가요?",
+                    _buttonText,
                     style: TextStyle(
                       fontSize: 16, // 줄글 글씨 크기
                     ),

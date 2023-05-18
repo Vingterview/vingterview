@@ -20,11 +20,16 @@ class _loginState extends State<login> {
 
   Future<void> _loginWithGoogle() async {
     // App specific variables
+    String title;
+    String selectedUrl;
+
+    // final GoogleSignIn _googleSignIn = GoogleSignIn();
+    // await _googleSignIn.signIn();
+
     final googleClientId =
         'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
     ;
-    final callbackUrlScheme =
-        'com.googleusercontent.apps.XXXXXXXXXXXX-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+    final callbackUrlScheme = 'myapp';
 
     final url = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
       'response_type': 'code',
@@ -39,6 +44,7 @@ class _loginState extends State<login> {
       //         'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google',
       //     callbackUrlScheme: callbackUrlScheme);
       // final code = Uri.parse(result).queryParameters['code'];
+      // print("우와아아아");
 
       // // Use this code to get an access token
       // final response = await http
@@ -50,11 +56,45 @@ class _loginState extends State<login> {
       // });
 
       // // Get the access token from the response
-      // final accessToken = jsonDecode(response.body)['access_token'] as String;
+      // String accessToken = jsonDecode(response.body)['access_token'] as String;
       // // callbackUrlScheme은 앱에서 등록한 scheme 이름과 같아야 합니다.
-      // // final uri = Uri.parse(result);
-      // // final queryParams = uri.queryParameters;
-      // // final accessToken = queryParams['access_token'];
+      // final uri = Uri.parse(result);
+      // final queryParams = uri.queryParameters;
+      // String auth_url = "https://accounts.google.com/o/oauth2/token";
+
+      // -------------------------------------------------------------------------
+
+      // String authorizationUrl =
+      //     '$authEndpoint?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=$scope';
+      // String result = await FlutterWebAuth.authenticate(
+      //     url: authorizationUrl, callbackUrlScheme: redirectUrl);
+
+      // Uri authUrl = Uri.parse('https://accounts.google.com/o/oauth2/token');
+      // Map<String, String> params = {
+      //   'grant_type': 'authorization_code',
+      //   'code': 'YOUR_CODE',
+      //   'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
+      //   'client_id': clientId,
+      //   'client_secret': clientSecret,
+      // };
+      // var response = await http.post(authUrl, body: params);
+
+      // // 인증 토큰을 추출합니다.
+      // Map<String, String> headers = json.decode(response.body)['headers'];
+      // String accessToken = headers['Authorization'].split(' ')[1];
+
+      // // Google API를 요청합니다.
+      // Uri url = Uri.parse('https://www.googleapis.com/books/v1/volumes?q=dune');
+      // response = await http.get(url, headers: <String, String>{
+      //   'Authorization': 'Bearer $accessToken',
+      // });
+
+      // // 응답을 인쇄합니다.
+      // print(json.decode(response.body));
+
+      // accessToken = queryParams['access_token'];
+
+      // ----------------------------
       // print(accessToken);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLogin', true);
@@ -127,6 +167,11 @@ class _loginState extends State<login> {
                 ),
         ),
       ),
+      // body: WebView(
+      //   initialUrl:
+      //       'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google',
+      //   javascriptMode: JavascriptMode.unrestricted,
+      // ),
     );
   }
 }

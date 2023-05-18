@@ -198,7 +198,7 @@ class _VideoPageState extends State<VideoPage> {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: ' 왜 지원하셨나요?',
+                                    text: videolist[index].questionContent,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,

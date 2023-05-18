@@ -119,8 +119,11 @@ class _PostVideoPageState extends State<PostVideoPage> {
               IconButton(
                 icon: Icon(Icons.camera),
                 onPressed: () async {
-                  _video_url = await Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => RecordVideoPage()));
+                  _video_url = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => RecordVideoPage(
+                              buttonText: buttonText.toString())));
                 },
               ),
               SizedBox(height: 16),
@@ -135,6 +138,7 @@ class _PostVideoPageState extends State<PostVideoPage> {
                       print(boardId);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Video posted with ID $boardId')));
+                      Navigator.pop(context);
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Failed to post video: $e')));

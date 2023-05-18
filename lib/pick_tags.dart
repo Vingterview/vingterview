@@ -3,14 +3,18 @@ import '../models/tags.dart';
 import '../providers/tags_api.dart';
 
 class pick_tags extends StatefulWidget {
+  final List<Tags> selectedTags;
+  pick_tags({@required this.selectedTags});
   @override
-  _pick_tagsState createState() => _pick_tagsState();
+  _pick_tagsState createState() => _pick_tagsState(selectedTags: selectedTags);
 }
 
 class _pick_tagsState extends State<pick_tags> {
   TagApi tagApi = TagApi();
   List<Tags> tagList;
-  List<Tags> selectedTags = []; // 리스트 초기화
+  List<Tags> selectedTags = [];
+  _pick_tagsState({@required this.selectedTags});
+  Tags parentTag;
 
   @override
   void initState() {
@@ -20,61 +24,82 @@ class _pick_tagsState extends State<pick_tags> {
   }
 
   Future<void> initTag() async {
-    tagList = await tagApi.getTags();
+    selectedTags = widget.selectedTags;
+    if (selectedTags.isEmpty) {
+      tagList = await tagApi.getTags();
+    } else {
+      parentTag = selectedTags[selectedTags.length - 1];
+      tagList =
+          await tagApi.getTags(query: 1, param: parentTag.tagId.toString());
+    }
     print(tagList);
+    setState(() {}); // 상태 변경 알림
   }
 
-  void selectTag(Tags tag) {
+  Future<void> selectTag(Tags tag) async {
+    selectedTags.add(tag);
     if (selectedTags.length < 3) {
-      // 선택된 태그가 3개 이하인 경우만 추가
-      setState(() {
-        selectedTags.add(tag); // 선택한 태그를 리스트에 추가
-      });
+      selectedTags = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => pick_tags(selectedTags: selectedTags)));
     }
+    Navigator.pop(context, selectedTags);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('태그 조회용'),
+        title: Text('태그 선택'),
       ),
-      body: ListView.builder(
-        itemCount: tagList.length,
-        itemBuilder: (BuildContext context, int index) {
-          Tags tag = tagList[index];
-          return InkWell(
-            onTap: () {
-              selectTag(tag); // 태그를 선택하면 선택한 태그를 저장하는 함수 호출
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              margin: EdgeInsets.symmetric(vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
+      body: FutureBuilder<List<Tags>>(
+        future: tagApi.getTags(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading Question data'));
+          } else {
+            return ListView.builder(
+              itemCount: tagList.length,
+              itemBuilder: (BuildContext context, int index) {
+                Tags tag = tagList[index];
+                return InkWell(
+                  onTap: () {
+                    selectTag(tag);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    margin: EdgeInsets.symmetric(vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      tagList[index].tagName,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              child: Text(
-                tagList[index].tagName,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          );
+                );
+              },
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context, selectedTags); // 선택된 태그 리스트를 반환
+          Navigator.pop(context, selectedTags);
         },
         child: Icon(Icons.check),
       ),

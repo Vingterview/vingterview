@@ -38,6 +38,7 @@ class _QuestionPageState extends State<QuestionPage> {
         break;
       case SortingOption.scrap:
         QuestionList = await questionApi.getQuestions(query: 4, param: "scrap");
+        print(QuestionList);
         return (QuestionList);
         break;
       case SortingOption.video:
@@ -47,6 +48,7 @@ class _QuestionPageState extends State<QuestionPage> {
         break;
       case SortingOption.old:
         QuestionList = await questionApi.getQuestions(query: 4, param: "old");
+        print(QuestionList);
         return (QuestionList);
         break;
       default:
@@ -109,6 +111,7 @@ class _QuestionPageState extends State<QuestionPage> {
                 child: ListView.builder(
               itemCount: Questionlist.length,
               itemBuilder: (context, index) {
+                print(index);
                 return GestureDetector(
                   onTap: () async {
                     // 이 질문만 모아보기 기능
