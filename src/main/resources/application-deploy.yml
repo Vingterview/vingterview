@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 500
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  profiles:
+    include: security
+
+  servlet:
+    multipart:
+      max-file-size: 1500MB
+      max-request-size: 1500MB
+
+logging:
+  level:
+    root: info
+  file:
+    path: ${user.home}/logs/
+
+img:
+  dir: ${user.home}/img/
+
+video:
+  dir: ${user.home}/video/

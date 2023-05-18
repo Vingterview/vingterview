@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Chating</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+    }
+    .container{
+      width: 500px;
+      margin: 0 auto;
+      padding: 25px
+    }
+    .container h1{
+      text-align: left;
+      padding: 5px 5px 5px 15px;
+      color: #FFBB00;
+      border-left: 3px solid #FFBB00;
+      margin-bottom: 20px;
+    }
+    .chating{
+      background-color: #000;
+      width: 500px;
+      height: 500px;
+      overflow: auto;
+    }
+    .chating p{
+      color: #fff;
+      text-align: left;
+    }
+    input{
+      width: 330px;
+      height: 25px;
+    }
+    #yourMsg{
+      display: none;
+    }
+  </style>
+</head>
+
+<script type="text/javascript">
+  var ws;
+  ws = new WebSocket("ws://" + location.host + "/ving");
+  ws.binaryType = "blob";
+  wsEvt();
+  function wsOpen(){
+  }
+
+  function createObjectURL(blob) {
+    return window.URL.createObjectURL(blob);
+  }
+
+  var cnt = 0;
+  var curSize =0;
+  var receivedChunks = [];
+
+
+  var content ;
+  var roomId;
+  var type ;
+  var gameInfo;
+  var sessionId;
+  function wsEvt() {
+    ws.onopen = function(data){
+      //소켓이 열리면 초기화 세팅하기
+      console.log(data);
+
+    }
+    ws.onmessage = function(e) {
+
+      if(e.data instanceof Blob){
+       /* setInterval(function () {
+          receivedChunks.push(data.data);
+          appendToSourceBuffer();
+        },1000);
+
+        var mediaSource = new MediaSource();
+        var mediaSourceUrl = createObjectURL(mediaSource);
+        var video = document.getElementById("yourVideo");
+        video.src = mediaSourceUrl;
+        var sourceBuffer = null;
+        mediaSource.addEventListener("sourceopen", function () {
+          sourceBuffer = mediaSource.addSourceBuffer("video/webm;codecs=\"opus,vp8\"");
+          sourceBuffer.addEventListener("updateend", appendToSourceBuffer);
+        });
+        function appendToSourceBuffer() {
+          if (mediaSource.readyState === "open" && sourceBuffer && sourceBuffer.updating === false) {
+            sourceBuffer.appendBuffer(receivedChunks.shift());
+          }
+        }
+*/
+        if (cnt == 1000) {
+          var videoUrl= createObjectURL(new Blob(receivedChunks));
+          var video = document.getElementById("yourVideo");
+          video.srcObject = null;
+          video.src = videoUrl;
+          receivedChunks.splice(0, 1000);
+          cnt = 0;
+        }else{
+          receivedChunks.push(e.data);
+          cnt += 1;
+        }
+
+      }else{
+
+        content = JSON.parse(e.data);
+        console.log(content)
+        roomId = content.roomId;
+        type = content.type;
+        gameInfo = content.gameInfo;
+        sessionId = content.sessionId;
+
+        document.body.append(roomId+" " + type +" " + gameInfo)
+
+      }
+
+    }
+
+    document.addEventListener("keypress", function(e){
+      if(e.keyCode == 13){ //enter press
+        send();
+      }
+    });
+  }
+
+  function sendVideoFinish() {
+
+    type = "FINISH_VIDEO";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendParticipateFinish() {
+
+    type = "FINISH_PARTICIPATE";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendParticipate() {
+
+    type = "PARTICIPATE";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendPoll() {
+    type = "POLL";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+  function sendPollFinish() {
+    type = "FINISH_POLL";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function sendNext() {
+    type = "NEXT";
+    ws.send(JSON.stringify({roomId: roomId, type: type, sessionId: sessionId, gameInfo:gameInfo}) )
+
+  }
+
+  function videoOn() {
+    navigator.mediaDevices.getUserMedia(
+            {video: true,audio:true})
+            .then(function (stream){
+              // 카메라 스트림을 비디오 요소에 연결하여 화면에 표시
+              var video = document.getElementById('myVideo');
+              video.srcObject = stream
+            })
+  }
+
+  function sendMyVideo() {
+    var videoElement = document.getElementById('myVideo');
+    var stream = videoElement.srcObject;
+
+    var mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = async function(event) {
+      console.log(event.data);
+      if (event.data && event.data.size > 0) {
+        var arrayBuffer = await event.data.arrayBuffer()
+        var blobData = new Blob([arrayBuffer],{type:"video/mp4"});
+
+        var chunkSize = 1024;
+        var start = 0;
+        while (start < blobData.size) {
+          ws.send(blobData.slice(start,start+chunkSize));
+          start += chunkSize;
+        }
+
+
+      }
+    };
+    mediaRecorder.start(2000);
+  }
+
+
+</script>
+<body>
+<div id="container" class="container">
+  <h1>채팅</h1>
+  <div id="chating" class="chating">
+  </div>
+
+  <div id="yourName">
+    <table class="inputTable">
+      <tr>
+        <th><button onclick="sendVideoFinish()" id="startBtn">비디오 종료</button></th>
+        <th><button onclick="sendParticipateFinish()" id="sendBtn">참가하기 종료</button></th>
+        <th><button onclick="sendParticipate()" id="participateBtn">참가하기</button></th>
+        <th><button onclick="sendPoll()" id="pollBtn">투퓨</button></th>
+        <th><button onclick="sendPollFinish()" id="pollFinishBtn">투표 종료</button></th>
+        <th><button onclick="sendNext()" id="pollSendBtn">다음 라운드</button></th>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div>
+  <h1>영상</h1>
+  <button onclick="videoOn()" id="videoBtn">카메라키기</button>
+  <button onclick="sendMyVideo()" id="videoSendBtn">스트림 전송</button>
+  <video id="myVideo" autoplay ></video>
+  <video id="yourVideo" autoplay ></video>
+</div>
+</body>
+</html>
