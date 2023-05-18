@@ -10,13 +10,13 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
-  profiles:
-    include: security
-
   servlet:
     multipart:
       max-file-size: 1500MB
       max-request-size: 1500MB
+
+  profiles:
+    include: security
 
 logging:
   level:
@@ -32,7 +32,6 @@ video:
 
 
 cloud:
-
   s3:
     bucket: vingterview
     dir_image : image/
