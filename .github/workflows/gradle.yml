@@ -69,8 +69,8 @@ jobs:
             credentials:
               accessKey: $AWS_S3_ACCESS_KEY
               secretKey: $AWS_S3_KEY_SECRET
-        " > application-secret.yml
-        cat application-secret.yml
+        " > application-security.yml
+        cat application-security.yml
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
