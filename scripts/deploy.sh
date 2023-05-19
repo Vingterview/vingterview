@@ -3,7 +3,7 @@ REPOSITORY=/home/ubuntu/app/deploy
 PROJECT_NAME=vingterview
 
 echo "> 현재 구동중인 어플리케이션 확인"
-CURRENT_PID=$(pgrep -fl vingterview | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep -f "vingterview.*\.jar" | awk '{print $1}')
 
 echo "> 현재 구동중인 어플리케이션 pid: $CURRENT_PID"
 
@@ -25,4 +25,4 @@ chmod +x $JAR_NAME
 
 echo ">$JAR_NAME 실행"
 nohup java -jar \
-  $JAR_NAME > $REPOSITORY/nohub.out 2>&1 &
+  $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.annotation.LoginMemberId;
+import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.comment.*;
 import ving.vingterview.service.comment.CommentService;
 
@@ -18,6 +19,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping(params = "board_id")
+    @Trace
     public ResponseEntity<CommentListDTO> findByBoard(@RequestParam(name = "board_id") Long boardId,
                                                       @RequestParam(name="page",defaultValue ="0")int page,
                                                       @RequestParam(name="size", defaultValue="20")int size) {
@@ -26,6 +28,7 @@ public class CommentController {
     }
 
     @GetMapping(params = "member_id")
+    @Trace
     public ResponseEntity<CommentListDTO> findByMember(@RequestParam(name = "member_id") Long memberId,
                                                        @RequestParam(name="page",defaultValue ="0")int page,
                                                        @RequestParam(name="size", defaultValue="20")int size) {
@@ -34,12 +37,14 @@ public class CommentController {
     }
 
     @PostMapping(value = "")
+    @Trace
     public ResponseEntity<CommentResponseDTO> create(@RequestBody CommentCreateDTO commentCreateDTO,
                                                      @LoginMemberId Long memberId) {
         return new ResponseEntity<>(new CommentResponseDTO(commentService.create(memberId, commentCreateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
+    @Trace
     public ResponseEntity<CommentDTO> comment(@PathVariable Long id) {
         CommentDTO comment = commentService.findOne(id);
         return new ResponseEntity<>(comment, HttpStatus.OK);
@@ -47,17 +52,20 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void delete(@PathVariable Long id) {
         commentService.delete(id);
     }
 
     @PutMapping("/{id}")
+    @Trace
     public ResponseEntity<CommentResponseDTO> update(@PathVariable Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
         return new ResponseEntity<>(new CommentResponseDTO(commentService.update(id, commentUpdateDTO)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void like(@PathVariable Long id,
                      @LoginMemberId Long memberId) {
         commentService.like(memberId, id);

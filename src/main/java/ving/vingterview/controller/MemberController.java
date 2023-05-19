@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.member.*;
 import ving.vingterview.service.file.FileStore;
 import ving.vingterview.service.member.MemberService;
@@ -23,11 +24,13 @@ public class MemberController {
     private final FileStore fileStore;
 
     @GetMapping("")
+    @Trace
     public ResponseEntity<MemberListDTO> list() {
         return ResponseEntity.ok(memberService.findAll());
     }
 
     @PostMapping("")
+    @Trace
     public ResponseEntity<MemberResponseDTO> create(@RequestBody MemberCreateDTO memberCreateDTO){
 
         Long memberId = memberService.join(memberCreateDTO);
@@ -39,6 +42,7 @@ public class MemberController {
     }
 
     @PostMapping("/image")
+    @Trace
     public ResponseEntity<ProfileImageResponseDTO> profileUpload(@ModelAttribute ProfileImageDTO profileImageDTO) {
         if (profileImageDTO.getProfileImage() != null && !profileImageDTO.getProfileImage().isEmpty()) {
             String storeFileName = fileStore.createStoreFileName(profileImageDTO.getProfileImage().getOriginalFilename());
@@ -62,6 +66,7 @@ public class MemberController {
 
 
     @GetMapping("/{id}")
+    @Trace
     public ResponseEntity<MemberDTO> member(@PathVariable(name = "id") Long id) {
 
         MemberDTO memberDTO = memberService.findById(id);
@@ -70,11 +75,13 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void delete(@PathVariable(name = "id") Long id) {
         memberService.delete(id);
     }
 
     @PutMapping("/{id}")
+    @Trace
     public ResponseEntity<MemberResponseDTO> update(@PathVariable(name = "id") Long id,
                        @RequestBody MemberUpdateDTO memberUpdateDTO) {
 

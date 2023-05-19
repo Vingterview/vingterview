@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.annotation.LoginMemberId;
+import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionListDTO;
 import ving.vingterview.dto.question.QuestionResponseDTO;
@@ -24,12 +25,14 @@ public class QuestionController {
 
 
     @GetMapping("")
+    @Trace
     public ResponseEntity<QuestionListDTO> list(@RequestParam(name="page",defaultValue ="0")int page,
                                                 @RequestParam(name="size", defaultValue="20")int size) {
         return ResponseEntity.ok(questionService.findAll(page, size, true));
     }
 
     @GetMapping(params = "tag_id")
+    @Trace
     public ResponseEntity<QuestionListDTO> findByTag(@RequestParam(name = "tag_id") List<Long> tagId,
                                                      @RequestParam(name="page",defaultValue ="0")int page,
                                                      @RequestParam(name="size", defaultValue="20")int size) {
@@ -38,6 +41,7 @@ public class QuestionController {
 
 
     @GetMapping(params = "member_id")
+    @Trace
     public ResponseEntity<QuestionListDTO> findByMember(@RequestParam(name = "member_id") Long memberId,
                                                         @RequestParam(name="page",defaultValue ="0")int page,
                                                         @RequestParam(name="size", defaultValue="20")int size) {
@@ -45,6 +49,7 @@ public class QuestionController {
     }
 
     @GetMapping(params = "scrap_member_id")
+    @Trace
     public ResponseEntity<QuestionListDTO> findScraps(@RequestParam(name = "scrap_member_id") Long scrapMemberId,
                                                       @RequestParam(name="page",defaultValue ="0")int page,
                                                       @RequestParam(name="size", defaultValue="20")int size) {
@@ -52,6 +57,7 @@ public class QuestionController {
     }
 
     @GetMapping(params = "order_by")
+    @Trace
     public ResponseEntity<QuestionListDTO> orderBy(@RequestParam(name = "order_by") String order_by,
                                                    @RequestParam(name="page",defaultValue ="0")int page,
                                                    @RequestParam(name="size", defaultValue="20")int size) {
@@ -72,6 +78,7 @@ public class QuestionController {
 
 
     @PostMapping("")
+    @Trace
     public ResponseEntity<QuestionResponseDTO> create(@RequestBody QuestionCreateDTO questionCreateDTO,
                                                       @LoginMemberId Long memberId) {
         return new ResponseEntity<>(new QuestionResponseDTO(questionService.create(memberId, questionCreateDTO)), HttpStatus.CREATED);
@@ -79,6 +86,7 @@ public class QuestionController {
 
     @GetMapping("/{id}/scrap")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void scrap(@PathVariable Long id, @LoginMemberId Long memberId) {
         questionService.scrap(memberId, id);
     }
