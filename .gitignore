@@ -2,4 +2,4 @@
 .gradle
 /build
 /out
-application-security.yml
+/src/main/resources/application-security.yml
