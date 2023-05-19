@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ving.vingterview.annotation.LoginMemberId;
+import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
@@ -33,15 +34,17 @@ public class BoardController {
 
 
     @GetMapping(value = "")
+    @Trace
     public ResponseEntity<BoardListDTO> boards(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "20") int size) {
-
+        log.info("BoardController boards");
         BoardListDTO boardListDTO = boardService.findAll(page, size, true);
 
         return ResponseEntity.ok(boardListDTO);
     }
 
     @GetMapping(value = "", params = "member_id")
+    @Trace
     public ResponseEntity<BoardListDTO> filterByMember(@RequestParam(name = "member_id") Long member_id,
                                                        @RequestParam(name = "page", defaultValue = "0") int page,
                                                        @RequestParam(name = "size", defaultValue = "20") int size) {
@@ -55,6 +58,7 @@ public class BoardController {
     }
 
     @GetMapping(value = "", params = "question_id")
+    @Trace
     public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id,
                                                          @RequestParam(name = "page", defaultValue = "0") int page,
                                                          @RequestParam(name = "size", defaultValue = "20") int size) {
@@ -64,6 +68,7 @@ public class BoardController {
     }
 
     @GetMapping(value = "", params = "order_by")
+    @Trace
     public ResponseEntity<BoardListDTO> filterByOrder(@RequestParam(name = "order_by") String order_by,
                                                       @RequestParam(name = "page", defaultValue = "0") int page,
                                                       @RequestParam(name = "size", defaultValue = "20") int size) {
@@ -92,6 +97,7 @@ public class BoardController {
     }
 
     @PostMapping("")
+    @Trace
     public ResponseEntity<BoardResponseDTO> create(@RequestBody BoardCreateDTO boardCreateDTO,
                                                    @LoginMemberId Long memberId) {
 
@@ -103,6 +109,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
+    @Trace
     public ResponseEntity<BoardDTO> board(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(boardService.findById(id));
     }
@@ -110,12 +117,14 @@ public class BoardController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void delete(@PathVariable(name = "id") Long id) {
         boardService.delete(id);
     }
 
 
     @PutMapping("/{id}")
+    @Trace
     public ResponseEntity<BoardResponseDTO> update(@PathVariable(name = "id") Long id,
                                                    @RequestBody BoardUpdateDTO boardUpdateDTO) {
 
@@ -129,11 +138,13 @@ public class BoardController {
 
     @GetMapping("/{id}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Trace
     public void like(@PathVariable(name = "id") Long id, @LoginMemberId Long memberId) {
         boardService.like(memberId, id);
     }
 
     @PostMapping("/video")
+    @Trace
     public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO) {
         if (videoDTO.getVideo() != null && !videoDTO.getVideo().isEmpty()) {
             String storeFileName = fileStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());

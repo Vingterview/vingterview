@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ving.vingterview.dto.tag.TagDTO;
+import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.tag.TagListDTO;
 import ving.vingterview.service.tag.TagService;
 
@@ -19,6 +19,7 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("")
+    @Trace
     public ResponseEntity<TagListDTO> list(@RequestParam(name = "parent_tag_id", required = false) Long parentTagId) {
 
         TagListDTO tags = new TagListDTO();
