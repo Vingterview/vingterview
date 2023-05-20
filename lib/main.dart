@@ -12,6 +12,7 @@ import 'pick_tags.dart';
 import 'record_video.dart';
 import 'example.dart';
 import 'video_edit.dart';
+import 'package:capston/mypage/my_videos.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
         '/tags_pick': (context) => pick_tags(),
         '/record_video': (context) => RecordVideoPage(),
         '/ex': (context) => VideoPlayerWidget(),
-        'video_edit': (context) => EditVideoPage(),
+        '/video_edit': (context) => EditVideoPage(),
+        '/my_videos': (context) => MyVideoPage(),
       },
       initialRoute: '/',
     );

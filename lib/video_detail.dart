@@ -382,38 +382,59 @@ class _VideoDetailState extends State<video_detail> {
                                 ],
                               ),
                             );
-                          } else if (idx == commentList.length + 2) {
-                            // Display your additional container at the end
-                            return Container(
-                                // Additional container
-                                // ...
-                                );
                           } else {
                             // Display comments from commentList
                             Comments comment = commentList[idx -
                                 1]; // Subtract 1 to account for video details
                             return Container(
-                              padding: EdgeInsets.fromLTRB(
-                                  10, 5, 10, 10), // Set appropriate margins
+                              padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start, // Align left
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    comment.memberNickname ??
-                                        '비회원 사용자', // Display userNickname in small letters
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween, // 오른쪽 정렬
+                                    children: [
+                                      Text(
+                                        comment.memberNickname ?? '비회원 사용자',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              // 좋아요 버튼 동작
+                                              // 원하는 동작을 여기에 추가하세요
+                                            },
+                                            child: Icon(
+                                              Icons.favorite_border,
+                                              size: 18,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          SizedBox(width: 5),
+                                          GestureDetector(
+                                            onTap: () {
+                                              // 메뉴 버튼 동작
+                                              // 원하는 동작을 여기에 추가하세요
+                                            },
+                                            child: Icon(
+                                              Icons.menu,
+                                              size: 18,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                      height:
-                                          5), // Add space between userNickname and content
+                                  SizedBox(height: 5),
                                   Text(
-                                    comment.content, // Display comment content
+                                    comment.content,
                                     style: TextStyle(
-                                      fontSize:
-                                          16, // Set slightly larger font size
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ],
