@@ -95,7 +95,8 @@ class VideoApi {
     }
   }
 
-  Future<int> putRequest(int id, int question_id, String content) async {
+  Future<int> putRequest(
+      int id, int question_id, String content, String video_url) async {
     // 얘네가 null이면 안 된다!!
     // 게시글 수정  # 5
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -105,7 +106,11 @@ class VideoApi {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json;charset=UTF-8'
     };
-    var body = jsonEncode({'question_id': question_id, 'content': content});
+    var body = jsonEncode({
+      'question_id': question_id,
+      'content': content,
+      'video_url': video_url
+    });
 
     var response = await http.put(url, headers: headers, body: body);
 

@@ -130,7 +130,10 @@ class _VideoPageState extends State<VideoPage> {
                                       index: videolist[index]
                                           .boardId), // Provide the index here
                                 ),
-                              );
+                              ).then((value) {
+                                _updateWithSorting(_sortingOption);
+                                setState(() {});
+                              });
                             },
                             child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 30),
@@ -284,7 +287,10 @@ class _VideoPageState extends State<VideoPage> {
               icon: Icon(Icons.keyboard_arrow_right_sharp),
               color: Color(0xFF6fa8dc),
               onPressed: () {
-                Navigator.pushNamed(context, '/video_write');
+                Navigator.pushNamed(context, '/video_write').then((value) {
+                  _updateWithSorting(_sortingOption);
+                  setState(() {});
+                });
               },
             ),
           ]);

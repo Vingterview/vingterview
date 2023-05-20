@@ -11,6 +11,7 @@ import 'pick_question.dart';
 import 'pick_tags.dart';
 import 'record_video.dart';
 import 'example.dart';
+import 'video_edit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/tags_pick': (context) => pick_tags(),
         '/record_video': (context) => RecordVideoPage(),
         '/ex': (context) => VideoPlayerWidget(),
+        'video_edit': (context) => EditVideoPage(),
       },
       initialRoute: '/',
     );
