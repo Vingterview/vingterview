@@ -30,6 +30,11 @@ class _QuestionPageState extends State<QuestionPage> {
     });
   }
 
+  Future<void> _refreshPosts() async {
+    await _updateWithSorting(_sortingOption);
+    setState(() {});
+  }
+
   Future<List<Questions>> _updateWithSorting(SortingOption newValue) async {
     switch (_sortingOption) {
       case SortingOption.latest:
@@ -106,44 +111,50 @@ class _QuestionPageState extends State<QuestionPage> {
               ),
             ),
             Expanded(
-                child: ListView.builder(
-              itemCount: Questionlist.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    // 이 질문만 모아보기 기능
-                    // Navigator.pushNamed(context, '/question_write',
-                    //     arguments: Questionlist[index].questionId);
-                  },
-                  onLongPress: () async {
-                    Navigator.pushNamed(context, '/video_write',
-                        arguments: Questionlist[index]);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      textData ?? Questionlist[index].questionContent,
-                      style: TextStyle(
-                        fontSize: 16, // 줄글 글씨 크기
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )),
+                child: RefreshIndicator(
+                    onRefresh: () {
+                      // 게시글을 다시 불러오는 동작을 수행하는 로직을 작성
+                      return _refreshPosts();
+                    },
+                    child: ListView.builder(
+                      itemCount: Questionlist.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () async {
+                            // 이 질문만 모아보기 기능
+                            // Navigator.pushNamed(context, '/question_write',
+                            //     arguments: Questionlist[index].questionId);
+                          },
+                          onLongPress: () async {
+                            Navigator.pushNamed(context, '/video_write',
+                                arguments: Questionlist[index]);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            margin: EdgeInsets.symmetric(vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              textData ?? Questionlist[index].questionContent,
+                              style: TextStyle(
+                                fontSize: 16, // 줄글 글씨 크기
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ))),
             IconButton(
               icon: Icon(Icons.keyboard_arrow_right_sharp),
               color: Color(0xFF6fa8dc),

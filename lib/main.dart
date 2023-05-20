@@ -10,6 +10,7 @@ import 'tags.dart';
 import 'pick_question.dart';
 import 'pick_tags.dart';
 import 'record_video.dart';
+import 'example.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/question_pick': (context) => pick_question(),
         '/tags_pick': (context) => pick_tags(),
         '/record_video': (context) => RecordVideoPage(),
+        '/ex': (context) => VideoPlayerWidget(),
       },
       initialRoute: '/',
     );

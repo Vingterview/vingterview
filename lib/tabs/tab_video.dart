@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/videos.dart';
 import '../providers/videos_api.dart';
+import 'package:capston/video_detail.dart';
 
 Widget getVideoPage() {
   return VideoPage();
@@ -57,6 +58,11 @@ class _VideoPageState extends State<VideoPage> {
     }
   }
 
+  Future<void> _refreshPosts() async {
+    await _updateWithSorting(_sortingOption);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Videos>>(
@@ -106,153 +112,174 @@ class _VideoPageState extends State<VideoPage> {
                 ],
               ),
             ),
-            // 나머지 내용 추가
             Expanded(
-                child: ListView.separated(
-              itemCount: videolist.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () async {
-                      Navigator.pushNamed(context, '/video_detail',
-                          arguments: videolist[index].boardId);
+                child: RefreshIndicator(
+                    onRefresh: () {
+                      // 게시글을 다시 불러오는 동작을 수행하는 로직을 작성
+                      return _refreshPosts();
                     },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFFD9D9D9), width: 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(top: 20, left: 20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU'),
-                                  ),
+                    child: ListView.separated(
+                      itemCount: videolist.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => video_detail(
+                                      index: videolist[index]
+                                          .boardId), // Provide the index here
                                 ),
-                                SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      videolist[index].memberName,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 1),
-                                    Text(
-                                      videolist[index].createTime,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                videolist[index].content,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xFFD9D9D9), width: 1),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 30),
-                            width: 300,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFEEEEEE),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            alignment: Alignment.centerLeft,
-                            child: RichText(
-                              text: TextSpan(
+                              child: Column(
                                 children: [
-                                  TextSpan(
-                                    text: '   Q.',
-                                    style: TextStyle(
-                                      color: Color(0xFF3D85C6),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                  Container(
+                                    padding: EdgeInsets.only(top: 20, left: 20),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU'),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              videolist[index].memberName,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 1),
+                                            Text(
+                                              videolist[index].createTime,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: videolist[index].questionContent,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 10),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        videolist[index].content,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    width: 300,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFEEEEEE),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: '   Q.',
+                                            style: TextStyle(
+                                              color: Color(0xFF3D85C6),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: videolist[index]
+                                                .questionContent,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.favorite_border_outlined,
+                                                size: 18,
+                                                color: Color(0xFFDE50A4)),
+                                            SizedBox(width: 5),
+                                            Text(
+                                                videolist[index]
+                                                    .likeCount
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                )),
+                                          ],
+                                        ),
+                                        SizedBox(width: 5),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.comment_outlined,
+                                                size: 18,
+                                                color: Color(0xFF3D85C6)),
+                                            SizedBox(width: 5),
+                                            Text(
+                                                videolist[index]
+                                                    .commentCount
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.favorite_border_outlined,
-                                        size: 18, color: Color(0xFFDE50A4)),
-                                    SizedBox(width: 5),
-                                    Text(videolist[index].likeCount.toString(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(width: 5),
-                                Row(
-                                  children: [
-                                    Icon(Icons.comment_outlined,
-                                        size: 18, color: Color(0xFF3D85C6)),
-                                    SizedBox(width: 5),
-                                    Text(
-                                        videolist[index]
-                                            .commentCount
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ));
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 10);
-              },
-            )),
+                            ));
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 10);
+                      },
+                    ))),
             IconButton(
               icon: Icon(Icons.keyboard_arrow_right_sharp),
               color: Color(0xFF6fa8dc),
