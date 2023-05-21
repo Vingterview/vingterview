@@ -13,13 +13,12 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final SocketHandler socketHandler;
+    private final WebSocketAuthenticationInterceptor webSocketAuthenticationInterceptor;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(socketHandler, "/ving")
+                .addInterceptors(webSocketAuthenticationInterceptor)
                 .setAllowedOrigins("*");
-
     }
-
-
 }
 
