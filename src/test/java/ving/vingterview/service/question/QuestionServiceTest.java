@@ -1,6 +1,7 @@
 package ving.vingterview.service.question;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import ving.vingterview.dto.tag.TagDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -123,7 +123,7 @@ class QuestionServiceTest {
         dto.setQuestionContent("testQuestion1");
         dto.setTags(tags);
 
-        assertThatThrownBy(() -> questionService.create(100L, dto)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.create(100L, dto)).isInstanceOf(EntityNotFoundException.class);
     }
 
     // 태그가 없는 경우
@@ -136,13 +136,13 @@ class QuestionServiceTest {
         dto.setQuestionContent("testQuestion1");
         dto.setTags(tags);
 
-        assertThatThrownBy(() -> questionService.create(1L, dto)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.create(1L, dto)).isInstanceOf(EntityNotFoundException.class);
     }
 
     // 단건 조회 - 결과가 없는 경우
     @Test
     void findNothing() {
-        assertThatThrownBy(() -> questionService.findOne(1000L)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> questionService.findOne(1000L)).isInstanceOf(EntityNotFoundException.class);
     }
 
     // 질문 전체 조회

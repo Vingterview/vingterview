@@ -1,5 +1,6 @@
 package ving.vingterview.service.question;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,6 @@ import ving.vingterview.dto.tag.TagDTO;
 import ving.vingterview.repository.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -44,7 +44,7 @@ public class QuestionService {
      */
     public Long create(Long memberId, QuestionCreateDTO questionCreateDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("회원 정보 없음"));
 
         Question question = questionRepository.save(
                 Question.builder()
@@ -55,7 +55,7 @@ public class QuestionService {
         questionCreateDTO.getTags().stream()
                 .forEach(tagId -> {
                     Tag tag = tagRepository.findById(tagId)
-                            .orElseThrow(() -> new NoSuchElementException("태그 없음"));
+                            .orElseThrow(() -> new EntityNotFoundException("태그 없음"));
                     TagQuestion tagQuestion = TagQuestion.builder()
                             .question(question)
                             .tag(tag)
@@ -74,7 +74,7 @@ public class QuestionService {
      */
     @Transactional(readOnly = true)
     public QuestionDTO findOne(Long id) {
-        Question question = questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        Question question = questionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 질문을 찾을 수 없습니다."));
         return convertToQuestionDTO(question);
     }
 
@@ -189,8 +189,8 @@ public class QuestionService {
         Optional<QuestionMemberScrap> scrap = scrapRepository.findByQuestionIdAndMemberId(questionId, memberId);
 
         if (scrap.isEmpty()) {
-            Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("질문 없음"));
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException("회원 정보 없음"));
+            Question question = questionRepository.findById(questionId).orElseThrow(() -> new EntityNotFoundException("질문 없음"));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("회원 정보 없음"));
             QuestionMemberScrap questionMemberScrap = new QuestionMemberScrap(question, member);
             questionMemberScrap.setQuestion(question);
             scrapRepository.save(questionMemberScrap);

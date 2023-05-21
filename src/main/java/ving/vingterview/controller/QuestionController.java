@@ -1,5 +1,6 @@
 package ving.vingterview.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.annotation.LoginMemberId;
 import ving.vingterview.annotation.Trace;
+import ving.vingterview.dto.ErrorResult;
 import ving.vingterview.dto.question.QuestionCreateDTO;
 import ving.vingterview.dto.question.QuestionListDTO;
 import ving.vingterview.dto.question.QuestionResponseDTO;
@@ -23,6 +25,12 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ErrorResult entityNotFoundExHandle(EntityNotFoundException e) {
+        log.error("[entityNotFoundExHandle] ex", e);
+        return new ErrorResult("404", e.getMessage());
+    }
 
     @GetMapping("")
     @Trace
