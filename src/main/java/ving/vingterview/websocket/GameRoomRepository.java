@@ -1,11 +1,10 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import lombok.Getter;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 public class GameRoomRepository {

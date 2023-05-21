@@ -1,4 +1,4 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

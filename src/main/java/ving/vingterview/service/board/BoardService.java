@@ -1,10 +1,12 @@
 package ving.vingterview.service.board;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.LikeType;
@@ -39,10 +41,10 @@ public class BoardService {
     @Transactional
     public Long save(Long memberId, BoardCreateDTO boardCreateDTO) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다"));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 사용자를 찾을 수 없습니다"));
 
         Long questionId = boardCreateDTO.getQuestionId();
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> new RuntimeException("해당 질문을 찾을 수 없습니다."));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new EntityNotFoundException("해당 질문을 찾을 수 없습니다."));
 
         Board board = Board.builder()
                 .member(member)
@@ -61,24 +63,33 @@ public class BoardService {
 
     public BoardDTO findById(Long id) {
 
-        Board board = boardRepository.findByIdWithMemberQuestion(id).orElseThrow(() -> new RuntimeException("해당 게시글을 찾을 수 없습니다."));
+        Board board = boardRepository.findByIdWithMemberQuestion(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
         return transferBoardDTO(board);
     }
 
 
-    public void delete(Long id) {
+    public void delete(Long id, Long memberId) {
+
+        Board board = boardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다"));
+        if (board.getMember().getId() != memberId) {
+            throw new AccessDeniedException("해당 게시글에 생성자만 글을 삭제할 수 있습니다.");
+        }
+
         boardRepository.deleteById(id);
     }
 
     @Transactional
-    public Long update(Long id, BoardUpdateDTO boardUpdateDTO) {
+    public Long update(Long id, BoardUpdateDTO boardUpdateDTO,Long memberId) {
 
-        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시글을 찾을 수 없습니다"));
+        Board board = boardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다"));
+        if (board.getMember().getId() != memberId) {
+            throw new AccessDeniedException("해당 게시글에 생성자만 글을 수정할 수 있습니다.");
+        }
 
-        Question question = questionRepository.findById(boardUpdateDTO.getQuestionId()).orElseThrow(() -> new RuntimeException("해당 질문을 찾을 수 없습니다."));
 
+
+        Question question = questionRepository.findById(boardUpdateDTO.getQuestionId()).orElseThrow(() -> new EntityNotFoundException("해당 질문을 찾을 수 없습니다."));
         board.update(question, boardUpdateDTO.getContent(), boardUpdateDTO.getVideoUrl());
-
         return board.getId();
 
     }
@@ -90,8 +101,8 @@ public class BoardService {
 
         if (boardMemberLike.isEmpty()) {
             log.info("create like , board_id:  {} , member_id: {}", boardId, memberId);
-            Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 멤버를 찾을 수 없습니다."));
+            Board board = boardRepository.findById(boardId).orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버를 찾을 수 없습니다."));
             boardMemberLikeRepository.save(new BoardMemberLike(board, member));
 
         }else{

@@ -1,4 +1,4 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import lombok.Getter;
 import lombok.Setter;

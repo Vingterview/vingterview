@@ -1,4 +1,4 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +28,7 @@ public class GameMessage {
 
     public void questionGameMessage(String roomId,GameInfo gameInfo) {
         this.roomId = roomId;
-        this.type = MessageType.QUESTION;
+        this.type = MessageType.START;
         this.gameInfo = gameInfo;
 
     }

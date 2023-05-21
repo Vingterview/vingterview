@@ -1,10 +1,12 @@
 package ving.vingterview.service.comment;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.LikeType;
@@ -41,9 +43,9 @@ public class CommentService {
      */
     public Long create(Long memberId, CommentCreateDTO commentCreateDTO) {
         Board board = boardRepository.findById(commentCreateDTO.getBoardId())
-                .orElseThrow(()->new NoSuchElementException("게시글 없음"));
+                .orElseThrow(()->new EntityNotFoundException("게시글 없음"));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("회원 없음"));
         String content = commentCreateDTO.getContent();
 
         Comment comment = new Comment(board, member, content);
@@ -59,7 +61,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentDTO findOne(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(()->new NoSuchElementException("댓글 없음"));
+                .orElseThrow(()->new EntityNotFoundException("댓글 없음"));
         Member member = comment.getMember();
         Board board = comment.getBoard();
         int likeCount = likeRepository.countByCommentAndLikeStatus(comment, LikeType.LIKE);
@@ -75,7 +77,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentListDTO findByBoard(Long boardId,int page,int size) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new NoSuchElementException("게시글 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
 
         /****페이징 추가 부분 ******/
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
@@ -104,7 +106,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentListDTO findByMember(Long memberId,int page,int size) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("회원 없음"));
 
         /****페이징 추가 부분 ******/
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
@@ -126,22 +128,37 @@ public class CommentService {
 
     /**
      * 댓글 수정
+     *
      * @param id
      * @param commentUpdateDTO
+     * @param memberId
      * @return
      */
-    public Long update(Long id, CommentUpdateDTO commentUpdateDTO) {
+    public Long update(Long id, CommentUpdateDTO commentUpdateDTO, Long memberId) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(()->new NoSuchElementException("댓글 없음"));
+                .orElseThrow(()->new EntityNotFoundException("댓글 없음"));
+
+        if (comment.getMember().getId() != memberId) {
+            throw new AccessDeniedException("작성자만 댓글을 수정할 수 있습니다.");
+        }
+
         comment.update(commentUpdateDTO.getContent());
         return comment.getId();
     }
 
     /**
      * 댓글 삭제
+     *
      * @param id
+     * @param memberId
      */
-    public void delete(Long id) {
+    public void delete(Long id, Long memberId) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("댓글 없음"));
+
+        if (comment.getMember().getId() != memberId) {
+            throw new AccessDeniedException("작성자만 댓글을 삭제할 수 있습니다.");
+        }
         commentRepository.deleteById(id);
     }
 
@@ -154,8 +171,8 @@ public class CommentService {
         Optional<CommentMemberLike> like = likeRepository.findByCommentIdAndMemberId(boardId, memberId);
 
         if (like.isEmpty()) {
-            Comment comment = commentRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다."));
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException("해당 멤버를 찾을 수 없습니다."));
+            Comment comment = commentRepository.findById(boardId).orElseThrow(() -> new EntityNotFoundException("해당 댓글을 찾을 수 없습니다."));
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버를 찾을 수 없습니다."));
             likeRepository.save(new CommentMemberLike(comment, member));
 
         } else {

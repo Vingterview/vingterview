@@ -1,4 +1,4 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +98,6 @@ public class SocketHandler extends TextWebSocketHandler {
                 if(!gameRoom.isFinishParticipate()){
                     gameRoom.setFinishParticipate(true);
                     gameRoom.setRandomOrder();
-                    gameInfo.increaseRound();
                     GameMessage infoGameMessage = new GameMessage();
                     infoGameMessage.infoGameMessage(roomId, gameInfo);
                     gameRoom.handleMessage(infoGameMessage,objectMapper);
@@ -152,6 +151,7 @@ public class SocketHandler extends TextWebSocketHandler {
                     gameRoom.initGameInfo();
                     //next round
                     GameMessage questionGameMessage = new GameMessage();
+                    gameInfo.increaseRound();
                     questionGameMessage.questionGameMessage(roomId,gameInfo);
                     gameRoom.handleMessage(questionGameMessage, objectMapper);
                 }
