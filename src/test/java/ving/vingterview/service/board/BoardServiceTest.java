@@ -163,7 +163,7 @@ class BoardServiceTest {
 
         em.flush();
 
-        boardService.delete(board.getId());
+        boardService.delete(board.getId(), member.getId());
 //        boardService.findById(board.getId());
         Assertions.assertThrows(RuntimeException.class, () -> boardService.findById(board.getId()));
 

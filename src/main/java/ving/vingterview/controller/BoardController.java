@@ -1,14 +1,17 @@
 package ving.vingterview.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import ving.vingterview.annotation.LoginMemberId;
 import ving.vingterview.annotation.Trace;
+import ving.vingterview.dto.ErrorResult;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
 import ving.vingterview.service.file.FileStore;
@@ -31,6 +34,20 @@ public class BoardController {
 
     @Value("${video.dir}")
     private String tempDir;
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorResult accessDeniedExHandle(AccessDeniedException e) {
+        log.error("[accessDeniedExHandle] ex", e);
+        return new ErrorResult("403", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ErrorResult entityNotFoundExHandle(EntityNotFoundException e) {
+        log.error("[entityNotFoundExHandle] ex", e);
+        return new ErrorResult("404", e.getMessage());
+    }
 
 
     @GetMapping(value = "")
@@ -118,18 +135,19 @@ public class BoardController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Trace
-    public void delete(@PathVariable(name = "id") Long id) {
-        boardService.delete(id);
+    public void delete(@PathVariable(name = "id") Long id,@LoginMemberId Long memberId)
+    {
+        boardService.delete(id,memberId);
     }
 
 
     @PutMapping("/{id}")
     @Trace
     public ResponseEntity<BoardResponseDTO> update(@PathVariable(name = "id") Long id,
-                                                   @RequestBody BoardUpdateDTO boardUpdateDTO) {
+                                                   @RequestBody BoardUpdateDTO boardUpdateDTO,
+                                                   @LoginMemberId Long memberId) {
 
-        Long boardId = boardService.update(id, boardUpdateDTO);
-
+        Long boardId = boardService.update(id, boardUpdateDTO,memberId);
         BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
         boardResponseDTO.setBoardId(boardId);
         return new ResponseEntity<>(boardResponseDTO, HttpStatus.CREATED);
