@@ -1,6 +1,7 @@
 package ving.vingterview.service.comment;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +15,6 @@ import ving.vingterview.dto.comment.CommentUpdateDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -85,7 +85,7 @@ class CommentServiceTest {
         CommentUpdateDTO updateDTO = new CommentUpdateDTO();
         updateDTO.setContent("수정한 댓글입니다");
 
-        Long updateId = commentService.update(commentId, updateDTO);
+        Long updateId = commentService.update(commentId, updateDTO, 1L);
 
         CommentDTO foundDto = commentService.findOne(updateId);
         assertThat(foundDto.getContent()).isEqualTo(updateDTO.getContent());
@@ -101,16 +101,16 @@ class CommentServiceTest {
 
         Long commentId = commentService.create(1L, dto);
 
-        commentService.delete(commentId);
+        commentService.delete(commentId, 1L);
 
         assertThatThrownBy(() -> commentService.findOne(commentId))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     // 없는 댓글을 찾는 경우
     @Test
     void findNothing() {
-        assertThatThrownBy(() -> commentService.findOne(100L)).isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> commentService.findOne(100L)).isInstanceOf(EntityNotFoundException.class);
     }
 
     // 게시글로 댓글 필터링
@@ -166,7 +166,7 @@ class CommentServiceTest {
         em.persist(board);
 
         assertThatThrownBy(() -> commentService.findByBoard(board.getId() + 100L,0,100))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     // 작성자로 댓글 필터링
@@ -226,7 +226,7 @@ class CommentServiceTest {
         em.persist(board);
 
         assertThatThrownBy(() -> commentService.findByMember(member.getId() + 100L,0,100))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     // 새로운 댓글에 좋아요를 누르고, 다시 한번 눌러 좋아요를 취소한 경우
