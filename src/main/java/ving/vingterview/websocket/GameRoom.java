@@ -1,4 +1,4 @@
-package ving.vingterview.config.websocket;
+package ving.vingterview.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -75,12 +75,14 @@ public class GameRoom {
         if (gameMessage.getType() == MessageType.CREATE) {
             send(gameMessage, objectMapper);
 
-            GameMessage startGameMessage = new GameMessage();
+           /* GameMessage startGameMessage = new GameMessage();
             startGameMessage.startGameMessage(roomId,gameInfo);
-            send(startGameMessage, objectMapper);
+            send(startGameMessage, objectMapper);*/
 
             GameMessage questionGameMessage = new GameMessage();
+            gameInfo.increaseRound();
             questionGameMessage.questionGameMessage(roomId,gameInfo);
+
             send(questionGameMessage, objectMapper);
 
 
