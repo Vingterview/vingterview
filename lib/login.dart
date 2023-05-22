@@ -98,9 +98,9 @@ class _loginState extends State<login> {
       // ----------------------------
       // print(accessToken);
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLogin', true);
+      await prefs.setBool('isLogin', false);
       prefs.setString('access_token',
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDU5MzA5NiwiZXhwIjoxNjkyMzY5MDk2fQ.J-8I9ItfALxtUJRI5fVI_hBc_CIpYnTR72c2pRHYYCI");
+          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
 
       String _decodeBase64(String str) {
         String output = str.replaceAll('-', '+').replaceAll('_', '/');
@@ -137,10 +137,11 @@ class _loginState extends State<login> {
       }
 
       Map<String, dynamic> tokenContent = parseJwtPayLoad(
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqdW5nY2hhbnlvdW5nMzJAZ21haWwuY29tIiwibWVtYmVySWQiOiIyIiwiaWF0IjoxNjg0Mzk2MDk4LCJleHAiOjE2OTIxNzIwOTh9.-fvhsKkvUrapHR1fI1ZVS0YO9rsK_G3QPve4Ofu3oRQ");
+          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
       print(tokenContent);
       prefs.setInt('member_id', int.parse(tokenContent['memberId']));
       print(tokenContent['memberId']);
+      await prefs.setBool('isLogin', true);
 
       Navigator.pushReplacementNamed(context, '/index');
       setState(() {

@@ -51,6 +51,8 @@ class VideoApi {
         'Content-Type': 'application/json;charset=UTF-8'
       },
     );
+    print("$question_id $content $video_url");
+    print(utf8.decode(response.bodyBytes));
 
     if (response.statusCode == 201) {
       final bodyBytes = response.bodyBytes;

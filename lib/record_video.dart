@@ -78,14 +78,11 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
 
     final bool exists = await _videoFile.exists();
 
-    videoUrl = await uploadVideoApi.uploadVideo(video);
-    print(videoUrl);
-
     // Pop the page and return the video URL.
     setState(() {
       isLoading = false;
     });
-    Navigator.pop(context, videoUrl);
+    Navigator.pop(context, video);
   }
 
   // Define a method to handle the on-screen buttons.

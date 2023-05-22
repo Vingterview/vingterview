@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLogin = prefs.getBool('isLogin') ?? false;
     print("로그인 상태 : " + isLogin.toString());
     if (isLogin) {
-      return isLogin;
+      // return isLogin;
       String id = prefs.getString('id');
       String password = prefs.getString('password');
       print("저장 정보로 다시 시도");

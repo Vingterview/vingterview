@@ -6,6 +6,7 @@ import 'package:capston/models/globals.dart';
 import 'package:capston/models/questions.dart';
 import 'pick_question.dart';
 import 'record_video.dart';
+import 'package:image_picker/image_picker.dart';
 
 // import 'package:video_player/video_player.dart';
 class PostVideoPage extends StatefulWidget {
@@ -20,10 +21,11 @@ class _PostVideoPageState extends State<PostVideoPage> {
   String _content;
   String _video_url;
   UploadVideoApi uploadVideoApi = UploadVideoApi();
-  File _video;
+  XFile _video;
   String uri = myUri;
   Questions selectedQuestion;
   String buttonText = "질문을 선택하세요";
+  bool isReady = false;
 
   // Create an instance of the API class
   VideoApi _videoApi = VideoApi();
@@ -112,36 +114,41 @@ class _PostVideoPageState extends State<PostVideoPage> {
               IconButton(
                 icon: Icon(Icons.image),
                 onPressed: () async {
-                  _video_url = await uploadVideoApi.pickVideo();
-                  print(_video_url);
+                  _video = await uploadVideoApi.returnVideo();
                 },
               ),
               IconButton(
                 icon: Icon(Icons.camera),
                 onPressed: () async {
-                  _video_url = await Navigator.push(
+                  _video = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (_) => RecordVideoPage(
                               buttonText: buttonText.toString())));
+                  print(_video);
+                  print("dd");
                 },
               ),
               SizedBox(height: 16),
               ElevatedButton(
                 child: Text('Post Video'),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState.validate() && _video != null) {
                     _formKey.currentState.save();
                     try {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('영상을 업로드하는데에 1분~10분 이내에 시간이 소요됩니다.')));
+                      Navigator.pop(context);
+                      _video_url = await uploadVideoApi.pickVideo(_video);
+                      print(_video_url);
                       int boardId = await _videoApi.postVideo(
                           _questionId, _content, _video_url);
                       print(boardId);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Video posted with ID $boardId')));
-                      Navigator.pop(context);
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(content: Text('영상이 업로드 되었습니다.')));
                     } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to post video: $e')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Failed to pick or post video: $e')));
                     }
                   }
                 },
