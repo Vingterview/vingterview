@@ -3,15 +3,14 @@ package ving.vingterview.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import ving.vingterview.annotation.LoginMemberId;
 import ving.vingterview.domain.question.Question;
+import ving.vingterview.repository.MemberRepository;
 import ving.vingterview.repository.QuestionRepository;
 
 import java.io.IOException;
@@ -27,6 +26,8 @@ public class SocketHandler extends TextWebSocketHandler {
     private final Queue<WebSocketSession> waitingQueue = new LinkedBlockingQueue<>();
     private final GameRoomRepository gameRoomRepository = new GameRoomRepository();
     private final QuestionRepository questionRepository;
+
+    private final MemberRepository memberRepository;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,7 +70,10 @@ public class SocketHandler extends TextWebSocketHandler {
          */
         GameMessage gameMessage = new GameMessage();
         gameMessage.createGameMessage(roomId,gameInfo);
+        for (WebSocketSession session : gameRoom.getSessions()) {
+            gameMessage.setMemberInfo(session);
 
+        }
         gameRoomRepository.addRoom(gameRoom.getRoomId(), gameRoom);
         gameRoom.handleMessage(gameMessage,objectMapper);
 
@@ -123,7 +127,7 @@ public class SocketHandler extends TextWebSocketHandler {
             }
             case POLL ->{
                 log.info("CLIENT SEND POLL");
-                gameInfo.addPoll(gameMessage.getMessage());
+                gameInfo.addPoll(gameMessage.getPoll());
             }
             case FINISH_POLL ->{
                 log.info("CLIENT SEND POLL FINISH");
@@ -131,7 +135,7 @@ public class SocketHandler extends TextWebSocketHandler {
                     gameRoom.setFinishPoll(true);
                     GameMessage resultGameMessage = new GameMessage();
                     String winner = gameRoom.getResult();
-                    resultGameMessage.setMessage(winner);
+                    resultGameMessage.setPoll(winner);
                     resultGameMessage.resultGameMessage(roomId, gameInfo);
                     gameRoom.handleMessage(resultGameMessage, objectMapper);
                 }
@@ -175,6 +179,9 @@ public class SocketHandler extends TextWebSocketHandler {
 
         for (WebSocketSession sess : gameRoom.getSessions()) {
             try {
+                if (sess.getId().equals(sessionId)){
+                    continue;
+                }
                 sess.sendMessage(new BinaryMessage(message.getPayload()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
