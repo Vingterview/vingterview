@@ -75,22 +75,22 @@ class UserApi {
     }
   }
 
-  Future<int> putRequest(
-      // put request인데 비밀번호 없는거 의도하신건지
-      String id,
-      String name,
-      int age,
-      String email,
-      String nickname) async {
+  Future<int> putRequest(int id, String name, int age, String email,
+      String nickname, String profileImageUrl) async {
     // 회원 정보 변경  # 5
     var url = Uri.parse('$uri/members/$id');
-    var headers = {'Content-Type': 'application/json'};
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json;charset=UTF-8'
+    };
     var body = jsonEncode({
-      'id': id,
       'name': name,
       'age': age,
       'email': email,
-      'nickname': nickname
+      'nickname': nickname,
+      'profile_image_url': profileImageUrl,
     });
 
     var response = await http.put(url, headers: headers, body: body);

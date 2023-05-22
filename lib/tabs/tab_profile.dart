@@ -61,6 +61,22 @@ class MyPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/user_edit',
+                      arguments: memberId);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    '내정보 수정',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 16),
               InkWell(
                 onTap: () {

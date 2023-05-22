@@ -27,7 +27,7 @@ class Users {
         name: json['name'],
         age: json['age'],
         email: json['email'],
-        nickName: json['nickName'],
+        nickName: json['nickname'],
         profile_image_url: json['profile_image_url']);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:capston/mypage/edit_user.dart';
 import 'package:capston/register.dart';
 import 'package:capston/screens/screen_index.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'record_video.dart';
 import 'example.dart';
 import 'video_edit.dart';
 import 'package:capston/mypage/my_videos.dart';
+import 'package:capston/mypage/edit_user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/ex': (context) => VideoPlayerWidget(),
         '/video_edit': (context) => EditVideoPage(),
         '/my_videos': (context) => MyVideoPage(),
+        '/user_edit': (context) => UserEditPage(),
       },
       initialRoute: '/',
     );
