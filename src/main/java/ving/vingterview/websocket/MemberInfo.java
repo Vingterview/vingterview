@@ -11,7 +11,6 @@ import java.util.Base64;
 @Data
 @Slf4j
 public class MemberInfo {
-
     String sessionId;
     String name;
     String encodedImage;
@@ -21,9 +20,7 @@ public class MemberInfo {
         InputStream is = null;
         ByteArrayOutputStream baos = null;
         try {
-//            url = new URL(imageUrl);
-            url = new URL("https://vingterview.s3.ap-northeast-2.amazonaws.com/image/ced77a75-31f1-47ce-82a0-6923b55cb7bb.png");
-
+            url = new URL(imageUrl);
             is = url.openStream();
             baos = new ByteArrayOutputStream();
 
@@ -42,7 +39,13 @@ public class MemberInfo {
 
         }
         catch (Exception e) {
-            log.error("Exception convertImageToBase64 , " ,e);
+            log.error("Exception convertImageToBase64");
+            if(imageUrl == "https://vingterview.s3.ap-northeast-2.amazonaws.com/image/ced77a75-31f1-47ce-82a0-6923b55cb7bb.png"){
+                log.error("기본 이미지 인코딩 실패");
+                this.encodedImage = "";
+                return;
+            }
+            convertImageToBase64("https://vingterview.s3.ap-northeast-2.amazonaws.com/image/ced77a75-31f1-47ce-82a0-6923b55cb7bb.png");
         }
     }
 }
