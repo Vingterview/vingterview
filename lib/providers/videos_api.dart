@@ -5,31 +5,61 @@ import 'package:capston/models/videos.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+class PageVideos {
+  List<Videos> videos;
+  final int nextPage;
+  final bool hasNext;
+
+  PageVideos({this.videos, this.nextPage, this.hasNext});
+
+  factory PageVideos.fromJson(Map<String, dynamic> json) {
+    List<dynamic> jsonVideos = json['boards'];
+    // print(jsonTags);
+    List<Videos> _videos = jsonVideos != null
+        ? jsonVideos.map((videos) => Videos.fromJson(videos)).toList()
+        : [];
+    return PageVideos(
+      videos: _videos,
+      nextPage: json['next_page'],
+      hasNext: json['has_next'],
+    );
+  }
+
+  void changeList(List<Videos> videos) {
+    this.videos = videos;
+  }
+}
+
 class VideoApi {
   String uri = myUri;
-  Future<List<Videos>> getVideos({int query = 0, String param = ""}) async {
+  Future<PageVideos> getVideos(
+      {int query = 0, String param = "", int page = 0}) async {
     // String으로 받는 거 기억하기!!
     // 게시글 전체 목록 # 0
     // 0 : 전부(default) , 1 : 작성자로 필터링, 2 : 질문으로 필터링, 3 : 정렬 (좋아요순, 댓글순, 최신순)
-    List<String> queries = ["", "?member_id=", "?question_id=", "?order_by="];
+    List<String> queries = [
+      "?page=$page",
+      "?page=$page&member_id=$param",
+      "?page=$page&question_id=$param",
+      "?page=$page&order_by=$param"
+    ];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
     final response = await http.get(
-      Uri.parse('$uri/boards${queries[query]}$param'),
+      Uri.parse('$uri/boards${queries[query]}'),
       headers: {'Authorization': 'Bearer $token'},
     );
-    print('$uri/boards${queries[query]}$param');
+    print('$uri/boards${queries[query]}');
+    print("겟비디오");
 
     final statusCode = response.statusCode;
-    print(statusCode);
     final bodyBytes = response.bodyBytes;
-    List<Videos> videos = [];
+    PageVideos videos;
+    // print(utf8.decode(bodyBytes));
 
     if (statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(utf8.decode(bodyBytes))['boards'];
-      if (jsonList != null) {
-        videos = jsonList.map((json) => Videos.fromJson(json)).toList();
-      }
+      Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
+      videos = PageVideos.fromJson(jsonMap);
     }
     return videos;
   }
@@ -52,7 +82,6 @@ class VideoApi {
       },
     );
     print("$question_id $content $video_url");
-    print(utf8.decode(response.bodyBytes));
 
     if (response.statusCode == 201) {
       final bodyBytes = response.bodyBytes;

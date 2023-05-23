@@ -143,6 +143,7 @@ class _loginState extends State<login> {
       print(tokenContent['memberId']);
       await prefs.setBool('isLogin', true);
 
+      // Navigator.pushReplacementNamed(context, '/ex');
       Navigator.pushReplacementNamed(context, '/index');
       setState(() {
         // print(accessToken);
