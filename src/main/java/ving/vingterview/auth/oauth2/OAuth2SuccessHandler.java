@@ -6,10 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 import ving.vingterview.auth.jwt.JwtTokenProvider;
 import ving.vingterview.domain.member.Member;
 import ving.vingterview.auth.dto.Token;
@@ -22,15 +25,13 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
 
-    private final ObjectMapper objectMapper;
-
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         log.info("OAuth2 authenticated");
 
@@ -49,16 +50,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         memberRepository.save(member);
 
         Token token = tokenProvider.generateToken(member.getId(), email);
-        writeTokenResponse(response, token);
-    }
 
-    private void writeTokenResponse(HttpServletResponse response, Token token) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        response.addHeader("Authorization","Bearer " + token.getAccessToken());
-        response.addHeader("X-Refresh-Token", "Bearer " + token.getRefreshToken());
-
-        PrintWriter writer = response.getWriter();
-        writer.println(objectMapper.writeValueAsString(token));
-        writer.flush();
+        String targetUrl = UriComponentsBuilder.fromUriString("/token")
+                .queryParam("access_token", token.getAccessToken())
+                .queryParam("refresh_token", token.getRefreshToken())
+                .build().toUriString();
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

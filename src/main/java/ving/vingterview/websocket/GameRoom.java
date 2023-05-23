@@ -111,7 +111,17 @@ public class GameRoom {
             for (WebSocketSession session : sessions) {
                 if (session.getId().equals(target)) {
                     try {
+                        messageObject.setType(MessageType.TURN);
                         messageObject.setSessionId(session.getId());
+                        TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
+                        session.sendMessage(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    try {
+                        messageObject.setSessionId(session.getId());
+                        messageObject.setType(MessageType.VIDEO);
                         TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
                         session.sendMessage(message);
                     } catch (IOException e) {
