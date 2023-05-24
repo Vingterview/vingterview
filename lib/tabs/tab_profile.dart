@@ -8,6 +8,7 @@ import 'package:capston/models/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capston/mypage/my_videos.dart';
 import 'package:capston/mypage/scrap_questions.dart';
+import 'package:capston/mypage/my_comments.dart';
 
 class MyPage extends StatelessWidget {
   UserApi userApi = UserApi();
@@ -103,7 +104,12 @@ class MyPage extends StatelessWidget {
               SizedBox(height: 16),
               InkWell(
                 onTap: () {
-                  // 댓글 단 글에 대한 동작 처리
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsPage(
+                            member_id: memberId), // Provide the index here
+                      ));
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),

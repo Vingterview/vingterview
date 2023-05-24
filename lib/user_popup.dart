@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/users.dart';
 import 'providers/users_api.dart';
 import 'mypage/my_videos.dart';
+import 'package:capston/mypage/my_comments.dart';
 
 class UserProfilePopup extends StatefulWidget {
   // UserProfilePopup 위젯에 전달할 사용자 정보를 매개변수로 받을 수 있습니다.
@@ -68,8 +69,12 @@ class _UserProfilePopupState extends State<UserProfilePopup> {
         // "작성댓글보기" 버튼
         TextButton(
           onPressed: () {
-            // 작성댓글보기 버튼이 눌렸을 때 처리 로직
-            // 해당 사용자의 작성댓글 화면으로 이동하도록 구현
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CommentsPage(
+                      member_id: user.member_id), // Provide the index here
+                ));
           },
           child: Text('작성댓글보기'),
         ),
