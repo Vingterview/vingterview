@@ -249,7 +249,8 @@ class _VideoPageState extends State<VideoPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        videoList.videos[index].memberName,
+                                        videoList.videos[index].memberName ??
+                                            '닉네임 미등록 사용자',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,

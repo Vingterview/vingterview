@@ -21,6 +21,7 @@ class MyPage extends StatelessWidget {
   Future initUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     memberId = prefs.getInt('member_id'); // 'member_id'라는 키로 저장한 값 가져오기
+    print(memberId);
     userApi.getUserDetail(memberId);
     if (memberId != null) {
       user = await userApi.getUserDetail(memberId);

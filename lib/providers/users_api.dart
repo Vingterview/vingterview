@@ -10,9 +10,18 @@ class UserApi {
 
   Future<List<Users>> getUsers() async {
     // 회원 전체 목록 # 0
-    final response = await http.get(Uri.parse('$uri/members'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    final response = await http.get(
+      Uri.parse('$uri/members'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
+
     List<Users> users = [];
 
     if (statusCode == 200) {
@@ -26,6 +35,7 @@ class UserApi {
   Future<int> postUser(String id, String password, String name, int age,
       String email, String nickname) async {
     // 회원 등록   # 1
+
     final response = await http.post(
       Uri.parse('$uri/members'),
       body: jsonEncode({
@@ -36,7 +46,7 @@ class UserApi {
         'email': email,
         'nickname': nickname,
       }),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json;charset=UTF-8'},
     );
 
     if (response.statusCode == 201) {
@@ -50,11 +60,19 @@ class UserApi {
 
   Future<Users> getUserDetail(int id) async {
     // 회원 조회 # 3
-    final response = await http.get(Uri.parse('$uri/members/$id'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
+    final response = await http.get(
+      Uri.parse('$uri/members/$id'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+    );
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
     Users user;
-
+    print(utf8.decode(bodyBytes));
     if (statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       user = Users.fromJson(jsonMap);
@@ -65,8 +83,14 @@ class UserApi {
 
   Future<void> deleteUser(int id) async {
     // 회원 탈퇴 # 4
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     var url = Uri.parse('$uri/members/$id');
-    var response = await http.delete(url);
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json;charset=UTF-8'
+    };
+    var response = await http.delete(url, headers: headers);
 
     if (response.statusCode == 204) {
       print('Delete request succeeded');
@@ -156,6 +180,7 @@ class UserApi {
     // 로그아웃 # 8
     var url = Uri.parse('$uri/logout');
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token');
     prefs.setBool('isLogin', false);
     prefs.setString('id', '');
     prefs.setString('password', '');
@@ -163,7 +188,7 @@ class UserApi {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer YOUR_AUTH_TOKEN',
+        'Authorization': '$token',
       },
     );
 

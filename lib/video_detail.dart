@@ -396,7 +396,7 @@ class _VideoDetailState extends State<video_detail> {
                                         .spaceBetween, // 오른쪽 정렬
                                     children: [
                                       Text(
-                                        comment.memberNickname ?? '비회원 사용자',
+                                        comment.memberNickname ?? '닉네임 미등록 사용자',
                                         style: TextStyle(
                                           fontSize: 12,
                                         ),

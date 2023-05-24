@@ -99,8 +99,8 @@ class _loginState extends State<login> {
       // print(accessToken);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLogin', false);
-      prefs.setString('access_token',
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
+      // prefs.setString('access_token',
+      //     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
 
       String _decodeBase64(String str) {
         String output = str.replaceAll('-', '+').replaceAll('_', '/');
@@ -136,15 +136,15 @@ class _loginState extends State<login> {
         return payloadMap;
       }
 
-      Map<String, dynamic> tokenContent = parseJwtPayLoad(
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
-      print(tokenContent);
-      prefs.setInt('member_id', int.parse(tokenContent['memberId']));
-      print(tokenContent['memberId']);
-      await prefs.setBool('isLogin', true);
+      // Map<String, dynamic> tokenContent = parseJwtPayLoad(
+      //     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
+      // print(tokenContent);
+      // prefs.setInt('member_id', int.parse(tokenContent['memberId']));
+      // print("${tokenContent['memberId']} id");
+      // await prefs.setBool('isLogin', true);
 
-      // Navigator.pushReplacementNamed(context, '/ex');
-      Navigator.pushReplacementNamed(context, '/index');
+      Navigator.pushReplacementNamed(context, '/ex');
+      // Navigator.pushReplacementNamed(context, '/index');
       setState(() {
         // print(accessToken);
       });

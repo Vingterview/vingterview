@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:async';
-import 'dart:io';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 String BASE_URL =
     "http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080";
@@ -18,6 +17,40 @@ class HomePage extends StatelessWidget {
   String accessToken;
   String refreshToken;
 
+  String _decodeBase64(String str) {
+    String output = str.replaceAll('-', '+').replaceAll('_', '/');
+
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw Exception('Illegal base64url string!"');
+    }
+
+    return utf8.decode(base64Url.decode(output));
+  }
+
+  Map<String, dynamic> parseJwtPayLoad(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('invalid token');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw Exception('invalid payload');
+    }
+
+    return payloadMap;
+  }
+
   void _handleGoogleLogin(BuildContext context) async {
     final result = await Navigator.push(
       context,
@@ -26,9 +59,18 @@ class HomePage extends StatelessWidget {
 
     ///url에서 토큰 추출
     if (result != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLogin', false);
       Uri uri = Uri.parse(result);
       accessToken = uri.queryParameters['access_token'];
       refreshToken = uri.queryParameters['refresh_token'];
+      prefs.setString('access_token', accessToken);
+      print(accessToken);
+      Map<String, dynamic> tokenContent = parseJwtPayLoad(accessToken);
+      prefs.setInt('member_id', int.parse(tokenContent['memberId']));
+      print("${tokenContent['memberId']} id");
+      await prefs.setBool('isLogin', true);
+      Navigator.pushReplacementNamed(context, '/index');
     }
   }
 
@@ -81,6 +123,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           print(request.url);
           if (request.url.startsWith(urlToNavigate)) {
             print(request.url);
+
             // 특정 URL에 도달하면 웹뷰를 종료하고 다른 위젯으로 전환
             Navigator.pop(context, request.url);
 
