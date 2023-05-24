@@ -17,25 +17,43 @@ public class GameRoom {
     private Set<WebSocketSession> sessions = new HashSet<>();
     private GameInfo gameInfo;
 
-    private boolean finishParticipate = false;
-    private boolean finishPoll = false;
+
 
     public GameRoom(String roomId) {
         this.roomId = roomId;
         this.gameInfo = new GameInfo();
     }
 
-    public void setFinishParticipate(boolean finishParticipate) {
-        this.finishParticipate = finishParticipate;
-    }
 
-    public void setFinishPoll(boolean finishPoll) {
-        this.finishPoll = finishPoll;
+    private String mostFrequentElement(List<String> poll) {
+
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        for (String p : poll) {
+            if (frequencyMap.containsKey(p)) {
+                frequencyMap.put(p,frequencyMap.get(p)+1);
+            }else{
+                frequencyMap.put(p, 1);
+            }
+        }
+
+        String mostFrequentElement = "";
+        int maxFrequency = 0;
+
+        // 맵을 순회하면서 가장 빈도가 높은 요소를 찾음
+        for (Map.Entry<String, Integer> entry : frequencyMap.entrySet()) {
+            if (entry.getValue() > maxFrequency) {
+                maxFrequency = entry.getValue();
+                mostFrequentElement = entry.getKey();
+            }
+        }
+
+        return mostFrequentElement;
+
     }
 
     public String getResult() {
         List<String> poll = gameInfo.getPoll();
-        return "1";
+        return mostFrequentElement(poll);
     }
 
     public void setRandomOrder() {
@@ -61,19 +79,19 @@ public class GameRoom {
         }
     }
 
-    public void initGameInfo() {
-        gameInfo.setParticipant(new ArrayList<>());
-        gameInfo.setOrder(new ArrayList<>());
-        gameInfo.setPoll(new ArrayList<>());
-        finishParticipate = false;
-        finishPoll = false;
-    }
+
 
 
     public void handleMessage(GameMessage gameMessage, ObjectMapper objectMapper) {
 
         if (gameMessage.getType() == MessageType.CREATE) {
             send(gameMessage, objectMapper);
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
            /* GameMessage startGameMessage = new GameMessage();
             startGameMessage.startGameMessage(roomId,gameInfo);

@@ -42,9 +42,9 @@ public class InitDb {
 
         public void dbInit() {
 
-            Member member1 = createMember("User1","PassWord1","임동현","Impala",25,"dla33834051@gmail.com","profileUrl1");
-            Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"jungchanyoung32@gmail.com","profileUrl2");
-            Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"","profileUrl3");
+            Member member1 = createMember("User1","PassWord1","임동현","Impala",25,"dla33834051@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"jungchanyoung32@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
 
             em.persist(member1);
             em.persist(member2);
@@ -106,10 +106,10 @@ public class InitDb {
 
             }
 
-            Board board1 = createBoard(question1,member1,"본문1","url1");
-            Board board2 = createBoard(question4,member1,"본문2","url2");
-            Board board3 = createBoard(question2,member2,"본문3","url3");
-            Board board4 = createBoard(question2,member3,"본문4","url4");
+            Board board1 = createBoard(question1,member1,"본문1","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board2 = createBoard(question4,member1,"본문2","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board3 = createBoard(question2,member2,"본문3","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board4 = createBoard(question2,member3,"본문4","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
 
             em.persist(board1);
             em.persist(board2);
@@ -117,7 +117,7 @@ public class InitDb {
             em.persist(board4);
 
             for (int i = 0; i < 1000; i++) {
-                Board board = createBoard(question2,member3,"forPaging","forPaging");
+                Board board = createBoard(question2,member3,"forPaging","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
                 em.persist(board);
             }
 
