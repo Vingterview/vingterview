@@ -38,22 +38,22 @@ public class LoginController {
         return ResponseEntity.ok("logout");
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<LoginUrlDTO> login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //토큰 재발급 요청일경우 /token/refresh로 리다이렉션
-        if (request.getHeader("X-Refresh-Token") != null) {
-            response.sendRedirect("/token/refresh");
-            return new ResponseEntity<>(null, HttpStatus.FOUND);
-        }
-
-        // 로그인 url 반환
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
-        LoginUrlDTO dto = new LoginUrlDTO();
-        dto.setLoginUrl(baseUrl + "/oauth2/authorization/google");
-
-        return ResponseEntity.ok(dto);
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<LoginUrlDTO> login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        //토큰 재발급 요청일경우 /token/refresh로 리다이렉션
+//        if (request.getHeader("X-Refresh-Token") != null) {
+//            response.sendRedirect("/token/refresh");
+//            return new ResponseEntity<>(null, HttpStatus.FOUND);
+//        }
+//
+//        // 로그인 url 반환
+//        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//
+//        LoginUrlDTO dto = new LoginUrlDTO();
+//        dto.setLoginUrl(baseUrl + "/oauth2/authorization/google");
+//
+//        return ResponseEntity.ok(dto);
+//    }
 
     //TODO 토큰 재발급
     @GetMapping("/token/refresh")
@@ -75,5 +75,10 @@ public class LoginController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<String > token() {
+        return ResponseEntity.ok("");
     }
 }
