@@ -45,10 +45,12 @@ public class InitDb {
             Member member1 = createMember("User1","PassWord1","임동현","Impala",25,"dla33834051@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
             Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"jungchanyoung32@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
             Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member4 = createMember("User4","PassWord4","장혜정2","Hae",23,"capstonvivi@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
 
             em.persist(member1);
             em.persist(member2);
             em.persist(member3);
+            em.persist(member4);
 
 
 
