@@ -27,8 +27,6 @@ public class SocketHandler extends TextWebSocketHandler {
     private final GameRoomRepository gameRoomRepository = new GameRoomRepository();
     private final QuestionRepository questionRepository;
 
-    private final MemberRepository memberRepository;
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     public static final int NUMBEROFPLAYERS = 3;
@@ -101,8 +99,8 @@ public class SocketHandler extends TextWebSocketHandler {
             }
             case FINISH_PARTICIPATE -> {
                 log.info("CLIENT SEND PARTICIPANT FINISH");
-                if(!gameRoom.isFinishParticipate()){
-                    gameRoom.setFinishParticipate(true);
+                if(!gameInfo.isFinishParticipate()){
+                    gameInfo.setFinishParticipate(true);
                     gameRoom.setRandomOrder();
                     GameMessage infoGameMessage = new GameMessage();
                     infoGameMessage.infoGameMessage(roomId, gameInfo);
@@ -131,8 +129,8 @@ public class SocketHandler extends TextWebSocketHandler {
             }
             case FINISH_POLL ->{
                 log.info("CLIENT SEND POLL FINISH");
-                if (!gameRoom.isFinishPoll()) {
-                    gameRoom.setFinishPoll(true);
+                if (!gameInfo.isFinishPoll()) {
+                    gameInfo.setFinishPoll(true);
                     GameMessage resultGameMessage = new GameMessage();
                     String winner = gameRoom.getResult();
                     resultGameMessage.setPoll(winner);
@@ -153,13 +151,17 @@ public class SocketHandler extends TextWebSocketHandler {
 
 
                 }else{
-                    log.info("GO NEXT ROUND");
-                    gameRoom.initGameInfo();
-                    //next round
-                    GameMessage questionGameMessage = new GameMessage();
-                    gameInfo.increaseRound();
-                    questionGameMessage.questionGameMessage(roomId,gameInfo);
-                    gameRoom.handleMessage(questionGameMessage, objectMapper);
+                    gameInfo.addNext();
+                    if (gameInfo.getNext() == NUMBEROFPLAYERS) {
+                        log.info("GO NEXT ROUND");
+                        gameInfo.initGameInfo();
+                        //next round
+                        GameMessage questionGameMessage = new GameMessage();
+                        gameInfo.increaseRound();
+                        questionGameMessage.questionGameMessage(roomId,gameInfo);
+                        gameRoom.handleMessage(questionGameMessage, objectMapper);
+                    }
+
                 }
             }
 
