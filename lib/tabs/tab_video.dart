@@ -151,7 +151,7 @@ class _VideoPageState extends State<VideoPage> {
 
   Future<void> _refreshPosts() async {
     print("리프레시");
-    setState(() {});
+    initializeDataList();
   }
 
   @override
@@ -204,6 +204,8 @@ class _VideoPageState extends State<VideoPage> {
                 itemCount: videoList.videos.length + 1,
                 itemBuilder: (context, index) {
                   if (index < videoList.videos.length) {
+                    print(videoList.videos[index].profileUrl);
+                    print(videoList.videos[index].memberName);
                     return GestureDetector(
                       onTap: () async {
                         Navigator.push(
@@ -262,7 +264,7 @@ class _VideoPageState extends State<VideoPage> {
                                             );
                                           },
                                           child: Image.network(
-                                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU',
+                                            '${videoList.videos[index].profileUrl}',
                                           ),
                                         ),
                                       )),
@@ -419,6 +421,9 @@ class _VideoPageState extends State<VideoPage> {
               Navigator.pushNamed(context, '/video_write').then((value) {
                 _updateWithSorting(_sortingOption, nextPage);
                 setState(() {});
+                // Navigator.pushNamed(context, '/web_socket').then((value) {
+                //   _updateWithSorting(_sortingOption, nextPage);
+                //   setState(() {});
               });
             },
           ),

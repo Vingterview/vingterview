@@ -33,15 +33,18 @@ class PageVideos {
 class VideoApi {
   String uri = myUri;
   Future<PageVideos> getVideos(
-      {int query = 0, String param = "", int page = 0}) async {
+      {int query = 0,
+      String param = "",
+      int page = 0,
+      String sort = ""}) async {
     // String으로 받는 거 기억하기!!
     // 게시글 전체 목록 # 0
     // 0 : 전부(default) , 1 : 작성자로 필터링, 2 : 질문으로 필터링, 3 : 정렬 (좋아요순, 댓글순, 최신순)
     List<String> queries = [
-      "?page=$page",
+      "?page=$page$sort",
       "?page=$page&member_id=$param",
       "?page=$page&question_id=$param",
-      "?page=$page&order_by=$param"
+      "?page=$page&order_by=$param$sort"
     ];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');

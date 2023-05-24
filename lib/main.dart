@@ -15,6 +15,7 @@ import 'example.dart';
 import 'video_edit.dart';
 import 'package:capston/mypage/my_videos.dart';
 import 'package:capston/mypage/edit_user.dart';
+import 'websocket/widget/websocket.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,8 +43,9 @@ class MyApp extends StatelessWidget {
         '/record_video': (context) => RecordVideoPage(),
         '/ex': (context) => HomePage(),
         '/video_edit': (context) => EditVideoPage(),
-        // '/my_videos': (context) => MyVideoPage(),
+        '/my_videos': (context) => MyVideoPage(),
         '/user_edit': (context) => UserEditPage(),
+        '/web_socket': (context) => MyWebSocketApp(),
       },
       initialRoute: '/',
     );

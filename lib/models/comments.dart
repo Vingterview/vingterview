@@ -27,7 +27,7 @@ class Comments {
       boardId: json['board_id'],
       memberId: json['member_id'],
       memberNickname: json['member_nickname'],
-      profileUrl: json['profile_url'],
+      profileUrl: json['profile_image_url'],
       content: json['content'],
       likeCount: json['like_count'],
     );
@@ -39,7 +39,7 @@ class Comments {
       'board_id': boardId,
       'member_id': memberId,
       'member_nickname': memberNickname,
-      'profile_url': profileUrl,
+      'profile_image_url': profileUrl,
       'content': content,
       'like_count': likeCount,
     };

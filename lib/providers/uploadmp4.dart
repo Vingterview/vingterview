@@ -23,6 +23,7 @@ class UploadVideoApi {
     final outputPath = await compressVideo(pickedFile);
     XFile compressed = XFile(outputPath);
     final video_url = uploadVideo(compressed);
+    print("업로드 된 영상 url :$video_url");
     return video_url;
   }
 

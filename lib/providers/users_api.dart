@@ -76,6 +76,7 @@ class UserApi {
     if (statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       user = Users.fromJson(jsonMap);
+      print(utf8.decode(bodyBytes));
     }
 
     return user;

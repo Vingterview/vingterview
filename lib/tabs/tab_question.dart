@@ -98,7 +98,7 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Future<void> _refreshPosts() async {
-    setState(() {});
+    initializeDataList();
   }
 
   Future<PageQuestions> _updateWithSorting(

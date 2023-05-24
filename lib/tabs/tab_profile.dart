@@ -7,6 +7,7 @@ import '../providers/uploadmp4.dart';
 import 'package:capston/models/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capston/mypage/my_videos.dart';
+import 'package:capston/mypage/scrap_questions.dart';
 
 class MyPage extends StatelessWidget {
   UserApi userApi = UserApi();
@@ -81,8 +82,12 @@ class MyPage extends StatelessWidget {
               SizedBox(height: 16),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/my_videos',
-                      arguments: memberId);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyVideoPage(
+                            member_id: memberId), // Provide the index here
+                      ));
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
@@ -114,23 +119,12 @@ class MyPage extends StatelessWidget {
               SizedBox(height: 16),
               InkWell(
                 onTap: () {
-                  // 좋아요한 글에 대한 동작 처리
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    '좋아요한 글',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              InkWell(
-                onTap: () {
-                  // 스크랩한 질문에 대한 동작 처리
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ScrapQuestionPage(
+                            member_id: memberId), // Provide the index here
+                      ));
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),

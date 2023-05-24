@@ -37,17 +37,20 @@ class QuestionApi {
   String uri = myUri;
 
   Future<PageQuestions> getQuestions(
-      {int query = 0, String param = "", int page = 0}) async {
+      {int query = 0,
+      String param = "",
+      int page = 0,
+      String sort = ""}) async {
     // 질문 전체 목록 # 0
     // 0 : 전부(default) , 1 : 태그로 필터링, 2 : 작성자로 필터링,
     // 3 : 스크랩 필터링, 4 : 정렬 (좋아요순, 댓글순, 최신순)
 
     List<String> queries = [
-      "?page=$page",
+      "?page=$page$sort",
       "?page=$page&tag_id=$param",
       "?page=$page&member_id=$param",
       "?page=$page&scrap_member_id=$param",
-      "?page=$page&order_by=$param"
+      "?page=$page&order_by=$param$sort"
     ];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
