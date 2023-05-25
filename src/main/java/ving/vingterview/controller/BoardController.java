@@ -125,8 +125,16 @@ public class BoardController {
 
     @GetMapping("/{id}")
     @Trace
-    public ResponseEntity<BoardDTO> board(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(boardService.findById(id));
+    public ResponseEntity<BoardDTOwithLike> board(@PathVariable(name = "id") Long id,
+                                          @LoginMemberId Long memberId) {
+        Boolean like = boardService.isLike(id, memberId);
+        BoardDTO boardDTO = boardService.findById(id);
+
+        BoardDTOwithLike boardDTOwithLike = BoardDTOwithLike.builder()
+                .boardDTO(boardDTO)
+                .like(like)
+                .build();
+        return ResponseEntity.ok(boardDTOwithLike);
     }
 
 
