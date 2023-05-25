@@ -14,10 +14,8 @@ import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.ErrorResult;
 import ving.vingterview.dto.board.*;
 import ving.vingterview.service.board.BoardService;
-import ving.vingterview.service.file.FileStore;
+import ving.vingterview.service.file.S3Upload;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ import java.util.ArrayList;
 public class BoardController {
 
     private final BoardService boardService;
-    private final FileStore fileStore;
+    private final S3Upload fileStore;
 
 
     @Value("${video.dir}")
@@ -169,12 +167,8 @@ public class BoardController {
 
             log.info("----------uploadFile----------start {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
-            try {
-                videoDTO.getVideo().transferTo(new File(tempDir + storeFileName));
-                log.info("파일 임시 업로드 성공");
-            } catch (IOException e) {
-                log.warn("파일 임시 업로드 실패 {}", e.getMessage());
-            }
+            fileStore.tempFileUpload(videoDTO.getVideo(), storeFileName);
+//          videoDTO.getVideo().transferTo(new File(tempDir + storeFileName));
 
             fileStore.uploadFile(storeFileName);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());

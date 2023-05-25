@@ -22,11 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("S3Upload")
-public class S3Upload implements FileStore{
+@Service
+public class S3Upload{
     @Value("${video.dir}")
     private String tempDir;
 
@@ -36,7 +37,16 @@ public class S3Upload implements FileStore{
 
     private final AmazonS3 amazonS3;
 
-    @Override
+    public String createStoreFileName(String originalFilename) {
+        String ext = extractExt(originalFilename); // 확장자 추출
+        String uuid = UUID.randomUUID().toString();
+        return uuid + "." + ext;
+    }
+    public String extractExt(String originalFilename) {
+        int pos = originalFilename.lastIndexOf(".");
+        return originalFilename.substring(pos + 1);
+    }
+
     public String getFullPath(String fileName,boolean isImg) {
         String dir;
         if (isImg) {
@@ -52,7 +62,6 @@ public class S3Upload implements FileStore{
      * @param multipartFile
      * @param storeName
      */
-    @Override
     public void uploadFile(MultipartFile multipartFile, String storeName) {
         ObjectMetadata objMetaData = new ObjectMetadata();
         String dir = "image/";
@@ -72,8 +81,8 @@ public class S3Upload implements FileStore{
      * 비디오 업로드
      * @param storeName
      */
-    @Override
     @Async("threadPoolTaskExecutor")
+
     public void uploadFile(String storeName) {
         log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
 
@@ -82,10 +91,11 @@ public class S3Upload implements FileStore{
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        String videoPath = tempDir + storeName;
+//        String videoPath = tempDir + storeName;
+        String videoPath = amazonS3.getUrl(bucket, "temp/" + storeName).toString();
         body.add("videoPath", videoPath);
         body.add("name", storeName);
-        body.add("bucket", "bucketAddress");
+        body.add("bucket", bucket);
         HttpEntity<?> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = null;
         try {
@@ -101,10 +111,21 @@ public class S3Upload implements FileStore{
 
     }
 
-    @Override
     public void deleteFile(String storeName) {
 
 //        amazonS3.deleteObject(bucket,dir+storeName);
+    }
+    public void tempFileUpload(MultipartFile multipartFile,String storeName) {
+        ObjectMetadata objMetaData = new ObjectMetadata();
+
+        try {
+            objMetaData.setContentLength(multipartFile.getInputStream().available());
+            amazonS3.putObject(new PutObjectRequest(bucket, "temp/" + storeName, multipartFile.getInputStream(), objMetaData).withCannedAcl(CannedAccessControlList.PublicRead));
+            log.info("파일 임시 업로드 성공");
+        } catch (IOException e) {
+            log.error("파일 임시 업로드 실패 {}", e.getMessage());
+        }
+
     }
 }
 
