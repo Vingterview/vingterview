@@ -62,10 +62,24 @@ public class BoardService {
 
 
     public BoardDTO findById(Long id) {
-
         Board board = boardRepository.findByIdWithMemberQuestion(id).orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
         return transferBoardDTO(board);
     }
+
+    public Boolean isLike(Long id, Long memberId) {
+
+        Optional<BoardMemberLike> boardMemberLike = boardMemberLikeRepository.findByMemberIdAndBoardId(memberId, id);
+        if (boardMemberLike.isEmpty()) {
+            return false;
+        }else{
+            if (boardMemberLike.get().getLikeStatus() == LikeType.LIKE) {
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
 
 
     public void delete(Long id, Long memberId) {

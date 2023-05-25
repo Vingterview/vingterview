@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ving.vingterview.annotation.Trace;
 import ving.vingterview.dto.member.*;
-import ving.vingterview.service.file.FileStore;
+import ving.vingterview.service.file.S3Upload;
 import ving.vingterview.service.member.MemberService;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class MemberController {
 
     private final MemberService memberService;
-    private final FileStore fileStore;
+    private final S3Upload fileStore;
 
     @GetMapping("")
     @Trace

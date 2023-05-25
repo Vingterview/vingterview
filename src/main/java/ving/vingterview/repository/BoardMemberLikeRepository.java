@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import ving.vingterview.domain.LikeType;
 import ving.vingterview.domain.board.Board;
 import ving.vingterview.domain.board.BoardMemberLike;
-import ving.vingterview.domain.comment.Comment;
 
 import java.util.Optional;
 
