@@ -30,6 +30,20 @@ class PageVideos {
   }
 }
 
+class VideoDetail {
+  final Videos video;
+  final bool like;
+
+  VideoDetail({this.video, this.like});
+
+  factory VideoDetail.fromJson(Map<String, dynamic> json) {
+    Videos _video = Videos.fromJson(json["board_dto"]);
+    // print(jsonTags);
+    bool _like = json["like"];
+    return VideoDetail(video: _video, like: _like);
+  }
+}
+
 class VideoApi {
   String uri = myUri;
   Future<PageVideos> getVideos(
@@ -95,7 +109,7 @@ class VideoApi {
     }
   }
 
-  Future<Videos> getVideoDetail(int id) async {
+  Future<VideoDetail> getVideoDetail(int id) async {
     // 게시글 조회 # 3
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
@@ -104,11 +118,11 @@ class VideoApi {
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
 
-    Videos video;
+    VideoDetail video;
 
     if (statusCode == 200) {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
-      video = Videos.fromJson(jsonMap);
+      video = VideoDetail.fromJson(jsonMap);
     }
 
     return video;

@@ -18,7 +18,7 @@ class video_detail extends StatefulWidget {
 
 class _VideoDetailState extends State<video_detail> {
   VideoApi videoApi = VideoApi();
-  Videos video;
+  VideoDetail video;
   CommentApi commentApi = CommentApi();
   List<Comments> commentList;
   int memberId;
@@ -47,7 +47,7 @@ class _VideoDetailState extends State<video_detail> {
     await videoApi.like(index);
     video = await videoApi.getVideoDetail(index);
     setState(() {
-      likeCount = video.likeCount;
+      likeCount = video.video.likeCount;
     });
   }
 
@@ -75,8 +75,9 @@ class _VideoDetailState extends State<video_detail> {
     commentCount = commentList.length;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     memberId = prefs.getInt('member_id');
-    likeCount = video.likeCount;
-    if (memberId == video.memberId) {
+    likeCount = video.video.likeCount;
+    isLiked = video.like;
+    if (memberId == video.video.memberId) {
       isMine = true;
     }
 
@@ -136,7 +137,7 @@ class _VideoDetailState extends State<video_detail> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  EditVideoPage(video: video)),
+                                  EditVideoPage(video: video.video)),
                         ).then((value) {
                           initVideo();
                           setState(() {});
@@ -221,7 +222,7 @@ class _VideoDetailState extends State<video_detail> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              video.memberName,
+                                              video.video.memberName,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -229,7 +230,7 @@ class _VideoDetailState extends State<video_detail> {
                                             ),
                                             SizedBox(height: 1),
                                             Text(
-                                              video.createTime,
+                                              video.video.createTime,
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey,
@@ -246,7 +247,7 @@ class _VideoDetailState extends State<video_detail> {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        video.content,
+                                        video.video.content,
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontSize: 18,
@@ -277,7 +278,7 @@ class _VideoDetailState extends State<video_detail> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: video.questionContent,
+                                            text: video.video.questionContent,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 16,

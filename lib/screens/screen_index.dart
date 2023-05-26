@@ -24,22 +24,7 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        child: AppBar(
-            // backgroundColor: Colors.white,
-            // elevation: 0,
-            // title: Container(
-            //     margin: EdgeInsets.only(top: 16),
-            //     child: Text(
-            //       namelist[selectIndex],
-            //       style: TextStyle(
-            //         fontSize: 14,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.black,
-            //       ),
-            //     )),
-            // centerTitle: true,
-            // other app bar properties
-            ),
+        child: AppBar(),
         // preferredSize: Size.fromHeight(64),
         preferredSize: Size.fromHeight(0),
       ),
