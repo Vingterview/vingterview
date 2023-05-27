@@ -12,6 +12,7 @@ class GameState with ChangeNotifier {
   GameInfo gameInfo = GameInfo();
   String poll;
   int duration;
+  String currentBroadcaster;
 
   notifyState(Stage stage) {
     this.stage = stage;

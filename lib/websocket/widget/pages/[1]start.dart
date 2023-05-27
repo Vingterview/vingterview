@@ -1,33 +1,43 @@
 import 'package:flutter/material.dart';
-import '[2]game_matched.dart';
+import 'package:provider/provider.dart';
+import 'package:capston/websocket/wsclient/game_state.dart';
+import '../timer_widget.dart';
+import 'package:capston/websocket/wsclient/websocket_client.dart';
+import 'package:capston/websocket/wsclient/stage.dart';
 
-class StartPage extends StatelessWidget {
+class Page1 extends StatefulWidget {
+  final WebSocketClient client;
+
+  Page1({this.client});
+
+  @override
+  _Page1State createState() => _Page1State();
+}
+
+class _Page1State extends State<Page1> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              child: Text('Page 1'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/page1');
+    return Container(
+      child: Row(
+        children: [
+          Text(Provider.of<GameState>(context).stage.toString()),
+          TimerWidget(
+              secondsRemaining: Provider.of<GameState>(context).duration),
+          SizedBox(height: 20),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () async {
+                await widget.client.connectToSocket();
               },
+              child: Text("매칭 시작"),
             ),
-            ElevatedButton(
-              child: Text('Page 2'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/page2');
-              },
-            ),
-            // 다른 페이지로 이동할 수 있는 버튼들을 추가해주세요
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+Widget getStage1(WebSocketClient client) {
+  return Page1(client: client);
 }

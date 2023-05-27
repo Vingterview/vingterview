@@ -6,6 +6,17 @@ import '../message/message_type.dart';
 import 'timer_widget.dart';
 import '../wsclient/game_state.dart';
 import '../wsclient/websocket_client.dart';
+import '../wsclient/stage.dart';
+
+import 'pages/[1]start.dart';
+import 'pages/[2]game_matched.dart';
+import 'pages/[3]round_start.dart';
+import 'pages/[4]show_participant.dart';
+import 'pages/[5]ready_streaming.dart';
+import 'pages/[6]watch_streaming.dart';
+import 'pages/[7]start_poll.dart';
+import 'pages/[8]show_result.dart';
+import 'pages/[9]game_finish.dart';
 
 class MyWebSocketApp extends StatefulWidget {
   WebSocketClient client;
@@ -17,9 +28,31 @@ class MyWebSocketApp extends StatefulWidget {
 }
 
 class _MyWebSocketAppState extends State<MyWebSocketApp> {
+  int stageIndex = 0;
+  final List<Widget> _stages = [];
+  WebSocketClient _client;
+
+  void updateStageIndex(int _index) {
+    setState(() {
+      stageIndex = _index;
+    });
+  }
+
   @override
   void initState() {
-    widget.client = WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
+    _client = widget.client ?? WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
+    _stages.addAll([
+      getStage1(_client),
+      getStage2(_client),
+      getStage3(_client),
+      getStage4(_client),
+      getStage5(_client),
+      getStage6(_client),
+      getStage7(_client),
+      getStage8(_client),
+      getStage9(_client),
+    ]);
+    super.initState();
   }
 
   // 상태 클래스가 종료될 때 호출
@@ -39,83 +72,31 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
       create: (context) => WebSocketClient.getInstance().state,
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(title: Text("소켓")),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(Provider.of<GameState>(context)
-                    .stage
-                    .toString()), // 이거에 따라서 switch문으로 위젯 불러내면 될 듯?
-                TimerWidget(
-                    secondsRemaining: Provider.of<GameState>(context).duration),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.connectToSocket();
-                        },
-                        child: Text("Connect"),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.disconnect();
-                        },
-                        child: Text("Disconnect"),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.sendMessage(MessageType.PARTICIPATE);
-                        },
-                        child: Text('Participate'),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10), // 버튼 간격 조절
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.sendMessage(MessageType.FINISH_VIDEO);
-                        },
-                        child: Text('Finish Streaming'),
-                      ),
-                    ),
-                    SizedBox(width: 10), // 버튼 간격 조절
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.sendMessage(MessageType.POLL);
-                        },
-                        child: Text('Poll'),
-                      ),
-                    ),
-                    SizedBox(width: 10), // 버튼 간격 조절
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.sendMessage(MessageType.NEXT);
-                        },
-                        child: Text('Next Round'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
+            appBar: AppBar(title: Text("소켓")),
+            body: Consumer<GameState>(
+              builder: (context, gameState, child) {
+                switch (gameState.stage) {
+                  case Stage.GAME_MATCHED:
+                    return getStage2(_client);
+                  case Stage.ROUND_START:
+                    return getStage3(_client);
+                  case Stage.SHOW_PARTICIPANT:
+                    return getStage4(_client);
+                  case Stage.READY_STREAMING:
+                    return getStage5(_client);
+                  case Stage.WATCH_STREAMING:
+                    return getStage6(_client);
+                  case Stage.START_POLL:
+                    return getStage7(_client);
+                  case Stage.SHOW_RESULT:
+                    return getStage8(_client);
+                  case Stage.GAME_FINISH:
+                    return getStage9(_client);
+                  default:
+                    return getStage1(_client); // 기본값 -> 매칭 시작
+                }
+              },
+            ));
       },
     );
   }
