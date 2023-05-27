@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/questions.dart';
 import '../providers/questions_api.dart';
+import 'package:capston/question_video.dart';
 
 Widget getQuestionPage() {
   return QuestionPage();
@@ -211,9 +212,11 @@ class _QuestionPageState extends State<QuestionPage> {
                     print(questionList.questions.length);
                     return GestureDetector(
                       onTap: () async {
-                        // 이 질문만 모아보기 기능
-                        // Navigator.pushNamed(context, '/question_write',
-                        //     arguments: Questionlist[index].questionId);
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => QVideoPage(
+                                    question: questionList.questions[index])));
                       },
                       onLongPress: () async {
                         Navigator.pushNamed(context, '/video_write',
