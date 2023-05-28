@@ -53,6 +53,7 @@ dependencies:
   provider: ^6.0.5
   agora_rtc_engine: ^6.1.1+1
   permission_handler: ^10.2.0
+  intl: ^0.17.0
 
 
 dev_dependencies:

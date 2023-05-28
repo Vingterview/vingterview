@@ -224,64 +224,83 @@ class _QuestionPageState extends State<QuestionPage> {
                               arguments: questionList.questions[index]);
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          margin: EdgeInsets.symmetric(vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  // 별 아이콘을 눌렀을 때 스크랩 기능 구현
-                                  // TODO: 스크랩 기능 추가
-                                },
-                                child: Icon(
-                                  Icons.star_border,
-                                  color: Colors.grey,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            margin: EdgeInsets.symmetric(vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
                                 ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  textData ??
-                                      questionList
-                                          .questions[index].questionContent,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        textData ??
+                                            questionList.questions[index]
+                                                .questionContent,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // 별 아이콘을 눌렀을 때 스크랩 기능 구현
+                                        // TODO: 스크랩 기능 추가
+                                      },
+                                      child: Icon(Icons.star_border,
+                                          color: Colors.grey, size: 16),
+                                    ),
+                                    SizedBox(width: 10),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                '스크랩 수: ${questionList.questions[index].scrapCount}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                '답변 수: ${questionList.questions[index].boardCount}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      questionList.questions[index].tags
+                                          .map((tag) => '#${tag.tagName}')
+                                          .join(' '),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '스크랩 ${questionList.questions[index].scrapCount}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          '답변 ${questionList.questions[index].boardCount}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )));
                   } else if (hasNext) {
                     print(questionList.questions.length);
                     return Padding(
@@ -296,13 +315,6 @@ class _QuestionPageState extends State<QuestionPage> {
                   }
                 },
               ))),
-      IconButton(
-        icon: Icon(Icons.keyboard_arrow_right_sharp),
-        color: Color(0xFF6fa8dc),
-        onPressed: () {
-          Navigator.pushNamed(context, '/question_write');
-        },
-      ),
     ]));
   }
 }

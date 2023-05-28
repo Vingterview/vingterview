@@ -3,6 +3,7 @@ import '../models/videos.dart';
 import '../providers/videos_api.dart';
 import 'package:capston/video_detail.dart';
 import 'package:capston/user_popup.dart';
+import 'package:intl/intl.dart';
 
 Widget getVideoPage() {
   return VideoPage();
@@ -75,14 +76,11 @@ class _VideoPageState extends State<VideoPage> {
 
     setState(() {
       List<Videos> tempList = List.from(videoList.videos);
-      print(tempList.length);
       tempList.addAll(newPage.videos);
-      print(tempList.length);
       videoList.videos = tempList;
       nextPage = newPage.nextPage;
       hasNext = newPage.hasNext; // 로딩 상태를 false로 설정합니다.
       isLoading = false;
-      print(videoList.videos.length);
     });
   }
 
@@ -204,8 +202,6 @@ class _VideoPageState extends State<VideoPage> {
                 itemCount: videoList.videos.length + 1,
                 itemBuilder: (context, index) {
                   if (index < videoList.videos.length) {
-                    print(videoList.videos[index].profileUrl);
-                    print(videoList.videos[index].memberName);
                     return GestureDetector(
                       onTap: () async {
                         Navigator.push(
@@ -283,7 +279,9 @@ class _VideoPageState extends State<VideoPage> {
                                       ),
                                       SizedBox(height: 1),
                                       Text(
-                                        videoList.videos[index].createTime,
+                                        DateFormat('MM/dd HH:mm').format(
+                                            DateTime.parse(videoList
+                                                .videos[index].createTime)),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
@@ -326,11 +324,11 @@ class _VideoPageState extends State<VideoPage> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: '   Q.',
+                                      text: '   Q. ',
                                       style: TextStyle(
                                         color: Color(0xFF3D85C6),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
                                       ),
                                     ),
                                     TextSpan(
@@ -338,7 +336,7 @@ class _VideoPageState extends State<VideoPage> {
                                           .videos[index].questionContent,
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 16,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ],
@@ -413,19 +411,6 @@ class _VideoPageState extends State<VideoPage> {
                 },
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.keyboard_arrow_right_sharp),
-            color: Color(0xFF6fa8dc),
-            onPressed: () {
-              Navigator.pushNamed(context, '/video_write').then((value) {
-                _updateWithSorting(_sortingOption, nextPage);
-                setState(() {});
-                // Navigator.pushNamed(context, '/web_socket').then((value) {
-                //   _updateWithSorting(_sortingOption, nextPage);
-                //   setState(() {});
-              });
-            },
           ),
         ],
       ),

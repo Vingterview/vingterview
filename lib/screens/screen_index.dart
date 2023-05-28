@@ -19,6 +19,54 @@ class _IndexScreenState extends State<IndexScreen> {
     getQuestionPage(),
     getMyPage(),
   ];
+  bool isBottomSheetOpen = false;
+
+  void _openBottomSheet(BuildContext context) {
+    setState(() {
+      isBottomSheetOpen = true;
+    });
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 180,
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '글 쓰기',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 10),
+              ListTile(
+                leading: Icon(Icons.videocam),
+                title: Text('영상 작성'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/video_write');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.question_answer),
+                title: Text('질문 작성'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/question_write');
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      setState(() {
+        isBottomSheetOpen = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +79,18 @@ class _IndexScreenState extends State<IndexScreen> {
         preferredSize: Size.fromHeight(0),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF8A61D4),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () async {}),
+        backgroundColor: Color(0xFF8A61D4),
+        child: isBottomSheetOpen ? Icon(Icons.close) : Icon(Icons.add),
+        onPressed: () async {
+          if (isBottomSheetOpen) {
+            // Cancel button is pressed
+            // Handle cancel action
+          } else {
+            // Add button is pressed
+            _openBottomSheet(context);
+          }
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "홈"),

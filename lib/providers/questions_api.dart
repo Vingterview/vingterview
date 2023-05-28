@@ -78,9 +78,10 @@ class QuestionApi {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
     List<int> postTags = [];
-    for (int i = 0; i < postTags.length; i++) {
+    for (int i = 0; i < tags.length; i++) {
       postTags.add(tags[i].tagId);
     }
+    print(postTags);
     final response = await http.post(
       Uri.parse('$uri/questions'),
       body:

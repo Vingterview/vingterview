@@ -61,7 +61,27 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
       create: (context) => WebSocketClient.getInstance().state,
       builder: (context, child) {
         return Scaffold(
-            appBar: AppBar(title: Text("소켓")),
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              title: Text(
+                '빙터뷰',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
             body: Consumer<GameState>(
               builder: (context, gameState, child) {
                 switch (gameState.stage) {

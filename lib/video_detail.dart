@@ -6,6 +6,7 @@ import '../providers/comments_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'video_edit.dart';
+import 'package:intl/intl.dart';
 
 // 영상 재생할 수 있게 하기 + 댓글 가져오기
 class video_detail extends StatefulWidget {
@@ -77,11 +78,12 @@ class _VideoDetailState extends State<video_detail> {
     memberId = prefs.getInt('member_id');
     likeCount = video.video.likeCount;
     isLiked = video.like;
+    FocusNode _focusNode = FocusNode();
     if (memberId == video.video.memberId) {
       isMine = true;
     }
 
-    isMine = true; // <- 수정 삭제용 코드 --------------------------------------------
+    // isMine = true; // <- 수정 삭제용 코드 --------------------------------------------
 
     _videoController = VideoPlayerController.network(
       'https://vingterview.s3.ap-northeast-2.amazonaws.com/video/2db1f066-4dfc-4c9c-8d1e-1345598f3e97.mp4',
@@ -108,6 +110,7 @@ class _VideoDetailState extends State<video_detail> {
   @override
   Widget build(BuildContext context) {
     final int index = widget.index;
+
     print(index);
 
     bool _isPlaying = false;
@@ -115,7 +118,10 @@ class _VideoDetailState extends State<video_detail> {
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: Text('영상 게시판 글 세부'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+          title: Text(''),
           actions: isMine
               ? [
                   PopupMenuButton<String>(
@@ -191,204 +197,230 @@ class _VideoDetailState extends State<video_detail> {
                           if (idx == 0) {
                             // Display video details in the first item
                             return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 30),
-                              decoration: BoxDecoration(
-                                border: BorderDirectional(
-                                  bottom: BorderSide(
-                                      color: Color(0xFFD9D9D9), width: 1),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
                                 ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(top: 20, left: 20),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 30,
-                                          height: 30,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: Image.network(
-                                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU'),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Column(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    border: BorderDirectional(
+                                      bottom: BorderSide(
+                                          color: Color(0xFFD9D9D9), width: 1),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.only(top: 20, left: 30),
+                                        child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              video.video.memberName,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                            Container(
+                                              width: 30,
+                                              height: 30,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image.network(
+                                                  '${video.video.profileUrl}',
+                                                ),
                                               ),
                                             ),
-                                            SizedBox(height: 1),
-                                            Text(
-                                              video.video.createTime,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                              ),
+                                            SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  video.video.memberName,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 1),
+                                                Text(
+                                                  DateFormat('MM/dd HH:mm')
+                                                      .format(DateTime.parse(
+                                                          video.video
+                                                              .createTime)),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 30, vertical: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        video.video.content,
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 30),
-                                    width: 300,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    alignment: Alignment.centerLeft,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: '   Q.',
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 30, vertical: 10),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            video.video.content,
+                                            textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: Color(0xFF3D85C6),
+                                              fontSize: 18,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
                                             ),
                                           ),
-                                          TextSpan(
-                                            text: video.video.questionContent,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  AspectRatio(
-                                    aspectRatio:
-                                        _videoController.value.aspectRatio,
-                                    child: VideoPlayer(_videoController),
-                                  ),
-                                  FloatingActionButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        if (_videoController.value.isPlaying) {
-                                          _videoController.pause();
-                                        } else {
-                                          _videoController.play();
-                                        }
-                                      });
-                                    },
-                                    child: Icon(
-                                      _videoController.value.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 30, vertical: 10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.favorite_border_outlined,
-                                                size: 18,
-                                                color: Color(0xFFDE50A4)),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              likeCount.toString(),
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        width: 330,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFEEEEEE),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                         ),
-                                        SizedBox(width: 5),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.comment_outlined,
-                                                size: 18,
-                                                color: Color(0xFF3D85C6)),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              commentCount.toString(),
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                        alignment: Alignment.centerLeft,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: '   Q. ',
+                                                style: TextStyle(
+                                                  color: Color(0xFF3D85C6),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              TextSpan(
+                                                text:
+                                                    video.video.questionContent,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(width: 5),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            likeVideo(index);
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        child: GestureDetector(
+                                          onTap: () {
                                             setState(() {
-                                              isLiked = !isLiked;
+                                              if (_videoController
+                                                  .value.isPlaying) {
+                                                _videoController.pause();
+                                              } else {
+                                                _videoController.play();
+                                              }
                                             });
                                           },
                                           child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  isLiked
-                                                      ? Icons.favorite
-                                                      : Icons.favorite_border,
-                                                  color: isLiked
-                                                      ? Colors.red
-                                                      : null,
-                                                ),
-                                                SizedBox(width: 8),
-                                                Text('좋아요'),
-                                              ],
+                                            width: 320,
+                                            height: 320,
+                                            child: AspectRatio(
+                                              aspectRatio: _videoController
+                                                  .value.aspectRatio,
+                                              child:
+                                                  VideoPlayer(_videoController),
                                             ),
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 30, vertical: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                    Icons
+                                                        .favorite_border_outlined,
+                                                    size: 18,
+                                                    color: Color(0xFFDE50A4)),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  likeCount.toString(),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 5),
+                                            Row(
+                                              children: [
+                                                Icon(Icons.comment_outlined,
+                                                    size: 18,
+                                                    color: Color(0xFF3D85C6)),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  commentCount.toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 14),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 5),
+                                            GestureDetector(
+                                              onTap: () async {
+                                                likeVideo(index);
+                                                setState(() {
+                                                  isLiked = !isLiked;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[200],
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                        isLiked
+                                                            ? Icons.favorite
+                                                            : Icons
+                                                                .favorite_border,
+                                                        color: isLiked
+                                                            ? Color(0xFFDE50A4)
+                                                            : null,
+                                                        size: 16),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      '좋아요',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
+                                ));
                           } else {
                             // Display comments from commentList
                             Comments comment = commentList[idx -
                                 1]; // Subtract 1 to account for video details
                             return Container(
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                              padding: EdgeInsets.fromLTRB(30, 5, 30, 10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -461,13 +493,26 @@ class _VideoDetailState extends State<video_detail> {
                               ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               _postComment(index);
                               _commentController.clear();
                               setState(() {});
                             },
-                            child: Text('Submit'),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors
+                                    .white, // Set the desired background color
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.send, // Replace with the desired icon
+                                color: Color(
+                                    0xFF8A61D4), // Set the desired icon color
+                              ),
+                            ),
                           ),
                         ]),
                       ))
