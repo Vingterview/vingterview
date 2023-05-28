@@ -17,11 +17,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capston/models/globals.dart';
 
 class WebSocketClient {
-  static const String BASE_URL =
-      "ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080";
-  // static const String BASE_URL = "localhost:8080";
-  static const String token =
-      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXBzdG9udml2aUBnbWFpbC5jb20iLCJtZW1iZXJJZCI6IjQiLCJpYXQiOjE2ODQ5MjA4ODYsImV4cCI6MTY5MjY5Njg4Nn0.bGlSghObRBl5S0ikmkfiIZ2h2gbeWzhuqq1EhgSk0pk";
+  String token;
+
+  Future<String> get_token() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return (prefs.getString('access_token'));
+  }
+
+  static String BASE_URL = myUri.substring(7);
 
   ///singleton instance
   static WebSocketClient _instance;
@@ -66,7 +69,8 @@ class WebSocketClient {
   ///웹소켓 연결
   connectToSocket() async {
     if (!_isConnected) {
-      const endPoint = "ws://$BASE_URL/ving";
+      String endPoint = "ws://$BASE_URL/ving";
+      token = await get_token();
       WebSocket.connect(endPoint, headers: {'Authorization': 'Bearer $token'})
           .then((ws) {
         _channel = IOWebSocketChannel(ws);
