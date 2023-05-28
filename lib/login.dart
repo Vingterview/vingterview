@@ -1,221 +1,176 @@
 import 'package:flutter/material.dart';
-import '../providers/users_api.dart';
-import 'package:capston/models/globals.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:async';
-import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-// import 'package:question_player/question_player.dart';
-class login extends StatefulWidget {
-  @override
-  _loginState createState() => _loginState();
-}
+String BASE_URL =
+    "http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080";
 
-class _loginState extends State<login> {
-  String _accessToken = '';
+class HomePage extends StatelessWidget {
+  String accessToken;
+  String refreshToken;
 
-  Future<void> _loginWithGoogle() async {
-    // App specific variables
-    String title;
-    String selectedUrl;
+  String _decodeBase64(String str) {
+    String output = str.replaceAll('-', '+').replaceAll('_', '/');
 
-    // final GoogleSignIn _googleSignIn = GoogleSignIn();
-    // await _googleSignIn.signIn();
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw Exception('Illegal base64url string!"');
+    }
 
-    final googleClientId =
-        'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google';
-    ;
-    final callbackUrlScheme = 'myapp';
+    return utf8.decode(base64Url.decode(output));
+  }
 
-    final url = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
-      'response_type': 'code',
-      'client_id': googleClientId,
-      'redirect_uri': '$callbackUrlScheme:/',
-      'scope': 'email',
-    });
+  Map<String, dynamic> parseJwtPayLoad(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('invalid token');
+    }
 
-    try {
-      // final result = await FlutterWebAuth.authenticate(
-      //     url:
-      //         'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google',
-      //     callbackUrlScheme: callbackUrlScheme);
-      // final code = Uri.parse(result).queryParameters['code'];
-      // print("우와아아아");
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw Exception('invalid payload');
+    }
 
-      // // Use this code to get an access token
-      // final response = await http
-      //     .post(Uri.parse('https://www.googleapis.com/oauth2/v4/token'), body: {
-      //   'client_id': googleClientId,
-      //   'redirect_uri': '$callbackUrlScheme:/',
-      //   'grant_type': 'authorization_code',
-      //   'code': code,
-      // });
+    return payloadMap;
+  }
 
-      // // Get the access token from the response
-      // String accessToken = jsonDecode(response.body)['access_token'] as String;
-      // // callbackUrlScheme은 앱에서 등록한 scheme 이름과 같아야 합니다.
-      // final uri = Uri.parse(result);
-      // final queryParams = uri.queryParameters;
-      // String auth_url = "https://accounts.google.com/o/oauth2/token";
+  void _handleGoogleLogin(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WebViewScreen()),
+    );
 
-      // -------------------------------------------------------------------------
-
-      // String authorizationUrl =
-      //     '$authEndpoint?response_type=code&client_id=$clientId&redirect_uri=$redirectUrl&scope=$scope';
-      // String result = await FlutterWebAuth.authenticate(
-      //     url: authorizationUrl, callbackUrlScheme: redirectUrl);
-
-      // Uri authUrl = Uri.parse('https://accounts.google.com/o/oauth2/token');
-      // Map<String, String> params = {
-      //   'grant_type': 'authorization_code',
-      //   'code': 'YOUR_CODE',
-      //   'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
-      //   'client_id': clientId,
-      //   'client_secret': clientSecret,
-      // };
-      // var response = await http.post(authUrl, body: params);
-
-      // // 인증 토큰을 추출합니다.
-      // Map<String, String> headers = json.decode(response.body)['headers'];
-      // String accessToken = headers['Authorization'].split(' ')[1];
-
-      // // Google API를 요청합니다.
-      // Uri url = Uri.parse('https://www.googleapis.com/books/v1/volumes?q=dune');
-      // response = await http.get(url, headers: <String, String>{
-      //   'Authorization': 'Bearer $accessToken',
-      // });
-
-      // // 응답을 인쇄합니다.
-      // print(json.decode(response.body));
-
-      // accessToken = queryParams['access_token'];
-
-      // ----------------------------
-      // print(accessToken);
+    ///url에서 토큰 추출
+    if (result != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLogin', false);
-      // prefs.setString('access_token',
-      //     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
-
-      String _decodeBase64(String str) {
-        String output = str.replaceAll('-', '+').replaceAll('_', '/');
-
-        switch (output.length % 4) {
-          case 0:
-            break;
-          case 2:
-            output += '==';
-            break;
-          case 3:
-            output += '=';
-            break;
-          default:
-            throw Exception('Illegal base64url string!"');
-        }
-
-        return utf8.decode(base64Url.decode(output));
-      }
-
-      Map<String, dynamic> parseJwtPayLoad(String token) {
-        final parts = token.split('.');
-        if (parts.length != 3) {
-          throw Exception('invalid token');
-        }
-
-        final payload = _decodeBase64(parts[1]);
-        final payloadMap = json.decode(payload);
-        if (payloadMap is! Map<String, dynamic>) {
-          throw Exception('invalid payload');
-        }
-
-        return payloadMap;
-      }
-
-      // Map<String, dynamic> tokenContent = parseJwtPayLoad(
-      //     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoam5ldDAxQGdtYWlsLmNvbSIsIm1lbWJlcklkIjoiNCIsImlhdCI6MTY4NDc2OTIxOSwiZXhwIjoxNjkyNTQ1MjE5fQ.j5UpgVJZ6KP-GlA3Lrmldjnknhx9zDkyDzOgUclUhko");
-      // print(tokenContent);
-      // prefs.setInt('member_id', int.parse(tokenContent['memberId']));
-      // print("${tokenContent['memberId']} id");
-      // await prefs.setBool('isLogin', true);
-
-      Navigator.pushReplacementNamed(context, '/ex');
-      // Navigator.pushReplacementNamed(context, '/index');
-      setState(() {
-        // print(accessToken);
-      });
-    } catch (e) {
-      // 에러 처리
+      Uri uri = Uri.parse(result);
+      accessToken = uri.queryParameters['access_token'];
+      refreshToken = uri.queryParameters['refresh_token'];
+      prefs.setString('access_token', accessToken);
+      print(accessToken);
+      Map<String, dynamic> tokenContent = parseJwtPayLoad(accessToken);
+      prefs.setInt('member_id', int.parse(tokenContent['memberId']));
+      print("${tokenContent['memberId']} id");
+      await prefs.setBool('isLogin', true);
+      Navigator.pushReplacementNamed(context, '/index');
     }
+  }
+
+  ///테스트
+  void _getBoards() async {
+    final response = await http.get(Uri.parse("$BASE_URL/boards"),
+        headers: {'Authorization': 'Bearer $accessToken'});
+    print(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: false
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
-              : OutlinedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                  ),
-                  onPressed: () async {
-                    _loginWithGoogle();
-                    setState(() {
-                      // _isSigningIn = true;
-                    });
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 200),
+            Image(
+              image: AssetImage(
+                'assets/_logo.png',
 
-                    // TODO: Add method call to the Google Sign-In authentication
-
-                    setState(() {
-                      // _isSigningIn = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image(
-                          image: AssetImage("assets/google_logo.png"),
-                          height: 35.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            'Sign in with Google',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                // adjust the width and alignment as needed
+              ),
+              height: 150,
+            ),
+            SizedBox(height: 200),
+            Text(
+              'SNS 로그인',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black54,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8),
+            OutlinedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
                   ),
                 ),
+              ),
+              onPressed: () => _handleGoogleLogin(context),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image(
+                      image: AssetImage("assets/google_logo.png"),
+                      height: 20.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),
+                      child: Text(
+                        'Google 계정으로 가입',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      // body: WebView(
-      //   initialUrl:
-      //       'http://ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google',
-      //   javascriptMode: JavascriptMode.unrestricted,
-      // ),
+    );
+  }
+}
+
+class WebViewScreen extends StatefulWidget {
+  @override
+  _WebViewScreenState createState() => _WebViewScreenState();
+}
+
+class _WebViewScreenState extends State<WebViewScreen> {
+  final urlToNavigate = '$BASE_URL/token'; // 웹뷰에 진입할 URL
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: null,
+      body: WebView(
+        // initialUrl: '$BASE_URL/oauth2/authorization/google',
+        initialUrl: '$BASE_URL/login',
+        javascriptMode: JavascriptMode.unrestricted,
+        navigationDelegate: (NavigationRequest request) {
+          print(request.url);
+          if (request.url.startsWith(urlToNavigate)) {
+            print(request.url);
+            Navigator.pop(context, request.url);
+
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+        userAgent: "ving",
+      ),
     );
   }
 }

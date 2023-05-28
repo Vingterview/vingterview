@@ -24,12 +24,14 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        child: AppBar(),
+        child: AppBar(
+          shadowColor: Colors.white10,
+        ),
         // preferredSize: Size.fromHeight(64),
         preferredSize: Size.fromHeight(0),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF3D85C6),
+          backgroundColor: Color(0xFF8A61D4),
           child: Icon(
             Icons.add,
             color: Colors.white,
@@ -45,7 +47,7 @@ class _IndexScreenState extends State<IndexScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.person_outline), label: "마이페이지"),
         ],
-        selectedItemColor: Color(0xFF3D85C6),
+        selectedItemColor: Color(0xFF8A61D4),
         //unselected된 item color
         unselectedItemColor: Colors.grey,
         //unselected된 label text

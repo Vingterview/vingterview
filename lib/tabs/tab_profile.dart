@@ -40,7 +40,7 @@ class MyPage extends StatelessWidget {
     return Container(
         child: ListView(children: [
       Container(
-          padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+          padding: EdgeInsets.fromLTRB(20, 21, 10, 0),
           child: Text(
             '마이 페이지',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

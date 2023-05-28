@@ -11,7 +11,8 @@ import 'tags.dart';
 import 'pick_question.dart';
 import 'pick_tags.dart';
 import 'record_video.dart';
-import 'example.dart';
+import '_login.dart';
+import 'login.dart';
 import 'video_edit.dart';
 import 'package:capston/mypage/my_videos.dart';
 import 'package:capston/mypage/edit_user.dart';
@@ -37,13 +38,12 @@ class MyApp extends StatelessWidget {
         '/video_detail': (context) => video_detail(),
         '/video_write': (context) => PostVideoPage(),
         '/question_write': (context) => PostQuestionPage(),
-        '/login': (context) => login(),
         '/register': (context) => registeruser(),
         '/tag': (context) => tag_detail(),
         '/question_pick': (context) => pick_question(),
         '/tags_pick': (context) => pick_tags(),
         '/record_video': (context) => RecordVideoPage(),
-        '/ex': (context) => HomePage(),
+        '/login': (context) => HomePage(),
         '/video_edit': (context) => EditVideoPage(),
         '/my_videos': (context) => MyVideoPage(),
         '/user_edit': (context) => UserEditPage(),

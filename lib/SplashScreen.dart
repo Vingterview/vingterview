@@ -16,30 +16,17 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<bool> checkLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLogin = prefs.getBool('isLogin') ?? false;
-    print("로그인 상태 : " + isLogin.toString());
     if (isLogin) {
-      // return isLogin;
-      String id = prefs.getString('id');
-      String password = prefs.getString('password');
-      print("저장 정보로 다시 시도");
-      try {
-        int member_id = await _userApi.userLogin(id, password);
-        // login succeeded
-        print('Login successful! Member ID: $member_id');
-        await prefs.setBool('isLogin', true);
-        return true;
-      } catch (e) {
-        // login failed
-        print(e.toString());
-        await prefs.setBool('isLogin', false);
+      if (prefs.getString('access_token') != null)
         return false;
-      }
+      else
+        return false;
     }
-    return isLogin;
   }
 
   void moveScreen() async {
     bool isLogin = await checkLogin();
+    print(isLogin);
     if (isLogin) {
       Navigator.pushReplacementNamed(context, '/index');
     } else {
@@ -59,7 +46,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Image(
+          image: AssetImage(
+            'assets/_logo.png',
+
+            // adjust the width and alignment as needed
+          ),
+          height: 150,
+        ),
       ),
     );
   }
