@@ -40,7 +40,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
 
   @override
   void initState() {
-    widget.client = WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
+    _client = widget.client ?? WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
     super.initState();
   }
 

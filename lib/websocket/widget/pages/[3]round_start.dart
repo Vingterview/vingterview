@@ -6,6 +6,9 @@ import 'package:capston/websocket/wsclient/game_state.dart';
 import '../timer_widget.dart';
 import 'package:capston/websocket/wsclient/websocket_client.dart';
 import 'package:capston/websocket/message/message_type.dart';
+import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
+import 'dart:convert';
 
 class Page3 extends StatefulWidget {
   final WebSocketClient client;
@@ -18,6 +21,17 @@ class Page3 extends StatefulWidget {
 
 class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
   AnimationController _animationController;
+
+  Widget _buildImageFromEncodedData(String encodedImage,
+      {double width, double height}) {
+    Uint8List imageBytes = base64.decode(encodedImage);
+    ImageProvider imageProvider = MemoryImage(imageBytes);
+    return Container(
+      width: width,
+      height: height,
+      child: Image(image: imageProvider, fit: BoxFit.cover),
+    );
+  }
 
   @override
   void initState() {
@@ -52,7 +66,8 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                 Column(
                   children: [
                     Text(memberInfo.name),
-                    Image.network(memberInfo.encodedImage),
+                    _buildImageFromEncodedData(memberInfo.encodedImage,
+                        width: 100, height: 100),
                   ],
                 ),
             ],

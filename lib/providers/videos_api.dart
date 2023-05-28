@@ -66,8 +66,6 @@ class VideoApi {
       Uri.parse('$uri/boards${queries[query]}'),
       headers: {'Authorization': 'Bearer $token'},
     );
-    print('$uri/boards${queries[query]}');
-    print("겟비디오");
 
     final statusCode = response.statusCode;
     final bodyBytes = response.bodyBytes;
@@ -167,6 +165,8 @@ class VideoApi {
       Map<String, dynamic> jsonMap = jsonDecode(utf8.decode(bodyBytes));
       return jsonMap['board_id'];
     } else {
+      print(utf8.decode(response.bodyBytes));
+      print(response.statusCode);
       throw Exception('Failed to post video');
     }
   }

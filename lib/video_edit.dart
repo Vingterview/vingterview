@@ -132,24 +132,30 @@ class _EditVideoPageState extends State<EditVideoPage> {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                child: Text('Update Video'), // 수정 버튼 텍스트 변경
+                child: Text('게시글 수정'), // 수정 버튼 텍스트 변경
                 onPressed: () async {
-                  if (_formKey.currentState.validate() && _video != null) {
+                  print(_video);
+                  if (_formKey.currentState.validate() &&
+                      (_video != null || _video_url != null)) {
                     _formKey.currentState.save();
                     try {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('영상을 업로드하는데에 1분~10분 이내에 시간이 소요됩니다.')));
+                          content:
+                              Text('글을 수정하는데에 1분~10분 이내에 시간이 소요될 수 있습니다.')));
                       Navigator.pop(context);
-                      _video_url = await uploadVideoApi.pickVideo(_video);
+                      if (_video != null) {
+                        _video_url = await uploadVideoApi.pickVideo(_video);
+                        print(_video_url);
+                      }
                       print(_video_url);
-                      int boardId = await _videoApi.postVideo(
-                          _questionId, _content, _video_url);
+                      int boardId = await _videoApi.putRequest(
+                          widget.video.boardId,
+                          _questionId,
+                          _content,
+                          _video_url);
                       print(boardId);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(content: Text('영상이 업로드 되었습니다.')));
                     } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Failed to pick or post video: $e')));
+                      print("dd$e");
                     }
                   }
                 },

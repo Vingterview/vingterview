@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.all(8),
                                 child: Text(
                                   _truncateText(
-                                      videoList.videos[index].content, 20),
+                                      videoList.videos[index].content, 26),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                               margin: EdgeInsets.only(bottom: 4),
                               decoration: BoxDecoration(
                                 color: Color(0xFFEEEEEE),
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.all(8),
@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                   _truncateText(
                                       questionList
                                           .questions[index].questionContent,
-                                      20),
+                                      26),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
