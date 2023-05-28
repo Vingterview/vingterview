@@ -4,6 +4,7 @@ import 'package:capston/websocket/wsclient/game_state.dart';
 import '../timer_widget.dart';
 import 'package:capston/websocket/wsclient/websocket_client.dart';
 import 'package:capston/websocket/message/message_type.dart';
+import 'streaming_page.dart';
 
 class Page5 extends StatefulWidget {
   final WebSocketClient client;
@@ -50,7 +51,18 @@ class _Page5State extends State<Page5> {
                 ),
               Text(widget.client.state.gameInfo
                   .question[widget.client.state.gameInfo.round - 1]),
-              Container(), // 내 카메라
+              Visibility(
+                  visible: true,
+                  child: StreamingPage(
+                    token: Provider.of<GameState>(context).agoraToken,
+                    channelName: Provider.of<GameState>(context).roomId,
+                    isHost: true,
+                    currentBroadcaster:
+                        Provider.of<GameState>(context).currentBroadcaster,
+                    onFinished: () {
+                      widget.client.sendMessage(MessageType.FINISH_VIDEO);
+                    },
+                  )), // 내 카메라
               ElevatedButton(
                 onPressed: () {
                   widget.client.sendMessage(MessageType.FINISH_VIDEO);

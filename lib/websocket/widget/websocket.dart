@@ -29,8 +29,8 @@ class MyWebSocketApp extends StatefulWidget {
 
 class _MyWebSocketAppState extends State<MyWebSocketApp> {
   int stageIndex = 0;
-  final List<Widget> _stages = [];
   WebSocketClient _client;
+  Stage _stage;
 
   void updateStageIndex(int _index) {
     setState(() {
@@ -40,18 +40,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
 
   @override
   void initState() {
-    _client = widget.client ?? WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
-    _stages.addAll([
-      getStage1(_client),
-      getStage2(_client),
-      getStage3(_client),
-      getStage4(_client),
-      getStage5(_client),
-      getStage6(_client),
-      getStage7(_client),
-      getStage8(_client),
-      getStage9(_client),
-    ]);
+    widget.client = WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
     super.initState();
   }
 

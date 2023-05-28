@@ -51,6 +51,8 @@ dependencies:
   web_socket_channel: ^2.4.0
   image: ^3.0.2
   provider: ^6.0.5
+  agora_rtc_engine: ^6.1.1+1
+  permission_handler: ^10.2.0
 
 
 dev_dependencies:

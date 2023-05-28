@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:capston/websocket/wsclient/game_state.dart';
 import '../timer_widget.dart';
 import 'package:capston/websocket/wsclient/websocket_client.dart';
+import 'streaming_page.dart';
+import 'package:capston/websocket/message/message_type.dart';
 
 class Page6 extends StatefulWidget {
   final WebSocketClient client;
@@ -49,7 +51,18 @@ class _Page6State extends State<Page6> {
                 ),
               Text(widget.client.state.gameInfo
                   .question[widget.client.state.gameInfo.round - 1]),
-              Container(), // 받은 비디오
+              Visibility(
+                  visible: true,
+                  child: StreamingPage(
+                    token: Provider.of<GameState>(context).agoraToken,
+                    channelName: Provider.of<GameState>(context).roomId,
+                    isHost: false,
+                    currentBroadcaster:
+                        Provider.of<GameState>(context).currentBroadcaster,
+                    onFinished: () {
+                      widget.client.sendMessage(MessageType.FINISH_VIDEO);
+                    },
+                  )), // 받은 비디오
               TimerWidget(
                   secondsRemaining: Provider.of<GameState>(context).duration),
             ],

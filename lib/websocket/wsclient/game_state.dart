@@ -8,11 +8,12 @@ class GameState with ChangeNotifier {
   Stage stage;
   String sessionId;
   String roomId;
+  String agoraToken;
   List<MemberInfo> memberInfos;
   GameInfo gameInfo = GameInfo();
+  String currentBroadcaster;
   String poll;
   int duration;
-  String currentBroadcaster;
 
   notifyState(Stage stage) {
     this.stage = stage;

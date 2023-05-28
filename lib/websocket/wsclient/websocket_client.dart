@@ -17,20 +17,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:capston/models/globals.dart';
 
 class WebSocketClient {
-  StreamController<dynamic> _messageController =
-      StreamController<dynamic>.broadcast();
-  Stream<dynamic> get messageStream => _messageController.stream;
+  static const String BASE_URL =
+      "ec2-43-201-224-125.ap-northeast-2.compute.amazonaws.com:8080";
+  // static const String BASE_URL = "localhost:8080";
+  static const String token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXBzdG9udml2aUBnbWFpbC5jb20iLCJtZW1iZXJJZCI6IjQiLCJpYXQiOjE2ODQ5MjA4ODYsImV4cCI6MTY5MjY5Njg4Nn0.bGlSghObRBl5S0ikmkfiIZ2h2gbeWzhuqq1EhgSk0pk";
 
   ///singleton instance
   static WebSocketClient _instance;
-  String token;
-
-  Future<String> get_token() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return (prefs.getString('access_token'));
-  }
-
-  static String BASE_URL = myUri.substring(7);
 
   ///WebSocket member fields
   IOWebSocketChannel _channel;
@@ -72,11 +66,7 @@ class WebSocketClient {
   ///웹소켓 연결
   connectToSocket() async {
     if (!_isConnected) {
-      String endPoint = "ws://$BASE_URL/ving";
-      token = await get_token();
-      print(token);
-      print(endPoint);
-      print(_isConnected);
+      const endPoint = "ws://$BASE_URL/ving";
       WebSocket.connect(endPoint, headers: {'Authorization': 'Bearer $token'})
           .then((ws) {
         _channel = IOWebSocketChannel(ws);
@@ -126,19 +116,10 @@ class WebSocketClient {
         roomId: state.roomId,
         sessionId: state.sessionId,
         gameInfo: state.gameInfo,
-        memberInfos: [], // 참여하는 멤버들 정보 (member.dart)
+        memberInfos: [],
         poll: state.poll);
 
     _push(jsonEncode(message));
-  }
-
-  sendBinary(Uint8List binary) {
-    if (_channel.sink != null && binary != null) {
-      // 스트림 싱크가 열려 있는지 확인
-      _channel.sink.add(binary); // 데이터 보내기
-    } else {
-      print('스트림 싱크가 닫혀 있습니다.');
-    }
   }
 
   /**
@@ -168,86 +149,88 @@ class WebSocketClient {
   ///메세지 수신
   _listenToMessage() {
     _channel.stream.listen((msg) {
-      if (msg is String) {
-        Message message = Message.fromJson(jsonDecode(msg));
-        switch (message.type) {
-          case MessageType.CREATE:
-            //set : 방 정보, 세션 정보
-            state.sessionId = message.sessionId;
-            state.roomId = message.roomId;
-            state.memberInfos = message.memberInfos;
+      Message message = Message.fromJson(jsonDecode(msg));
+      switch (message.type) {
+        case MessageType.CREATE:
+          //set : 방 정보, 세션 정보
+          state.sessionId = message.sessionId;
+          state.roomId = message.roomId;
+          state.memberInfos = message.memberInfos;
+          state.agoraToken = message.agoraToken;
 
-            //signal : game matched
-            state.notifyState(Stage.GAME_MATCHED);
+          //signal : game matched
+          state.notifyState(Stage.GAME_MATCHED);
 
-            break;
+          break;
 
-          case MessageType.START:
-            //set : 질문3개, 현재 라운드, 참가신청 받는 시간
-            state.gameInfo.question = message.gameInfo.question;
-            state.gameInfo.round = message.gameInfo.round;
-            state.duration = _participateSec;
+        case MessageType.START:
+          //set : 질문3개, 현재 라운드, 참가신청 받는 시간
+          state.gameInfo.question = message.gameInfo.question;
+          state.gameInfo.round = message.gameInfo.round;
+          state.duration = _participateSec;
 
-            //timer start
-            _setTimer(Duration(seconds: _participateSec),
-                MessageType.FINISH_PARTICIPATE);
+          //timer start
+          _setTimer(Duration(seconds: _participateSec),
+              MessageType.FINISH_PARTICIPATE);
 
-            //signal : show question & ask participate
-            state.notifyState(Stage.ROUND_START);
-            break;
+          //signal : show question & ask participate
+          state.notifyState(Stage.ROUND_START);
+          break;
 
-          case MessageType.INFO:
-            //set : 답변 순서, 참가자 정보
-            state.gameInfo.order = message.gameInfo.order;
-            state.gameInfo.participant = message.gameInfo.participant;
+        case MessageType.INFO:
+          //set : 답변 순서, 참가자 정보
+          state.gameInfo.order = message.gameInfo.order;
+          state.gameInfo.participant = message.gameInfo.participant;
 
-            //signal : show participant
-            state.notifyState(Stage.SHOW_PARTICIPANT);
-            break;
+          //signal : show participant
+          state.notifyState(Stage.SHOW_PARTICIPANT);
+          break;
 
-          case MessageType.TURN:
-            //signal : ready & start streaming
-            state.notifyState(Stage.READY_STREAMING);
-            break;
+        case MessageType.TURN:
+          //set : 현재 발표자
+          state.currentBroadcaster = message.sessionId;
 
-          case MessageType.VIDEO:
-            //signal : show video stream
-            state.notifyState(Stage.WATCH_STREAMING);
-            break;
+          //signal : ready & start streaming
+          state.notifyState(Stage.READY_STREAMING);
+          break;
 
-          case MessageType.POLL:
-            //set : 투표 시간
-            state.duration = _pollSec;
+        case MessageType.VIDEO:
+          //set : 현재 발표자
+          state.currentBroadcaster = message.currentBroadcaster;
 
-            //timer start
-            _setTimer(Duration(seconds: _pollSec), MessageType.FINISH_POLL);
+          //signal : show video stream
+          state.notifyState(Stage.WATCH_STREAMING);
+          break;
 
-            //signal : start poll
-            state.notifyState(Stage.START_POLL);
-            break;
+        case MessageType.POLL:
+          //set : 투표 시간
+          state.duration = _pollSec;
 
-          case MessageType.RESULT:
-            //set : 투표 결과
-            state.poll = message.poll;
+          //timer start
+          _setTimer(Duration(seconds: _pollSec), MessageType.FINISH_POLL);
 
-            //signal : show result
-            state.notifyState(Stage.SHOW_RESULT);
-            break;
+          //signal : start poll
+          state.notifyState(Stage.START_POLL);
+          break;
 
-          case MessageType.FINISH_GAME:
-            //웹소켓 연결 해제
-            disconnect();
+        case MessageType.RESULT:
+          //set : 투표 결과
+          state.poll = message.poll;
 
-            //signal : game finish
-            state.notifyState(Stage.GAME_FINISH);
-            break;
+          //signal : show result
+          state.notifyState(Stage.SHOW_RESULT);
+          break;
 
-          default:
-            break;
-        }
-      } else if (msg is Uint8List) {
-        print("received : ${msg.length}");
-        _messageController.add(msg);
+        case MessageType.FINISH_GAME:
+          //웹소켓 연결 해제
+          disconnect();
+
+          //signal : game finish
+          state.notifyState(Stage.GAME_FINISH);
+          break;
+
+        default:
+          break;
       }
     }, onDone: () {
       print("fail to receive message");
