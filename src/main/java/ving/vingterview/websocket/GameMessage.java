@@ -16,6 +16,9 @@ public class GameMessage {
     private GameInfo gameInfo;
     private String poll = ""; // for mapping
 
+    private String currentBroadcaster;
+    private String agoraToken;
+
     private List<MemberInfo> memberInfos = new ArrayList<>();
 
     public void createGameMessage(String roomId,GameInfo gameInfo) {
