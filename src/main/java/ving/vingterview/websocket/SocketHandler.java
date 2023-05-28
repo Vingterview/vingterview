@@ -10,7 +10,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ving.vingterview.domain.question.Question;
-import ving.vingterview.repository.MemberRepository;
 import ving.vingterview.repository.QuestionRepository;
 
 import java.io.IOException;
@@ -26,6 +25,8 @@ public class SocketHandler extends TextWebSocketHandler {
     private final Queue<WebSocketSession> waitingQueue = new LinkedBlockingQueue<>();
     private final GameRoomRepository gameRoomRepository = new GameRoomRepository();
     private final QuestionRepository questionRepository;
+
+    private final AgoraTokenBuilder tokenBuilder;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -52,8 +53,6 @@ public class SocketHandler extends TextWebSocketHandler {
         GameInfo gameInfo = gameRoom.getGameInfo();
         gameInfo.setQuestion(questionRepository.findRandom().stream().map(Question::getContent).toList());
 
-
-
         /**
          * 소캣 NUMBEROFPLAYERS 만큼 제거해서 GameRoom에 추가
          */
@@ -72,6 +71,14 @@ public class SocketHandler extends TextWebSocketHandler {
             gameMessage.setMemberInfo(session);
 
         }
+
+        /**
+         * 스트리밍용 토큰 생성
+         */
+        String token = tokenBuilder.generateToken(roomId, 0);
+        gameMessage.setAgoraToken(token);
+
+
         gameRoomRepository.addRoom(gameRoom.getRoomId(), gameRoom);
         gameRoom.handleMessage(gameMessage,objectMapper);
 

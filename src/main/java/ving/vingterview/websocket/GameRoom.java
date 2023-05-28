@@ -131,6 +131,8 @@ public class GameRoom {
                     try {
                         messageObject.setType(MessageType.TURN);
                         messageObject.setSessionId(session.getId());
+                        messageObject.setCurrentBroadcaster(session.getId());
+
                         TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
                         session.sendMessage(message);
                     } catch (IOException e) {
@@ -140,6 +142,8 @@ public class GameRoom {
                     try {
                         messageObject.setSessionId(session.getId());
                         messageObject.setType(MessageType.VIDEO);
+                        messageObject.setCurrentBroadcaster(target);
+
                         TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
                         session.sendMessage(message);
                     } catch (IOException e) {

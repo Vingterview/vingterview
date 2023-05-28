@@ -38,6 +38,8 @@ dependencies {
 	//swagger-ui
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+	implementation 'commons-codec:commons-codec'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
