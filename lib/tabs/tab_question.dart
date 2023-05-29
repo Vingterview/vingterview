@@ -24,6 +24,7 @@ class _QuestionPageState extends State<QuestionPage> {
   int nextPage = 0;
   bool hasNext = true;
   ScrollController _scrollController = ScrollController();
+  bool _isStarred = false;
 
   @override
   void initState() {
@@ -245,22 +246,38 @@ class _QuestionPageState extends State<QuestionPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        textData ??
-                                            questionList.questions[index]
-                                                .questionContent,
-                                        style: TextStyle(
-                                          fontSize: 16,
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(8, 3, 80, 3),
+                                        child: Text(
+                                          textData ??
+                                              questionList.questions[index]
+                                                  .questionContent,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // 별 아이콘을 눌렀을 때 스크랩 기능 구현
-                                        // TODO: 스크랩 기능 추가
-                                      },
-                                      child: Icon(Icons.star_border,
-                                          color: Colors.grey, size: 16),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          questionApi.scrap(questionList
+                                              .questions[index].questionId);
+                                          setState(() {
+                                            _isStarred = !_isStarred;
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.star_border,
+                                          color: _isStarred
+                                              ? Color(0xFF8A61D4)
+                                              : Colors.grey,
+                                          size: 16,
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(width: 10),
                                   ],
@@ -269,30 +286,41 @@ class _QuestionPageState extends State<QuestionPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      questionList.questions[index].tags
-                                          .map((tag) => '#${tag.tagName}')
-                                          .join(' '),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 4, 8, 0),
+                                      child: Text(
+                                        questionList.questions[index].tags
+                                            .map((tag) => '#${tag.tagName}')
+                                            .join(' '),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     Row(
                                       children: [
-                                        Text(
-                                          '스크랩 ${questionList.questions[index].scrapCount}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                          child: Text(
+                                            '스크랩 ${questionList.questions[index].scrapCount}',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 10),
-                                        Text(
-                                          '답변 ${questionList.questions[index].boardCount}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                          child: Text(
+                                            '답변 ${questionList.questions[index].boardCount}',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         ),
                                       ],

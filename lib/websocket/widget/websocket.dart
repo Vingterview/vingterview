@@ -17,6 +17,7 @@ import 'pages/[6]watch_streaming.dart';
 import 'pages/[7]start_poll.dart';
 import 'pages/[8]show_result.dart';
 import 'pages/[9]game_finish.dart';
+import 'pages/streaming_page.dart';
 
 class MyWebSocketApp extends StatefulWidget {
   WebSocketClient client;
@@ -28,19 +29,14 @@ class MyWebSocketApp extends StatefulWidget {
 }
 
 class _MyWebSocketAppState extends State<MyWebSocketApp> {
-  int stageIndex = 0;
+  ///추가
   WebSocketClient _client;
-  Stage _stage;
 
-  void updateStageIndex(int _index) {
-    setState(() {
-      stageIndex = _index;
-    });
-  }
+  Stage _stage;
 
   @override
   void initState() {
-    _client = widget.client ?? WebSocketClient.getInstance(); // <-  토큰으로 들어와야 함
+    _client = widget.client ?? WebSocketClient.getInstance();
     super.initState();
   }
 
@@ -48,9 +44,6 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
   @override
   void dispose() {
     // 채널을 닫음
-    if (widget.client == null) {
-      return;
-    }
     widget.client.disconnect();
     super.dispose();
   }
@@ -60,6 +53,9 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
     return ChangeNotifierProvider<GameState>(
       create: (context) => WebSocketClient.getInstance().state,
       builder: (context, child) {
+        ///추가
+        _stage = Provider.of<GameState>(context).stage;
+
         return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -82,31 +78,93 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                 ),
               ),
             ),
-            body: Consumer<GameState>(
-              builder: (context, gameState, child) {
-                switch (gameState.stage) {
-                  case Stage.GAME_MATCHED:
-                    return getStage2(_client);
-                  case Stage.ROUND_START:
-                    return getStage3(_client);
-                  case Stage.SHOW_PARTICIPANT:
-                    return getStage4(_client);
-                  case Stage.READY_STREAMING:
-                    return getStage5(_client);
-                  case Stage.WATCH_STREAMING:
-                    return getStage6(_client);
-                  case Stage.START_POLL:
-                    return getStage7(_client);
-                  case Stage.SHOW_RESULT:
-                    return getStage8(_client);
-                  case Stage.GAME_FINISH:
-                    return getStage9(_client);
-                  default:
-                    return getStage1(_client); // 기본값 -> 매칭 시작
-                }
-              },
-            ));
+            body: Consumer<GameState>(builder: (context, gameState, child) {
+              Widget stageWidget;
+
+              switch (gameState.stage) {
+                case Stage.GAME_MATCHED:
+                  stageWidget = getStage2(_client);
+                  break;
+                case Stage.ROUND_START:
+                  stageWidget = getStage3(_client);
+                  break;
+                case Stage.SHOW_PARTICIPANT:
+                  stageWidget = getStage4(_client);
+                  break;
+                case Stage.READY_STREAMING:
+                  stageWidget = getStage5(_client);
+                  break;
+                case Stage.WATCH_STREAMING:
+                  stageWidget = getStage6(_client);
+                  break;
+                case Stage.START_POLL:
+                  stageWidget = getStage7(_client);
+                  break;
+                case Stage.SHOW_RESULT:
+                  stageWidget = getStage8(_client);
+                  break;
+                case Stage.GAME_FINISH:
+                  stageWidget = getStage9(_client);
+                  break;
+                default:
+                  stageWidget = getStage1(_client);
+              }
+              return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 12, 30, 62),
+                        // Colors.black54,
+                        Color.fromARGB(255, 170, 155, 198),
+                      ],
+                    ),
+                  ), // 검정색 배경 설정
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        stageWidget,
+
+                        ///추가 : StreamingPage 사용법
+                        Visibility(
+                            visible: _isStreaming(),
+                            child: StreamingPage(
+                              token: Provider.of<GameState>(context).agoraToken,
+                              channelName:
+                                  Provider.of<GameState>(context).roomId,
+                              isHost: _isHost(),
+                              currentBroadcaster:
+                                  Provider.of<GameState>(context)
+                                      .currentBroadcaster,
+                              onFinished: () {
+                                _client.sendMessage(MessageType.FINISH_VIDEO);
+                              },
+                            ))
+                      ],
+                    ),
+                  ));
+            }));
       },
     );
+  }
+
+  ///추가
+  bool _isStreaming() {
+    if (_stage == Stage.WATCH_STREAMING || _stage == Stage.READY_STREAMING) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ///추가
+  bool _isHost() {
+    if (_stage == Stage.READY_STREAMING) {
+      return true;
+    }
+    return false;
   }
 }

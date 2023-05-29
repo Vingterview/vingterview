@@ -197,11 +197,11 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 16),
-                height: 190,
                 child: isLoadingVideos
                     ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
                         itemCount: videoList.videos.length > 5
                             ? 5
                             : videoList.videos.length,
@@ -265,11 +265,11 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 16),
-                height: 190,
                 child: isLoadingQuestions
                     ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true, // ListView의 크기를 내용물에 맞게 조절
                         itemCount: questionList.questions.length > 5
                             ? 5
                             : questionList.questions.length,

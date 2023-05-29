@@ -54,7 +54,7 @@ class _StreamingPageState extends State<StreamingPage> {
             visible: widget.isHost,
             child: ElevatedButton(
                 onPressed: _handleBroadcasting,
-                child: _onAir.value ? Text("stop") : Text("start")))
+                child: _onAir.value ? Text("끝내기") : Text("시작하기")))
       ],
     );
   }
@@ -105,6 +105,13 @@ class _StreamingPageState extends State<StreamingPage> {
     super.initState();
     // Set up an instance of Agora engine
     setupVideoSDKEngine();
+  }
+
+  @override
+  void dispose() async {
+    await agoraEngine.leaveChannel();
+    agoraEngine.release();
+    super.dispose();
   }
 
   Future<void> setupVideoSDKEngine() async {
@@ -183,12 +190,16 @@ class _StreamingPageState extends State<StreamingPage> {
       );
     }
 
-    await agoraEngine.joinChannel(
-      token: widget.token,
-      channelId: widget.channelName,
-      options: options,
-      uid: uid,
-    );
+    try {
+      await agoraEngine.joinChannel(
+        token: widget.token,
+        channelId: widget.channelName,
+        options: options,
+        uid: uid,
+      );
+    } catch (e) {
+      print("error");
+    }
 
     setState(() {});
   }
@@ -207,11 +218,5 @@ class _StreamingPageState extends State<StreamingPage> {
   }
 
   // Release the resources when you leave
-  @override
-  void dispose() async {
-    print("dispose");
-    await agoraEngine.leaveChannel();
-    agoraEngine.release();
-    super.dispose();
-  }
+
 }

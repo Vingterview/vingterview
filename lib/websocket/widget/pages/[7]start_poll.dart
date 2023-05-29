@@ -26,12 +26,40 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
 
   Widget _buildImageFromEncodedData(String encodedImage,
       {double width, double height}) {
+    if (encodedImage == null || encodedImage.isEmpty) {
+      // 이미지가 없을 때 플레이스홀더 이미지 표시
+      return Container(
+        width: width,
+        height: height,
+        color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
+      );
+    }
+
     Uint8List imageBytes = base64.decode(encodedImage);
     ImageProvider imageProvider = MemoryImage(imageBytes);
+
     return Container(
       width: width,
       height: height,
-      child: Image(image: imageProvider, fit: BoxFit.cover),
+      child: Image(
+        image: imageProvider,
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          // 로딩 진행 상태 표시
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes
+                  : null,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -82,20 +110,22 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
             child: Column(
               children: [
                 Text("가장 잘한 참가자를 선택해주세요!"),
-                for (var value in buttonValues)
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedValue = value;
-                      });
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: (selectedValue == value)
-                          ? MaterialStateProperty.all<Color>(Colors.blue)
-                          : null,
+                ...[
+                  for (int index = 0; index < buttonValues.length; index++)
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedValue = buttonValues[index];
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: (selectedValue == buttonValues[index])
+                            ? MaterialStateProperty.all<Color>(Colors.blue)
+                            : null,
+                      ),
+                      child: Text((index + 1).toString()),
                     ),
-                    child: Text(value),
-                  ),
+                ],
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: (selectedValue != null)
