@@ -51,7 +51,25 @@ class _pick_tagsState extends State<pick_tags> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('태그 선택'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text(
+          '태그 선택',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
       ),
       body: FutureBuilder<List<Tags>>(
         future: tagApi.getTags(),
@@ -70,8 +88,10 @@ class _pick_tagsState extends State<pick_tags> {
                     selectTag(tag);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 3),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                    margin: EdgeInsets.symmetric(
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -85,9 +105,10 @@ class _pick_tagsState extends State<pick_tags> {
                       ],
                     ),
                     child: Text(
-                      tagList[index].tagName,
+                      "#${tagList[index].tagName}",
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
