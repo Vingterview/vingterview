@@ -24,6 +24,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
   bool isLoading = false;
   String question;
   String _buttonText;
+  Color iconColor = Colors.white;
 
   // Define a method to initialize the camera.
   Future<void> initCamera() async {
@@ -123,61 +124,86 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
             ),
           ),
           Positioned(
-            top: 50,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: MediaQuery.of(context).size.height *
+                0.9, // 위쪽 검정색 박스의 높이 설정 (30%)
+            child: Container(
+              color: Colors.black,
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height *
+                0.85, // 아래쪽 검정색 박스의 위치 설정 (70%)
             left: 0,
             right: 0,
             bottom: 0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+            child: Container(
+              color: Colors.black,
+            ),
+          ),
+          Positioned(
+              top: 100,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  margin: EdgeInsets.symmetric(vertical: 3),
+                  margin: EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFEEEEEE),
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
                   ),
                   child: Text(
-                    _buttonText,
-                    style: TextStyle(
-                      fontSize: 16, // 줄글 글씨 크기
-                    ),
+                    "Q. $_buttonText",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Spacer(),
-                SizedBox(height: 50),
-                Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Image.asset(
-                    'assets/face1.png',
-                    width: 500,
-                    height: 500,
-                  ),
+              ])),
+          Positioned(
+              top: 200,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Column(children: [
+                Image.asset(
+                  'assets/face_line.png',
+                  width: 500,
+                  height: 500,
+                ),
+                SizedBox(
+                  height: 50,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.video_camera_front),
-                      onPressed: () => handleButton(0),
+                      icon: Icon(
+                        Icons.video_camera_front,
+                        color: iconColor, // 아이콘 색상 설정
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          iconColor = Colors.red; // 버튼을 눌렀을 때 아이콘 색상 변경
+                        });
+                        handleButton(0);
+                      },
+                      iconSize: 32,
                     ),
                     IconButton(
-                      icon: Icon(Icons.stop),
+                      icon: Icon(
+                        Icons.stop,
+                        color: Colors.white,
+                      ),
                       onPressed: () => handleButton(1),
+                      iconSize: 32,
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ]))
         ],
       ),
     );

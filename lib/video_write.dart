@@ -151,29 +151,49 @@ class _PostVideoPageState extends State<PostVideoPage> {
                     _content = value;
                   },
                 ),
+                SizedBox(
+                  height: 3,
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.image),
-                      onPressed: () async {
-                        _video = await uploadVideoApi.returnVideo();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.camera),
-                      onPressed: () async {
-                        _video = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => RecordVideoPage(
-                                    buttonText: buttonText.toString())));
-                        print(_video);
-                        print("dd");
-                      },
+                    _video != null
+                        ? Text("영상이 선택되었습니다.",
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black54))
+                        : Text("영상을 선택해주세요.",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 213, 23, 9),
+                            )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end, // 오른쪽 정렬
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.image, color: Colors.black54),
+                          onPressed: () async {
+                            _video = await uploadVideoApi.returnVideo();
+                            setState(() {});
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.camera, color: Colors.black54),
+                          onPressed: () async {
+                            _video = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => RecordVideoPage(
+                                        buttonText: buttonText.toString())));
+                            print(_video);
+                            setState(() {});
+                            print("dd");
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 8),
                 Text(
                   '''빙터뷰 앱의 영상 게시 시 사용자들끼리 불편을 최소화하기 위해 다음과 같은 사항에 유의해야 합니다.
 

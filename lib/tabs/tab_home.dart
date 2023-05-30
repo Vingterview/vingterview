@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.all(8),
                                 child: Text(
                                   _truncateText(
-                                      videoList.videos[index].content, 26),
+                                      videoList.videos[index].content, 25),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                   _truncateText(
                                       questionList
                                           .questions[index].questionContent,
-                                      26),
+                                      25),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
