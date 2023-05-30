@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       else
         return false;
     }
+    return false;
   }
 
   void moveScreen() async {

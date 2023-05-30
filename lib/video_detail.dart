@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'video_edit.dart';
 import 'package:intl/intl.dart';
+import 'package:capston/user_popup.dart';
 
 // 영상 재생할 수 있게 하기 + 댓글 가져오기
 class video_detail extends StatefulWidget {
@@ -240,8 +241,34 @@ class _VideoDetailState extends State<video_detail> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.network(
-                                                  '${video.video.profileUrl}',
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Stack(
+                                                          children: [
+                                                            // 배경 어둠 효과
+                                                            ModalBarrier(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                            ),
+                                                            // 팝업 창
+                                                            UserProfilePopup(
+                                                                userId: video
+                                                                    .video
+                                                                    .memberId),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Image.network(
+                                                    '${video.video.profileUrl}',
+                                                  ),
                                                 ),
                                               ),
                                             ),
