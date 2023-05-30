@@ -173,6 +173,27 @@ class _QVideoPageState extends State<QVideoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text(
+          '영상 게시판',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Container(
@@ -183,7 +204,7 @@ class _QVideoPageState extends State<QVideoPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '영상 게시판',
+                        '질문 별 영상 보기',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -211,25 +232,23 @@ class _QVideoPageState extends State<QVideoPage> {
                       ),
                     ]),
                 Container(
+                  width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  margin: EdgeInsets.symmetric(vertical: 3),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
                   ),
                   child: Text(
-                    widget.question.questionContent,
+                    "Q. ${widget.question.questionContent}",
                     style: TextStyle(
-                      fontSize: 16, // 줄글 글씨 크기
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ],
@@ -455,16 +474,6 @@ class _QVideoPageState extends State<QVideoPage> {
                 },
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.keyboard_arrow_right_sharp),
-            color: Color(0xFF6fa8dc),
-            onPressed: () {
-              Navigator.pushNamed(context, '/video_write').then((value) {
-                _updateWithSorting(_sortingOption, nextPage);
-                setState(() {});
-              });
-            },
           ),
         ],
       ),

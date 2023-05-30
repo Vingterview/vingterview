@@ -143,7 +143,7 @@ class _PostVideoPageState extends State<PostVideoPage> {
                   keyboardType: TextInputType.multiline,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some content';
+                      return '내용을 작성해주세요';
                     }
                     return null;
                   },

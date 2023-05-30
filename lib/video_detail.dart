@@ -119,9 +119,25 @@ class _VideoDetailState extends State<video_detail> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
           elevation: 0,
-          title: Text(''),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          foregroundColor: Colors.white,
+          title: Text(
+            '게시글 세부',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
           actions: isMine
               ? [
                   PopupMenuButton<String>(
@@ -273,37 +289,39 @@ class _VideoDetailState extends State<video_detail> {
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.symmetric(horizontal: 5),
-                                        width: 330,
-                                        height: 30,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 30),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 10),
+                                        constraints: BoxConstraints(
+                                            maxWidth: 320), // 너비 제약조건 추가
                                         decoration: BoxDecoration(
                                           color: Color(0xFFEEEEEE),
                                           borderRadius:
                                               BorderRadius.circular(5),
                                         ),
                                         alignment: Alignment.centerLeft,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: '   Q. ',
-                                                style: TextStyle(
-                                                  color: Color(0xFF3D85C6),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Q. ',
+                                              style: TextStyle(
+                                                color: Color(0xFF3D85C6),
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 14,
                                               ),
-                                              TextSpan(
-                                                text:
-                                                    video.video.questionContent,
+                                            ),
+                                            Expanded(
+                                              // Expanded 위젯 추가
+                                              child: Text(
+                                                video.video.questionContent,
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       Padding(
