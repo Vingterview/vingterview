@@ -158,7 +158,27 @@ class _QuestionPageState extends State<pick_question> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          title: Text(
+            '질문 선택',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
         body: Column(children: [
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -228,9 +248,10 @@ class _QuestionPageState extends State<pick_question> {
                             ),
                             child: Text(
                               textData ??
-                                  questionList.questions[index].questionContent,
+                                  "Q. ${questionList.questions[index].questionContent}",
                               style: TextStyle(
-                                fontSize: 16, // 줄글 글씨 크기
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
