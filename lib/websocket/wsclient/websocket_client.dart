@@ -122,7 +122,6 @@ class WebSocketClient {
         gameInfo: state.gameInfo,
         memberInfos: [],
         poll: state.poll);
-    print("메시지 타입ㅂㅂㅂㅂㅂ${type.name}");
 
     _push(jsonEncode(message));
   }

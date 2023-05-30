@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Vingterview',
+      theme: ThemeData(primaryColor: const Color(0xFF8A61D4)),
       routes: {
         '/': (context) => SplashScreen(),
         '/index': (context) => IndexScreen(),

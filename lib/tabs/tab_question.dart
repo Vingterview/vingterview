@@ -212,123 +212,115 @@ class _QuestionPageState extends State<QuestionPage> {
                   if (index < questionList.questions.length) {
                     print(questionList.questions.length);
                     return GestureDetector(
-                        onTap: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => QVideoPage(
-                                      question:
-                                          questionList.questions[index])));
-                        },
-                        onLongPress: () async {
-                          Navigator.pushNamed(context, '/video_write',
-                              arguments: questionList.questions[index]);
-                        },
-                        child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            margin: EdgeInsets.symmetric(vertical: 3),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 3),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QVideoPage(
+                                question: questionList.questions[index]),
+                          ),
+                        );
+                      },
+                      onLongPress: () async {
+                        Navigator.pushNamed(context, '/video_write',
+                            arguments: questionList.questions[index]);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFEEEEEE),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(8, 3, 20, 8),
+                                    child: Text(
+                                      textData ??
+                                          questionList
+                                              .questions[index].questionContent,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      questionApi.scrap(questionList
+                                          .questions[index].questionId);
+                                      setState(() {
+                                        _isStarred = !_isStarred;
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.star_border,
+                                      color: _isStarred
+                                          ? Color(0xFF8A61D4)
+                                          : Colors.grey,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
                               ],
                             ),
-                            child: Column(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(8, 3, 80, 3),
-                                        child: Text(
-                                          textData ??
-                                              questionList.questions[index]
-                                                  .questionContent,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 4, 8, 0),
+                                  child: Text(
+                                    questionList.questions[index].tags
+                                        .map((tag) => '#${tag.tagName}')
+                                        .join(' '),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          questionApi.scrap(questionList
-                                              .questions[index].questionId);
-                                          setState(() {
-                                            _isStarred = !_isStarred;
-                                          });
-                                        },
-                                        child: Icon(
-                                          Icons.star_border,
-                                          color: _isStarred
-                                              ? Color(0xFF8A61D4)
-                                              : Colors.grey,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                  ],
+                                  ),
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.fromLTRB(0, 4, 8, 0),
+                                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Text(
-                                        questionList.questions[index].tags
-                                            .map((tag) => '#${tag.tagName}')
-                                            .join(' '),
+                                        '스크랩 ${questionList.questions[index].scrapCount}',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                          child: Text(
-                                            '스크랩 ${questionList.questions[index].scrapCount}',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
+                                    SizedBox(width: 10),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                      child: Text(
+                                        '답변 ${questionList.questions[index].boardCount}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
                                         ),
-                                        SizedBox(width: 10),
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                          child: Text(
-                                            '답변 ${questionList.questions[index].boardCount}',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
-                                )
+                                ),
                               ],
-                            )));
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   } else if (hasNext) {
                     print(questionList.questions.length);
                     return Padding(

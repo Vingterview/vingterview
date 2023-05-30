@@ -80,6 +80,12 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
             ),
             body: Consumer<GameState>(builder: (context, gameState, child) {
               Widget stageWidget;
+              Widget memberWidget =
+                  Container(); // <----------------------------------잘 되나 확인
+
+              if (_isMatched()) {
+                memberWidget = getStage2(_client);
+              }
 
               switch (gameState.stage) {
                 case Stage.GAME_MATCHED:
@@ -126,6 +132,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        memberWidget,
                         stageWidget,
 
                         ///추가 : StreamingPage 사용법
@@ -163,6 +170,14 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
   ///추가
   bool _isHost() {
     if (_stage == Stage.READY_STREAMING) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isMatched() {
+    if (_stage != null) {
+      print(_stage);
       return true;
     }
     return false;
