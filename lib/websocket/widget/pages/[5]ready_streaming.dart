@@ -19,81 +19,12 @@ class Page5 extends StatefulWidget {
 }
 
 class _Page5State extends State<Page5> {
-  Widget _buildImageFromEncodedData(String encodedImage,
-      {double width, double height}) {
-    if (encodedImage == null || encodedImage.isEmpty) {
-      // 이미지가 없을 때 플레이스홀더 이미지 표시
-      return Container(
-        width: width,
-        height: height,
-        color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
-      );
-    }
-
-    Uint8List imageBytes = base64.decode(encodedImage);
-    ImageProvider imageProvider = MemoryImage(imageBytes);
-
-    return Container(
-      width: width,
-      height: height,
-      child: Image(
-        image: imageProvider,
-        fit: BoxFit.cover,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          // 로딩 진행 상태 표시
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes
-                  : null,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(children: [
-        Row(children: [
-          for (var memberInfo in widget.client.state.memberInfos)
-            Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: widget.client.state.currentBroadcaster ==
-                              memberInfo.sessionId
-                          ? Colors.red
-                          : (widget.client.state.gameInfo.participant
-                                  .contains(memberInfo.sessionId)
-                              ? Colors.blue
-                              : Colors.transparent),
-                      width: 2,
-                    ),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(memberInfo.name),
-                      _buildImageFromEncodedData(memberInfo.encodedImage,
-                          width: 100, height: 100),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-        ]),
-        Text(widget.client.state.gameInfo
-            .question[widget.client.state.gameInfo.round - 1]),
-      ]),
+      child: Text(widget.client.state.gameInfo
+          .question[widget.client.state.gameInfo.round - 1]),
+      // ]),
     );
   }
 }

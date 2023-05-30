@@ -25,13 +25,11 @@ class _Page2State extends State<Page2> {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        shape: BoxShape.circle, // 이미지를 동그랗게 만듦
         border: Border.all(
-            color: borderColor ??
-                Colors.black, // border 색상을 입력받아 설정하며, 기본값은 검정색입니다.
-            width: borderWidth ??
-                8 // border 너비를 입력받아 설정하며, 기본값은 0입니다. (border가 없음)
-            ),
+          color: borderColor,
+          width: 2,
+        ),
+        shape: BoxShape.circle,
       ),
       child: ClipOval(
         child: Image(image: imageProvider, fit: BoxFit.cover),
@@ -53,15 +51,25 @@ class _Page2State extends State<Page2> {
                   margin: EdgeInsets.all(8.0), // 여백 추가
                   child: Column(
                     children: [
-                      _buildImageFromEncodedData(memberInfo.encodedImage,
-                          width: 90,
-                          height: 90,
-                          borderWidth: 4,
-                          borderColor: Colors.black45),
-                      SizedBox(height: 8), // 사진과 글자 사이 여백
                       Text(
                         memberInfo.name,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                      SizedBox(height: 8), // 사진과 글자 사이 여백
+                      _buildImageFromEncodedData(
+                        memberInfo.encodedImage,
+                        width: 60,
+                        height: 60,
+                        borderWidth: 4,
+                        borderColor: widget.client.state.currentBroadcaster ==
+                                memberInfo.sessionId
+                            ? Colors.red
+                            : (widget.client.state.gameInfo.participant !=
+                                        null &&
+                                    widget.client.state.gameInfo.participant
+                                        .contains(memberInfo.sessionId)
+                                ? Colors.blue
+                                : Colors.black54),
                       ),
                     ],
                   ),

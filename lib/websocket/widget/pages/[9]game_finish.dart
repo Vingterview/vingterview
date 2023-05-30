@@ -61,22 +61,11 @@ class _Page9State extends State<Page9> {
     return Container(
         child: Column(
       children: [
-        Row(
-          children: [
-            for (var memberInfo in widget.client.state.memberInfos)
-              Column(
-                children: [
-                  Text(memberInfo.name),
-                  _buildImageFromEncodedData(memberInfo.encodedImage,
-                      width: 100, height: 100),
-                ],
-              ),
-          ],
-        ),
         Text("게임 끝 ㅅㄱ"),
         ElevatedButton(
           onPressed: () {
             widget.client.disconnect();
+            Navigator.pop(context);
           },
           child: Text("Disconnect"),
         ),

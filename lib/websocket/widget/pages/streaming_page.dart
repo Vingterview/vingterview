@@ -46,15 +46,41 @@ class _StreamingPageState extends State<StreamingPage> {
       children: [
         // Container for the local video
         Container(
-          height: 240,
+          height: 450,
           decoration: BoxDecoration(border: Border.all()),
           child: Center(child: _videoPanel()),
         ),
         Visibility(
-            visible: widget.isHost,
-            child: ElevatedButton(
-                onPressed: _handleBroadcasting,
-                child: _onAir.value ? Text("끝내기") : Text("시작하기")))
+          visible: widget.isHost,
+          child: ElevatedButton(
+            onPressed: _handleBroadcasting,
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              overlayColor: MaterialStateProperty.all<Color>(
+                  Colors.blue.withOpacity(0.2)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  side: BorderSide(
+                    color: Color(0xFF8A61D4),
+                  ),
+                ),
+              ),
+              elevation: MaterialStateProperty.all<double>(5.0),
+              padding:
+                  MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0)),
+            ),
+            child: Text(
+              _onAir.value ? '끝내기' : '시작하기',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -92,10 +118,14 @@ class _StreamingPageState extends State<StreamingPage> {
         );
       } else {
         // 방송시작 안했을때
-        return const Text(
-          'Waiting for a host to join',
-          textAlign: TextAlign.center,
-        );
+        return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
+        // return Container(
+        //     color: Colors.black38,
+        //     padding: EdgeInsets.all(15.0),
+        //     child: Text(
+        //       '참가자가 준비될 때까지 잠시만 기다려주세',
+        //       textAlign: TextAlign.center,
+        //     ));
       }
     }
   }

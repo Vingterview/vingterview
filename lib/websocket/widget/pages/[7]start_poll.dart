@@ -23,45 +23,7 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   List<String> buttonValues = []; // 버튼 값 리스트
   String selectedValue; // 선택된 값
-
-  Widget _buildImageFromEncodedData(String encodedImage,
-      {double width, double height}) {
-    if (encodedImage == null || encodedImage.isEmpty) {
-      // 이미지가 없을 때 플레이스홀더 이미지 표시
-      return Container(
-        width: width,
-        height: height,
-        color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
-      );
-    }
-
-    Uint8List imageBytes = base64.decode(encodedImage);
-    ImageProvider imageProvider = MemoryImage(imageBytes);
-
-    return Container(
-      width: width,
-      height: height,
-      child: Image(
-        image: imageProvider,
-        fit: BoxFit.cover,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          // 로딩 진행 상태 표시
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes
-                  : null,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  bool isPolled = false;
 
   @override
   void initState() {
@@ -92,46 +54,35 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              for (var memberInfo in widget.client.state.memberInfos)
-                Column(
-                  children: [
-                    Text(memberInfo.name),
-                    _buildImageFromEncodedData(memberInfo.encodedImage,
-                        width: 100, height: 100),
-                  ],
-                ),
-            ],
-          ),
           SizedBox(height: 20),
           Container(
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
                 Text("가장 잘한 참가자를 선택해주세요!"),
-                ...[
-                  for (int index = 0; index < buttonValues.length; index++)
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedValue = buttonValues[index];
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: (selectedValue == buttonValues[index])
-                            ? MaterialStateProperty.all<Color>(Colors.blue)
-                            : null,
+                Row(
+                  children: [
+                    for (int index = 0; index < buttonValues.length; index++)
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedValue = buttonValues[index];
+                          });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: (selectedValue ==
+                                  buttonValues[index])
+                              ? MaterialStateProperty.all<Color>(Colors.blue)
+                              : null,
+                        ),
+                        child: Text((index + 1).toString()),
                       ),
-                      child: Text((index + 1).toString()),
-                    ),
-                ],
+                  ],
+                ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: (selectedValue != null)
                       ? () {
-                          // Provider.of<GameState>(context, listen: false).poll =
-                          //     selectedValue;
                           widget.client.state.poll = selectedValue;
                           widget.client.sendMessage(MessageType.POLL);
                         }
@@ -171,18 +122,18 @@ class TimerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.red
+      ..color = Color(0xFF8A61D4)
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
 
     double radius = min(size.width, size.height) / 2;
     Offset center = Offset(size.width / 2, size.height / 2);
-    double angle = 2 * pi * progress;
+    double startAngle = pi / 2; // Start angle at the bottom
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      -angle,
+      startAngle,
+      2 * pi * progress,
       false,
       paint,
     );

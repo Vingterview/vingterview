@@ -84,18 +84,21 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                   Container(); // <----------------------------------잘 되나 확인
 
               if (_isMatched()) {
+                print("Dd");
                 memberWidget = getStage2(_client);
               }
 
               switch (gameState.stage) {
                 case Stage.GAME_MATCHED:
-                  stageWidget = getStage2(_client);
+                  // stageWidget = getStage2(_client);
+                  stageWidget = Container();
                   break;
                 case Stage.ROUND_START:
                   stageWidget = getStage3(_client);
                   break;
                 case Stage.SHOW_PARTICIPANT:
                   stageWidget = getStage4(_client);
+                  stageWidget = Container();
                   break;
                 case Stage.READY_STREAMING:
                   stageWidget = getStage5(_client);
@@ -130,7 +133,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         memberWidget,
                         stageWidget,

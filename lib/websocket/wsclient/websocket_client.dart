@@ -46,7 +46,7 @@ class WebSocketClient {
 
   ///timer state
   int _participateSec = 600; //질문 확인하고 참가하는 시간 60초
-  int _pollSec = 6; //투표하는 시간 30초
+  int _pollSec = 1000; //투표하는 시간 30초
   bool _isAlive = false;
 
   ///private constructor

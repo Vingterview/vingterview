@@ -22,28 +22,7 @@ class Page3 extends StatefulWidget {
 
 class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-
-  Widget _buildImageFromEncodedData(String encodedImage,
-      {double width, double height, double borderWidth, Color borderColor}) {
-    Uint8List imageBytes = base64.decode(encodedImage);
-    ImageProvider imageProvider = MemoryImage(imageBytes);
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle, // 이미지를 동그랗게 만듦
-        border: Border.all(
-            color: borderColor ??
-                Colors.black, // border 색상을 입력받아 설정하며, 기본값은 검정색입니다.
-            width: borderWidth ??
-                8 // border 너비를 입력받아 설정하며, 기본값은 0입니다. (border가 없음)
-            ),
-      ),
-      child: ClipOval(
-        child: Image(image: imageProvider, fit: BoxFit.cover),
-      ),
-    );
-  }
+  bool isParticipant = false;
 
   @override
   void initState() {
@@ -72,41 +51,18 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
     return Container(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (var memberInfo in widget.client.state.memberInfos)
-                Container(
-                  margin: EdgeInsets.all(8.0), // 여백 추가
-                  child: Column(
-                    children: [
-                      _buildImageFromEncodedData(memberInfo.encodedImage,
-                          width: 90,
-                          height: 90,
-                          borderWidth: 4,
-                          borderColor: Colors.black45),
-                      SizedBox(height: 8), // 사진과 글자 사이 여백
-                      Text(
-                        memberInfo.name,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                )
-            ],
-          ),
-          SizedBox(height: 8),
+          SizedBox(height: 10),
           Container(
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 15),
                 Stack(
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: 200,
-                      height: 280,
+                      width: 250,
+                      height: 330,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -120,7 +76,7 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Color(0xFF8A61D4),
-                          width: 2,
+                          width: 3,
                         ),
                       ),
                     ),
@@ -129,14 +85,14 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                         progress: progress,
                       ),
                       child: SizedBox(
-                        width: 184,
-                        height: 184,
+                        width: 234,
+                        height: 234,
                         child: Center(
                           child: Text(
                             widget.client.state.gameInfo.question[
                                 widget.client.state.gameInfo.round - 1],
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               color: Colors.white,
                             ),
                           ),
@@ -146,15 +102,22 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                     Positioned(
                       bottom: 16,
                       child: ElevatedButton(
-                        onPressed: () {
-                          widget.client.sendMessage(MessageType.PARTICIPATE);
-                        },
+                        onPressed: isParticipant
+                            ? null
+                            : () {
+                                widget.client
+                                    .sendMessage(MessageType.PARTICIPATE);
+                                setState(() {
+                                  isParticipant = true;
+                                });
+                              },
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all<EdgeInsets>(
                             EdgeInsets.all(15.0),
                           ),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black38),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            isParticipant ? Colors.grey : Colors.black38,
+                          ),
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                           overlayColor: MaterialStateProperty.all<Color>(
@@ -169,7 +132,7 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        child: Text("참가하기",
+                        child: Text(isParticipant ? '참가 완료' : '참가하기',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,

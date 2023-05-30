@@ -20,7 +20,6 @@ class Page8 extends StatefulWidget {
 }
 
 class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
   List<String> buttonValues = []; // 버튼 값 리스트
   String selectedValue; // 선택된 값
 
@@ -77,34 +76,22 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double progress = 1 - _animationController.value;
-
-    String pollParticipantName = '';
-    String pollParicipantImage = '';
-    for (var memberInfo in widget.client.state.memberInfos) {
-      if (memberInfo.sessionId == widget.client.state.poll) {
-        pollParticipantName = memberInfo.name;
-        pollParicipantImage = memberInfo.encodedImage;
+    String pollParticipantName;
+    String pollParicipantImage;
+    for (var memberInfo in widget.client.state.memberInfos ?? []) {
+      if (memberInfo != null &&
+          memberInfo.sessionId == widget.client.state.poll) {
+        pollParticipantName = memberInfo.name ?? '';
+        pollParicipantImage = memberInfo.encodedImage ?? '';
         break;
       }
     }
+    print(widget.client.state.memberInfos[0].name);
 
     return Container(
+        child: SingleChildScrollView(
       child: Column(
         children: [
-          Row(
-            children: [
-              for (var memberInfo in widget.client.state.memberInfos)
-                Column(
-                  children: [
-                    Text(memberInfo.name),
-                    _buildImageFromEncodedData(memberInfo.encodedImage,
-                        width: 100, height: 100),
-                  ],
-                ),
-            ],
-          ),
-          SizedBox(height: 20),
           Container(
             padding: EdgeInsets.all(20),
             child: Column(
@@ -128,7 +115,7 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

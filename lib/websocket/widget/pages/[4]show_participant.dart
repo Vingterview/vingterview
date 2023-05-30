@@ -58,40 +58,7 @@ class _Page4State extends State<Page4> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              for (var memberInfo in widget.client.state.memberInfos)
-                Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: widget.client.state.gameInfo.participant
-                                  .contains(memberInfo.sessionId)
-                              ? Colors.blue
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(memberInfo.name),
-                          _buildImageFromEncodedData(memberInfo.encodedImage,
-                              width: 100, height: 100),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return Container();
   }
 }
 
