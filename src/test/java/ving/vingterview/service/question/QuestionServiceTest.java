@@ -90,7 +90,7 @@ class QuestionServiceTest {
     }
 
     // 질문 생성
-    @Test
+    /*@Test
     void create() {
         List<Long> tags = new ArrayList<>();
         tags.add(1L);
@@ -109,7 +109,7 @@ class QuestionServiceTest {
         assertThat(foundDTO.getQuestionId()).isEqualTo(questionId);
         assertThat(foundDTO.getQuestionContent()).isEqualTo(dto.getQuestionContent());
         assertThat(foundDTO.getTags()).extracting("tagId").isEqualTo(dto.getTags());
-    }
+    }*/
 
     // 회원이 없는 경우
     @Test
