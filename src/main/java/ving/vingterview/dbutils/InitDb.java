@@ -34,8 +34,8 @@ public class InitDb {
     @PostConstruct
     public void InitDb() {
 
-//        initService.tagInit();
-//        initService.dbInit();
+        initService.tagInit();
+        initService.dbInit();
 
 
     }
