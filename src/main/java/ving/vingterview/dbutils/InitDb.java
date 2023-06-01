@@ -4,6 +4,8 @@ package ving.vingterview.dbutils;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ving.vingterview.domain.board.Board;
@@ -19,7 +21,6 @@ import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.domain.tag.TagType;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +49,13 @@ public class InitDb {
     static class InitService {
 
         private final EntityManager em;
+
+        @Value("classpath:기업.txt")
+        private Resource fileResource;
+        @Value("classpath:소분류.txt")
+        private Resource fileResource2;
+        @Value("classpath:질문Parsing.txt")
+        private Resource fileResource3;
 
         public void dbInit() {
 
@@ -214,10 +222,12 @@ public class InitDb {
         }
 
         public void tagInit() {
+
             try {
-                BufferedReader br = new BufferedReader(new FileReader("src/main/resources/기업.txt"));
-                BufferedReader br2 = new BufferedReader(new FileReader("src/main/resources/소분류.txt"));
-                BufferedReader questionBufferReader = new BufferedReader(new FileReader("src/main/resources/질문Parsing.txt"));
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(fileResource.getInputStream()));
+                BufferedReader br2 = new BufferedReader(new InputStreamReader(fileResource2.getInputStream()));
+                BufferedReader questionBufferReader = new BufferedReader(new InputStreamReader(fileResource3.getInputStream()));
 
                 String line;
                 String line2;
