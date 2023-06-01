@@ -69,9 +69,26 @@ public class InitDb {
             em.persist(member3);
             em.persist(member4);
 
+           /* Tag tag1 = createTag(null,"이벤트", TagType.TOPLEVEL);
+            Tag tag2 = createTag(tag1,"이벤트", TagType.MIDLEVEL);
+            Tag tag3 = createTag(tag2,"이벤트", TagType.SUB);
 
+            em.persist(tag1);
+            em.persist(tag2);
+            em.persist(tag3);
 
-           /* Tag tag1 = createTag(null,"대기업", TagType.TOPLEVEL);
+            Question question =createQuestion(member1,"임시");
+            em.persist(question);
+            em.persist(createTagQuestion(tag1,question));
+            em.persist(createTagQuestion(tag2,question));
+            em.persist(createTagQuestion(tag3,question));
+
+            for (int i = 0; i < 1000; i++) {
+                Board board = createBoard(question,member3,"임시글","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+                em.persist(board);
+            }*/
+
+            Tag tag1 = createTag(null,"대기업", TagType.TOPLEVEL);
             Tag tag2 = createTag(null,"중소기업",TagType.TOPLEVEL);
             Tag tag3 = createTag(null,"스타트업",TagType.TOPLEVEL);
 
@@ -97,13 +114,11 @@ public class InitDb {
             em.persist(tag8);
             em.persist(tag9);
             em.persist(tag10);
-            em.persist(tag11);*/
-
-/*            Question question =createQuestion(member1,"forpaging");
-            em.persist(question);*/
+            em.persist(tag11);
 
 
-            /*Question question1 = createQuestion(null, "질문1");
+
+            Question question1 = createQuestion(null, "질문1");
             Question question2 =createQuestion(member1,"질문2");
             Question question3 = createQuestion(member3,"질문3");
             Question question4 = createQuestion(member2,"질문4");
@@ -115,20 +130,12 @@ public class InitDb {
             em.persist(question4);
             em.persist(question5);
 
-            for (int i = 0; i < 100; i++) {
-                Question question = createQuestion(null, "forPaging" + i);
-                em.persist(question);
-                em.persist(createTagQuestion(tag1,question));
-                em.persist(createTagQuestion(tag4,question));
-                em.persist(createTagQuestion(tag9,question));
-
-            }*/
 
 
-         /*   Board board1 = createBoard(question,member1,"본문1","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board2 = createBoard(question,member1,"본문2","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board3 = createBoard(question,member2,"본문3","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board4 = createBoard(question,member3,"본문4","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board1 = createBoard(question1,member1,"본문1","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board2 = createBoard(question2,member1,"본문2","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board3 = createBoard(question3,member2,"본문3","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board4 = createBoard(question4,member3,"본문4","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
 
             em.persist(board1);
             em.persist(board2);
@@ -136,7 +143,7 @@ public class InitDb {
             em.persist(board4);
 
             for (int i = 0; i < 1000; i++) {
-                Board board = createBoard(question,member3,"forPaging","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+                Board board = createBoard(question1,member3,"forPaging","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
                 em.persist(board);
             }
 
@@ -179,16 +186,16 @@ public class InitDb {
             em.persist(createCommentMemberLike(comment3,member3));
 
 
-            em.persist(createQuestionMemberScrap(question,member1));
-            em.persist(createQuestionMemberScrap(question,member1));
-            em.persist(createQuestionMemberScrap(question,member2));
-            em.persist(createQuestionMemberScrap(question,member2));
-            em.persist(createQuestionMemberScrap(question,member3));
-            em.persist(createQuestionMemberScrap(question,member3));
-            em.persist(createQuestionMemberScrap(question,member3));
-            em.persist(createQuestionMemberScrap(question,member3));*/
+            em.persist(createQuestionMemberScrap(question1,member1));
+            em.persist(createQuestionMemberScrap(question1,member1));
+            em.persist(createQuestionMemberScrap(question1,member2));
+            em.persist(createQuestionMemberScrap(question1,member2));
+            em.persist(createQuestionMemberScrap(question1,member3));
+            em.persist(createQuestionMemberScrap(question1,member3));
+            em.persist(createQuestionMemberScrap(question1,member3));
+            em.persist(createQuestionMemberScrap(question1,member3));
 
-/*            em.persist(createTagQuestion(tag1,question1));
+            em.persist(createTagQuestion(tag1,question1));
             em.persist(createTagQuestion(tag4,question1));
             em.persist(createTagQuestion(tag9,question1));
             em.persist(createTagQuestion(tag2,question2));
@@ -202,9 +209,8 @@ public class InitDb {
             em.persist(createTagQuestion(tag8,question4));
             em.persist(createTagQuestion(tag1,question5));
             em.persist(createTagQuestion(tag4,question5));
-            em.persist(createTagQuestion(tag9,question5));*/
+            em.persist(createTagQuestion(tag9,question5));
 
-/*
             em.persist(createTagMember(tag1,member1));
             em.persist(createTagMember(tag4,member1));
             em.persist(createTagMember(tag9,member1));
@@ -214,7 +220,6 @@ public class InitDb {
             em.persist(createTagMember(tag1,member3));
             em.persist(createTagMember(tag5,member3));
             em.persist(createTagMember(tag8,member3));
-*/
 
 
 
