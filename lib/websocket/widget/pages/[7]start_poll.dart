@@ -59,8 +59,15 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                Text("가장 잘한 참가자를 선택해주세요!"),
+                Text(
+                  "가장 잘한 참가자를 선택해주세요!",
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
+                  ),
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     for (int index = 0; index < buttonValues.length; index++)
                       ElevatedButton(
@@ -70,41 +77,112 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                           });
                         },
                         style: ButtonStyle(
-                          backgroundColor: (selectedValue ==
-                                  buttonValues[index])
-                              ? MaterialStateProperty.all<Color>(Colors.blue)
-                              : null,
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.all(15.0),
+                          ),
+                          backgroundColor:
+                              (selectedValue == buttonValues[index])
+                                  ? MaterialStateProperty.all<Color>(
+                                      Color(0xFF1A4FB5),
+                                    )
+                                  : null,
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.blue.withOpacity(0.2)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                color: Color(0xFF8A61D4),
+                              ),
+                            ),
+                          ),
                         ),
-                        child: Text((index + 1).toString()),
+                        child: Text((index + 1).toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            )),
                       ),
                   ],
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: (selectedValue != null)
+                  onPressed: (selectedValue != null && !isPolled)
                       ? () {
                           widget.client.state.poll = selectedValue;
                           widget.client.sendMessage(MessageType.POLL);
                         }
                       : null,
-                  child: Text('투표하기'),
-                ),
-                SizedBox(height: 20),
-                CustomPaint(
-                  painter: TimerPainter(
-                    progress: progress,
-                  ),
-                  child: SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: Center(
-                      child: Text(
-                        "${(_animationController.value * Provider.of<GameState>(context).duration).ceil()}",
-                        style: TextStyle(fontSize: 32),
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.all(15.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      isPolled ? Colors.grey : Colors.black38,
+                    ),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                        Colors.blue.withOpacity(0.2)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: BorderSide(
+                          color: Color(0xFF8A61D4),
+                        ),
                       ),
                     ),
                   ),
+                  child: Text('투표하기',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      )),
                 ),
+                SizedBox(height: 20),
+                Stack(alignment: Alignment.center, children: [
+                  Container(
+                    width: 220,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromARGB(255, 12, 30, 62),
+                          // Colors.black54,
+                          Color.fromARGB(255, 63, 56, 76),
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Color(0xFF8A61D4),
+                        width: 3,
+                      ),
+                    ),
+                  ),
+                  CustomPaint(
+                    painter: TimerPainter(
+                      progress: progress,
+                    ),
+                    child: SizedBox(
+                      width: 204,
+                      height: 204,
+                      child: Center(
+                        child: Text(
+                          "${(_animationController.value * Provider.of<GameState>(context).duration).ceil()}",
+                          style: TextStyle(
+                            fontSize: 32,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
               ],
             ),
           ),
@@ -122,7 +200,7 @@ class TimerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color(0xFF8A61D4)
+      ..color = Color.fromARGB(255, 148, 185, 255)
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
 

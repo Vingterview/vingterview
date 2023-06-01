@@ -45,8 +45,8 @@ class WebSocketClient {
   GameState state = new GameState();
 
   ///timer state
-  int _participateSec = 600; //질문 확인하고 참가하는 시간 60초
-  int _pollSec = 1000; //투표하는 시간 30초
+  int _participateSec = 60; //질문 확인하고 참가하는 시간 60초
+  int _pollSec = 30; //투표하는 시간 30초
   bool _isAlive = false;
 
   ///private constructor
@@ -209,6 +209,7 @@ class WebSocketClient {
         case MessageType.POLL:
           //set : 투표 시간
           state.duration = _pollSec;
+          state.currentBroadcaster = null;
 
           //timer start
           _setTimer(Duration(seconds: _pollSec), MessageType.FINISH_POLL);

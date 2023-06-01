@@ -22,42 +22,63 @@ class Page8 extends StatefulWidget {
 class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
   List<String> buttonValues = []; // 버튼 값 리스트
   String selectedValue; // 선택된 값
+  bool isPushed = false;
+
+  // Widget _buildImageFromEncodedData(String encodedImage,
+  //     {double width, double height}) {
+  //   if (encodedImage == null || encodedImage.isEmpty) {
+  //     // 이미지가 없을 때 플레이스홀더 이미지 표시
+  //     return Container(
+  //       width: width,
+  //       height: height,
+  //       color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
+  //     );
+  //   }
+
+  //   Uint8List imageBytes = base64.decode(encodedImage);
+  //   ImageProvider imageProvider = MemoryImage(imageBytes);
+
+  //   return Container(
+  //     width: width,
+  //     height: height,
+  //     child: Image(
+  //       image: imageProvider,
+  //       fit: BoxFit.cover,
+  //       loadingBuilder: (BuildContext context, Widget child,
+  //           ImageChunkEvent loadingProgress) {
+  //         if (loadingProgress == null) {
+  //           return child;
+  //         }
+  //         // 로딩 진행 상태 표시
+  //         return Center(
+  //           child: CircularProgressIndicator(
+  //             value: loadingProgress.expectedTotalBytes != null
+  //                 ? loadingProgress.cumulativeBytesLoaded /
+  //                     loadingProgress.expectedTotalBytes
+  //                 : null,
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget _buildImageFromEncodedData(String encodedImage,
-      {double width, double height}) {
-    if (encodedImage == null || encodedImage.isEmpty) {
-      // 이미지가 없을 때 플레이스홀더 이미지 표시
-      return Container(
-        width: width,
-        height: height,
-        color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
-      );
-    }
-
+      {double width, double height, double borderWidth, Color borderColor}) {
     Uint8List imageBytes = base64.decode(encodedImage);
     ImageProvider imageProvider = MemoryImage(imageBytes);
-
     return Container(
       width: width,
       height: height,
-      child: Image(
-        image: imageProvider,
-        fit: BoxFit.cover,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          // 로딩 진행 상태 표시
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes
-                  : null,
-            ),
-          );
-        },
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: borderColor,
+          width: 2,
+        ),
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: Image(image: imageProvider, fit: BoxFit.cover),
       ),
     );
   }
@@ -96,19 +117,67 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                Text("가장 잘한 참가자 결과입니다!"),
+                Text("가장 잘한 참가자 결과입니다!",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    )),
                 Column(
                   children: [
-                    Text("$pollParticipantName님, 축하합니다!"),
-                    _buildImageFromEncodedData(pollParicipantImage,
-                        width: 100, height: 100),
+                    Text("$pollParticipantName님, 축하합니다!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        )),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    _buildImageFromEncodedData(
+                      pollParicipantImage,
+                      width: 100,
+                      height: 100,
+                      borderWidth: 4,
+                      borderColor: Color(0xFF8A61D4),
+                    ),
+                    SizedBox(
+                      height: 80,
+                    )
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    widget.client.sendMessage(MessageType.NEXT);
-                  },
-                  child: Text('다음 라운드'),
+                  onPressed: isPushed
+                      ? null
+                      : () {
+                          widget.client.sendMessage(MessageType.NEXT);
+                          setState(() {
+                            isPushed = true;
+                          });
+                        },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.all(15.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      isPushed ? Colors.grey : Colors.black38,
+                    ),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                        Colors.blue.withOpacity(0.2)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: BorderSide(
+                          color: Color(0xFF8A61D4),
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: Text('다음 라운드',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      )),
                 ),
               ],
             ),

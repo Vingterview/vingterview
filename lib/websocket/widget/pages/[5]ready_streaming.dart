@@ -21,11 +21,32 @@ class Page5 extends StatefulWidget {
 class _Page5State extends State<Page5> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(widget.client.state.gameInfo
-          .question[widget.client.state.gameInfo.round - 1]),
-      // ]),
-    );
+    return Column(children: [
+      SizedBox(
+        height: 10,
+      ),
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          "Q. ${widget.client.state.gameInfo.question[widget.client.state.gameInfo.round - 1]}",
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+    ]);
   }
 }
 

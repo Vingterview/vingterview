@@ -61,7 +61,14 @@ class _Page9State extends State<Page9> {
     return Container(
         child: Column(
       children: [
-        Text("게임 끝 ㅅㄱ"),
+        Text("게임 끝 ㅅㄱ",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            )),
+        SizedBox(
+          height: 50,
+        ),
         ElevatedButton(
           onPressed: () {
             widget.client.disconnect();
