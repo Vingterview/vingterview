@@ -1,32 +1,19 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/ving
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        # show_sql: true
-        format_sql: true
-        default_batch_fetch_size: 500
 
   jackson:
     property-naming-strategy: SNAKE_CASE
 
   profiles:
-    include: security
-
+    include:
+      - security
+      - db
   servlet:
     multipart:
       max-file-size: 1500MB
       max-request-size: 1500MB
 
 logging.level:
-  org.hibernate.SQL: debug
+#  org.hibernate.SQL: debug
   org.hibernate.type: trace
 
 img:
