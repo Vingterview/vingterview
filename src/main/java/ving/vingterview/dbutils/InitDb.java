@@ -1,4 +1,4 @@
-package ving.vingterview;
+package ving.vingterview.dbutils;
 
 
 import jakarta.annotation.PostConstruct;
@@ -18,6 +18,12 @@ import ving.vingterview.domain.tag.TagMember;
 import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.domain.tag.TagType;
 
+import java.io.*;
+import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +33,10 @@ public class InitDb {
 
     @PostConstruct
     public void InitDb() {
-        initService.dbInit();
+
+//        initService.tagInit();
+//        initService.dbInit();
+
 
     }
 
@@ -54,23 +63,21 @@ public class InitDb {
 
 
 
-            Tag tag1 = createTag(null,"대기업", TagType.CLASSIFICATION);
-            Tag tag2 = createTag(null,"중소기업",TagType.CLASSIFICATION);
-            Tag tag3 = createTag(null,"스타트업",TagType.CLASSIFICATION);
+           /* Tag tag1 = createTag(null,"대기업", TagType.TOPLEVEL);
+            Tag tag2 = createTag(null,"중소기업",TagType.TOPLEVEL);
+            Tag tag3 = createTag(null,"스타트업",TagType.TOPLEVEL);
 
-            Tag tag4 = createTag(tag1, "삼성", TagType.ENTERPRISE);
-            Tag tag5 = createTag(tag1, "카카오", TagType.ENTERPRISE);
-            Tag tag6 = createTag(tag1, "네이버", TagType.ENTERPRISE);
-            Tag tag7 = createTag(tag2, "당근마켓", TagType.ENTERPRISE);
+            Tag tag4 = createTag(tag1, "삼성", TagType.MIDLEVEL);
+            Tag tag5 = createTag(tag1, "카카오", TagType.MIDLEVEL);
+            Tag tag6 = createTag(tag1, "네이버", TagType.MIDLEVEL);
+            Tag tag7 = createTag(tag2, "당근마켓", TagType.MIDLEVEL);
 
 
-            Tag tag8 = createTag(tag5, "개발", TagType.JOB);
-            Tag tag9 = createTag(tag4, "IT/개발", TagType.JOB);
-            Tag tag10 = createTag(tag4, "마케팅", TagType.JOB);
-            Tag tag11 = createTag(tag7, "회계", TagType.JOB);
+            Tag tag8 = createTag(tag5, "개발", TagType.SUB);
+            Tag tag9 = createTag(tag4, "IT/개발", TagType.SUB);
+            Tag tag10 = createTag(tag4, "마케팅", TagType.SUB);
+            Tag tag11 = createTag(tag7, "회계", TagType.SUB);
 
-            Tag tag12 = createTag(null, "인적성", TagType.INTERVIEW);
-            Tag tag13 = createTag(null, "기술면접", TagType.INTERVIEW);
 
             em.persist(tag1);
             em.persist(tag2);
@@ -82,12 +89,13 @@ public class InitDb {
             em.persist(tag8);
             em.persist(tag9);
             em.persist(tag10);
-            em.persist(tag11);
-            em.persist(tag12);
-            em.persist(tag13);
+            em.persist(tag11);*/
+
+/*            Question question =createQuestion(member1,"forpaging");
+            em.persist(question);*/
 
 
-            Question question1 = createQuestion(null, "질문1");
+            /*Question question1 = createQuestion(null, "질문1");
             Question question2 =createQuestion(member1,"질문2");
             Question question3 = createQuestion(member3,"질문3");
             Question question4 = createQuestion(member2,"질문4");
@@ -106,12 +114,13 @@ public class InitDb {
                 em.persist(createTagQuestion(tag4,question));
                 em.persist(createTagQuestion(tag9,question));
 
-            }
+            }*/
 
-            Board board1 = createBoard(question1,member1,"본문1","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board2 = createBoard(question4,member1,"본문2","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board3 = createBoard(question2,member2,"본문3","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
-            Board board4 = createBoard(question2,member3,"본문4","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+
+         /*   Board board1 = createBoard(question,member1,"본문1","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board2 = createBoard(question,member1,"본문2","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board3 = createBoard(question,member2,"본문3","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+            Board board4 = createBoard(question,member3,"본문4","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
 
             em.persist(board1);
             em.persist(board2);
@@ -119,7 +128,7 @@ public class InitDb {
             em.persist(board4);
 
             for (int i = 0; i < 1000; i++) {
-                Board board = createBoard(question2,member3,"forPaging","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
+                Board board = createBoard(question,member3,"forPaging","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
                 em.persist(board);
             }
 
@@ -162,16 +171,16 @@ public class InitDb {
             em.persist(createCommentMemberLike(comment3,member3));
 
 
-            em.persist(createQuestionMemberScrap(question1,member1));
-            em.persist(createQuestionMemberScrap(question4,member1));
-            em.persist(createQuestionMemberScrap(question3,member2));
-            em.persist(createQuestionMemberScrap(question4,member2));
-            em.persist(createQuestionMemberScrap(question1,member3));
-            em.persist(createQuestionMemberScrap(question2,member3));
-            em.persist(createQuestionMemberScrap(question3,member3));
-            em.persist(createQuestionMemberScrap(question4,member3));
+            em.persist(createQuestionMemberScrap(question,member1));
+            em.persist(createQuestionMemberScrap(question,member1));
+            em.persist(createQuestionMemberScrap(question,member2));
+            em.persist(createQuestionMemberScrap(question,member2));
+            em.persist(createQuestionMemberScrap(question,member3));
+            em.persist(createQuestionMemberScrap(question,member3));
+            em.persist(createQuestionMemberScrap(question,member3));
+            em.persist(createQuestionMemberScrap(question,member3));*/
 
-            em.persist(createTagQuestion(tag1,question1));
+/*            em.persist(createTagQuestion(tag1,question1));
             em.persist(createTagQuestion(tag4,question1));
             em.persist(createTagQuestion(tag9,question1));
             em.persist(createTagQuestion(tag2,question2));
@@ -185,8 +194,9 @@ public class InitDb {
             em.persist(createTagQuestion(tag8,question4));
             em.persist(createTagQuestion(tag1,question5));
             em.persist(createTagQuestion(tag4,question5));
-            em.persist(createTagQuestion(tag9,question5));
+            em.persist(createTagQuestion(tag9,question5));*/
 
+/*
             em.persist(createTagMember(tag1,member1));
             em.persist(createTagMember(tag4,member1));
             em.persist(createTagMember(tag9,member1));
@@ -196,9 +206,69 @@ public class InitDb {
             em.persist(createTagMember(tag1,member3));
             em.persist(createTagMember(tag5,member3));
             em.persist(createTagMember(tag8,member3));
+*/
 
 
 
+
+        }
+
+        public void tagInit() {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader("src/main/resources/기업.txt"));
+                BufferedReader br2 = new BufferedReader(new FileReader("src/main/resources/소분류.txt"));
+                BufferedReader questionBufferReader = new BufferedReader(new FileReader("src/main/resources/질문Parsing.txt"));
+
+                String line;
+                String line2;
+                Tag toplevel  = createTag(null, "기업", TagType.TOPLEVEL);
+                em.persist(toplevel);
+
+                while (((line = br.readLine()) != null) && ((line2 = br2.readLine()) != null)) {
+                    Tag midlevel = createTag(toplevel, line, TagType.MIDLEVEL);
+                    em.persist(midlevel);
+                    String[] subs = line2.split(",");
+                    for (String sub : subs) {
+                        Tag sublevel = createTag(midlevel, sub, TagType.SUB);
+                        em.persist(sublevel);
+                        questionInit(questionBufferReader,new ArrayList<>(Arrays.asList(new Tag[]{toplevel, midlevel, sublevel})));
+
+
+                    }
+
+                }
+
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        public void questionInit(BufferedReader fis, List<Tag> tags) {
+            try {
+                String[] questions = fis.readLine().split("-");
+                String 기업 = questions[0];
+                String 직무 = questions[1];
+                for (int i = 2; i < questions.length ; i++) {
+                    String content = questions[i];
+                    Question question = createQuestion(null, content);
+                    em.persist(question);
+                    for (Tag tag : tags) {
+                        TagQuestion tagQuestion = createTagQuestion(tag,question);
+                        tagQuestion.setQuestion(question);
+                        em.persist(tagQuestion);
+                    }
+                }
+
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 

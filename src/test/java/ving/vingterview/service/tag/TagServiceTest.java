@@ -31,9 +31,9 @@ class TagServiceTest {
 
     @BeforeEach
     void init() {
-        Tag testTag1 = new Tag(null, "testTag1", TagType.CLASSIFICATION);
-        Tag testTag2 = new Tag(null, "testTag2", TagType.INTERVIEW);
-        Tag testTag3 = new Tag(testTag1, "testTag3", TagType.ENTERPRISE);
+        Tag testTag1 = new Tag(null, "testTag1", TagType.TOPLEVEL);
+        Tag testTag2 = new Tag(null, "testTag2", TagType.TOPLEVEL);
+        Tag testTag3 = new Tag(testTag1, "testTag3", TagType.MIDLEVEL);
         em.persist(testTag1);
         em.persist(testTag2);
         em.persist(testTag3);
