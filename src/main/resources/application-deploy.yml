@@ -1,18 +1,5 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        format_sql: true
-        default_batch_fetch_size: 500
 
-
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/ving
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
 
@@ -22,7 +9,9 @@ spring:
       max-request-size: 1500MB
 
   profiles:
-    include: security
+    include:
+      - security
+      - db
 
 logging:
   level:
