@@ -89,7 +89,28 @@ class _UserInfoPageState extends State<UserEditPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit User Info'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(icon: Icon(Icons.check), onPressed: updateUserInfo),
+        ],
+        title: Text(
+          '회원 정보 수정하기',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -103,10 +124,10 @@ class _UserInfoPageState extends State<UserEditPage> {
                   children: [
                     TextFormField(
                       initialValue: userData.name,
-                      decoration: InputDecoration(labelText: 'name'),
+                      decoration: InputDecoration(labelText: '이름'),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some content';
+                          return '이름을 입력해주세요.';
                         }
                         return null;
                       },
@@ -116,7 +137,7 @@ class _UserInfoPageState extends State<UserEditPage> {
                     ),
                     TextFormField(
                       initialValue: userData.age.toString(),
-                      decoration: InputDecoration(labelText: 'age'),
+                      decoration: InputDecoration(labelText: '나이'),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value.isEmpty) {
@@ -130,10 +151,10 @@ class _UserInfoPageState extends State<UserEditPage> {
                     ),
                     TextFormField(
                       initialValue: userData.nickName,
-                      decoration: InputDecoration(labelText: 'nickname'),
+                      decoration: InputDecoration(labelText: '닉네임'),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some content';
+                          return '닉네임을 입력해주세요';
                         }
                         return null;
                       },
@@ -143,10 +164,10 @@ class _UserInfoPageState extends State<UserEditPage> {
                     ),
                     TextFormField(
                       initialValue: userData.email,
-                      decoration: InputDecoration(labelText: 'email'),
+                      decoration: InputDecoration(labelText: '이메일'),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some content';
+                          return '이메일을 입력해주세요';
                         }
                         return null;
                       },
@@ -155,6 +176,7 @@ class _UserInfoPageState extends State<UserEditPage> {
                       },
                     ),
                     SizedBox(height: 16.0),
+
                     // if (profilePicture != null)
                     //   Image.network(
                     //     profilePicture,
@@ -166,13 +188,8 @@ class _UserInfoPageState extends State<UserEditPage> {
                     SizedBox(height: 8.0),
                     if (_image != null) Image.file(_image),
                     ElevatedButton(
-                      child: Text('Upload'),
+                      child: Text('사진 업로드'),
                       onPressed: uploadImage,
-                    ),
-                    SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: updateUserInfo,
-                      child: Text('Save'),
                     ),
                   ],
                 ),

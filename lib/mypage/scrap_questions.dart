@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/questions.dart';
+import 'package:capston/question_video.dart';
 import '../providers/questions_api.dart';
 
 Widget getQuestionPage() {
@@ -26,6 +27,7 @@ class _QuestionPageState extends State<ScrapQuestionPage> {
   bool hasNext = true;
   ScrollController _scrollController = ScrollController();
   int member_id;
+  bool _isStarred = false;
 
   @override
   void initState() {
@@ -180,123 +182,224 @@ class _QuestionPageState extends State<ScrapQuestionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '스크랩한 질문',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-            dropdownButton = DropdownButton<SortingOption>(
-              value: _sortingOption,
-              onChanged: _updateSortingOption,
-              items: [
-                DropdownMenuItem(
-                  value: SortingOption.latest,
-                  child: Text('최신순'),
+          ),
+          title: Text(
+            '스크랩한 질문',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        body: Column(children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  ' ',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                DropdownMenuItem(
-                  value: SortingOption.scrap,
-                  child: Text('스크랩순'),
-                ),
-                DropdownMenuItem(
-                  value: SortingOption.video,
-                  child: Text('영상순'),
-                ),
-                DropdownMenuItem(
-                  value: SortingOption.old,
-                  child: Text('오래된순'),
+                dropdownButton = DropdownButton<SortingOption>(
+                  value: _sortingOption,
+                  onChanged: _updateSortingOption,
+                  items: [
+                    DropdownMenuItem(
+                      value: SortingOption.latest,
+                      child: Text('최신순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.scrap,
+                      child: Text('스크랩순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.video,
+                      child: Text('영상순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.old,
+                      child: Text('오래된순'),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      Expanded(
-          child: RefreshIndicator(
-              onRefresh: () {
-                // 게시글을 다시 불러오는 동작을 수행하는 로직을 작성
-                return _refreshPosts();
-              },
-              child: ListView.separated(
-                controller: _scrollController,
-                itemCount: questionList.questions.length + 1 > 1
-                    ? questionList.questions.length
-                    : 1,
-                itemBuilder: (context, index) {
-                  if (questionList.questions.length > 0) {
-                    print(questionList.questions.length);
-                    if (index < questionList.questions.length) {
-                      return GestureDetector(
-                        onTap: () async {
-                          // 이 질문만 모아보기 기능
-                          // Navigator.pushNamed(context, '/question_write',
-                          //     arguments: Questionlist[index].questionId);
-                        },
-                        onLongPress: () async {
-                          Navigator.pushNamed(context, '/video_write',
-                              arguments: questionList.questions[index]);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          margin: EdgeInsets.symmetric(vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
+          ),
+          Expanded(
+              child: RefreshIndicator(
+                  onRefresh: () {
+                    // 게시글을 다시 불러오는 동작을 수행하는 로직을 작성
+                    return _refreshPosts();
+                  },
+                  child: ListView.separated(
+                    controller: _scrollController,
+                    itemCount: questionList.questions.length + 1 > 1
+                        ? questionList.questions.length
+                        : 1,
+                    itemBuilder: (context, index) {
+                      if (questionList.questions.length > 0) {
+                        print(questionList.questions.length);
+                        if (index < questionList.questions.length) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => QVideoPage(
+                                      question: questionList.questions[index]),
+                                ),
+                              );
+                            },
+                            onLongPress: () async {
+                              Navigator.pushNamed(context, '/video_write',
+                                  arguments: questionList.questions[index]);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 30),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFEEEEEE),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ],
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(8, 3, 20, 8),
+                                          child: Text(
+                                            textData ??
+                                                questionList.questions[index]
+                                                    .questionContent,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            questionApi.scrap(questionList
+                                                .questions[index].questionId);
+                                            setState(() {
+                                              _isStarred = !_isStarred;
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.star_border,
+                                            color: _isStarred
+                                                ? Color(0xFF8A61D4)
+                                                : Colors.grey,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(0, 4, 8, 0),
+                                        child: Text(
+                                          questionList.questions[index].tags
+                                              .map((tag) => '#${tag.tagName}')
+                                              .join(' '),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin:
+                                                EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                            child: Text(
+                                              '스크랩 ${questionList.questions[index].scrapCount}',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Container(
+                                            margin:
+                                                EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                            child: Text(
+                                              '답변 ${questionList.questions[index].boardCount}',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else if (hasNext) {
+                          print(questionList.questions.length);
+                          return Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else {
+                          print(questionList.questions.length);
+                          return Container();
+                        }
+                      } else {
+                        // 리스트가 비어있을 경우
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            textData ??
-                                questionList.questions[index].questionContent,
-                            style: TextStyle(
-                              fontSize: 16, // 줄글 글씨 크기
-                            ),
+                            '스크랩한 질문이 없습니다.',
+                            style: TextStyle(fontSize: 16),
                           ),
-                        ),
-                      );
-                    } else if (hasNext) {
-                      print(questionList.questions.length);
-                      return Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    } else {
-                      print(questionList.questions.length);
-                      return Container();
-                    }
-                  } else {
-                    // 리스트가 비어있을 경우
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        '스크랩한 질문이 없습니다.',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    );
-                  }
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 10);
-                },
-              ))),
-    ]));
+                        );
+                      }
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 10);
+                    },
+                  ))),
+        ]));
   }
 }

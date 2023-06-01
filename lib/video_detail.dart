@@ -461,7 +461,7 @@ class _VideoDetailState extends State<video_detail> {
                                   ),
                                 ));
                           } else {
-                            // Display comments from commentList
+                            // Display comments from commentList <------------------- 댓글
                             Comments comment = commentList[idx -
                                 1]; // Subtract 1 to account for video details
                             return Container(

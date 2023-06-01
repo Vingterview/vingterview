@@ -178,6 +178,27 @@ class _VideoPageState extends State<MyVideoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text(
+          '작성한 글',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Container(
@@ -186,7 +207,7 @@ class _VideoPageState extends State<MyVideoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '작성한 글',
+                  ' ',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 dropdownButton = DropdownButton<SortingOption>(

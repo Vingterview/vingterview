@@ -37,16 +37,34 @@ class _UserProfilePopupState extends State<UserProfilePopup> {
     return AlertDialog(
       title: Text('프로필 정보'),
       content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 프로필 정보 표시
+          // 사용자 이미지
           if (user != null)
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('이름: ${user.nickName}'),
-                Text('나이: ${user.age}'),
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(user.profile_image_url),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  '닉네임: ${user.nickName}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '나이: ${user.age}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
                 // 추가적인 프로필 정보 항목들...
               ],
             ),
@@ -58,25 +76,37 @@ class _UserProfilePopupState extends State<UserProfilePopup> {
         TextButton(
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyVideoPage(
-                      member_id: user.member_id), // Provide the index here
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyVideoPage(member_id: user.member_id),
+              ),
+            );
           },
-          child: Text('작성글보기'),
+          style: TextButton.styleFrom(
+            backgroundColor: Color(0xFF8A61D4),
+          ),
+          child: Text(
+            '작성글보기',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
         // "작성댓글보기" 버튼
         TextButton(
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CommentsPage(
-                      member_id: user.member_id), // Provide the index here
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommentsPage(member_id: user.member_id),
+              ),
+            );
           },
-          child: Text('작성댓글보기'),
+          style: TextButton.styleFrom(
+            backgroundColor: Color(0xFF8A61D4),
+          ),
+          child: Text(
+            '작성댓글보기',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );
