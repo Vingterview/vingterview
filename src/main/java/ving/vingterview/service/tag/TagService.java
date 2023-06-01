@@ -26,7 +26,7 @@ public class TagService {
      * @return
      */
     public List<TagDTO> findAll() {
-        List<Tag> tags = tagRepository.findAllByCategoryIn(TagType.CLASSIFICATION, TagType.INTERVIEW);
+        List<Tag> tags = tagRepository.findAllByCategoryIn(TagType.TOPLEVEL);
         List<Tag> results = tags.stream().filter(tag -> tag.getParent() == null).toList();
         return convertToTagDTOList(results);
     }
