@@ -283,36 +283,34 @@ class _VideoPageState extends State<MyVideoPage> {
                                         width: 30,
                                         height: 30,
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return Stack(
-                                                    children: [
-                                                      // 배경 어둠 효과
-                                                      ModalBarrier(
-                                                        color: Colors.black
-                                                            .withOpacity(0.5),
-                                                      ),
-                                                      // 팝업 창
-                                                      UserProfilePopup(
-                                                          userId: videoList
-                                                              .videos[index]
-                                                              .memberId),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Image.network(
-                                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXf8crJLB8uSKf9KBauyEfkOC6r4YZWamBRmF4Eu--O3NIOBKaraTEuYRL8fs59ZChKk&usqp=CAU',
-                                            ),
-                                          ),
-                                        )),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Stack(
+                                                      children: [
+                                                        // 배경 어둠 효과
+                                                        ModalBarrier(
+                                                          color: Colors.black
+                                                              .withOpacity(0.5),
+                                                        ),
+                                                        // 팝업 창
+                                                        UserProfilePopup(
+                                                            userId: videoList
+                                                                .videos[index]
+                                                                .memberId),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Image.network(
+                                                  '${videoList.videos[index].profileUrl}'),
+                                            ))),
                                     SizedBox(width: 10),
                                     Column(
                                       crossAxisAlignment:

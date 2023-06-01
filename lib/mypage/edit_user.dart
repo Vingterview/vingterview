@@ -188,7 +188,11 @@ class _UserInfoPageState extends State<UserEditPage> {
                     SizedBox(height: 8.0),
                     if (_image != null) Image.file(_image),
                     ElevatedButton(
-                      child: Text('사진 업로드'),
+                      child: Text('프로필 사진 업로드'),
+                      style: ElevatedButton.styleFrom(
+                        primary:
+                            Color(0xFF8A61D4), // 배경색을 Color(0xFF8A61D4)로 설정
+                      ),
                       onPressed: uploadImage,
                     ),
                   ],

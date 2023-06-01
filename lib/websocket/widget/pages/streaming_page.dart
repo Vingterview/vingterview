@@ -46,7 +46,6 @@ class _StreamingPageState extends State<StreamingPage> {
       children: [
         // Container for the local video
         Container(
-          height: 450,
           decoration: BoxDecoration(
             border: Border.all(),
             // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정

@@ -139,20 +139,27 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                         stageWidget,
 
                         ///추가 : StreamingPage 사용법
-                        Visibility(
-                            visible: _isStreaming(),
-                            child: StreamingPage(
-                              token: Provider.of<GameState>(context).agoraToken,
-                              channelName:
-                                  Provider.of<GameState>(context).roomId,
-                              isHost: _isHost(),
-                              currentBroadcaster:
-                                  Provider.of<GameState>(context)
-                                      .currentBroadcaster,
-                              onFinished: () {
-                                _client.sendMessage(MessageType.FINISH_VIDEO);
-                              },
-                            ))
+                        Expanded(
+                            child: Container(
+                                // 화면 크기에 맞게 적절한 높이 설정
+                                height: MediaQuery.of(context).size.height,
+                                child: Visibility(
+                                    visible: _isStreaming(),
+                                    child: StreamingPage(
+                                      token: Provider.of<GameState>(context)
+                                          .agoraToken,
+                                      channelName:
+                                          Provider.of<GameState>(context)
+                                              .roomId,
+                                      isHost: _isHost(),
+                                      currentBroadcaster:
+                                          Provider.of<GameState>(context)
+                                              .currentBroadcaster,
+                                      onFinished: () {
+                                        _client.sendMessage(
+                                            MessageType.FINISH_VIDEO);
+                                      },
+                                    ))))
                       ],
                     ),
                   ));

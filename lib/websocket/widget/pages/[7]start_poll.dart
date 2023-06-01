@@ -62,7 +62,7 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                 Text(
                   "가장 잘한 참가자를 선택해주세요!",
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 12,
                     color: Colors.white,
                   ),
                 ),
@@ -83,13 +83,13 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                           backgroundColor:
                               (selectedValue == buttonValues[index])
                                   ? MaterialStateProperty.all<Color>(
-                                      Color(0xFF1A4FB5),
+                                      Color(0xFF6fa8dc),
                                     )
                                   : null,
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                              Colors.blue.withOpacity(0.2)),
+                          overlayColor:
+                              MaterialStateProperty.all<Color>(Colors.grey),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
@@ -106,6 +106,9 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                               color: Colors.white,
                             )),
                       ),
+                    SizedBox(
+                      width: 5,
+                    )
                   ],
                 ),
                 SizedBox(height: 20),
@@ -142,11 +145,11 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                         color: Colors.white,
                       )),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Stack(alignment: Alignment.center, children: [
                   Container(
-                    width: 220,
-                    height: 300,
+                    width: 200,
+                    height: 280,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -169,8 +172,8 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                       progress: progress,
                     ),
                     child: SizedBox(
-                      width: 204,
-                      height: 204,
+                      width: 184,
+                      height: 184,
                       child: Center(
                         child: Text(
                           "${(_animationController.value * Provider.of<GameState>(context).duration).ceil()}",

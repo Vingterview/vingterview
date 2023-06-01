@@ -56,14 +56,55 @@ class MyPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 16),
-              Text(
-                '내 활동',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+              SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(user.profile_image_url),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 25),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '닉네임: ${user.nickName}' ?? '닉네임 미등록 사용자',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          '나이: ${user.age}',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+              SizedBox(height: 36),
               InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, '/user_edit',
@@ -80,7 +121,7 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -101,7 +142,7 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -122,7 +163,7 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -181,7 +222,7 @@ class MyPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
             InkWell(
               onTap: () {
                 // 댓글 단 글에 대한 동작 처리

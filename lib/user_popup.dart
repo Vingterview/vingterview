@@ -35,7 +35,10 @@ class _UserProfilePopupState extends State<UserProfilePopup> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('프로필 정보'),
+      title: Text(
+        '프로필 정보',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -58,13 +61,13 @@ class _UserProfilePopupState extends State<UserProfilePopup> {
                 SizedBox(height: 16),
                 Text(
                   '닉네임: ${user.nickName}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.w400),
                 ),
                 Text(
                   '나이: ${user.age}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                SizedBox(height: 16),
+                // SizedBox(height: 16),
                 // 추가적인 프로필 정보 항목들...
               ],
             ),

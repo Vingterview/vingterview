@@ -144,7 +144,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
             ),
           ),
           Positioned(
-              top: 100,
+              top: MediaQuery.of(context).size.height * 0.15,
               left: 0,
               right: 0,
               bottom: 0,
@@ -164,18 +164,18 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
                 ),
               ])),
           Positioned(
-              top: 200,
+              top: MediaQuery.of(context).size.height * 0.23,
               left: 0,
               right: 0,
               bottom: 0,
               child: Column(children: [
                 Image.asset(
                   'assets/face_line.png',
-                  width: 500,
-                  height: 500,
+                  width: MediaQuery.of(context).size.width * 1.0,
+                  height: MediaQuery.of(context).size.height * 0.65,
                 ),
                 SizedBox(
-                  height: 50,
+                  height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

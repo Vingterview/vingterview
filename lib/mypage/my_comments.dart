@@ -67,6 +67,9 @@ class _CommentsPageState extends State<CommentsPage> {
           ),
         ),
         body: Column(children: [
+          SizedBox(
+            height: 30,
+          ),
           Expanded(
               child: RefreshIndicator(
                   onRefresh: () {
