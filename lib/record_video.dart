@@ -201,11 +201,13 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
               right: 0,
               bottom: 0,
               child: Column(children: [
-                Image.asset(
-                  'assets/face_line.png',
-                  width: MediaQuery.of(context).size.width * 1.0,
-                  height: MediaQuery.of(context).size.height * 0.65,
-                ),
+                Opacity(
+                    opacity: 0.3,
+                    child: Image.asset(
+                      'assets/face_line.png',
+                      width: MediaQuery.of(context).size.width * 1.0,
+                      height: MediaQuery.of(context).size.height * 0.65,
+                    )),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),

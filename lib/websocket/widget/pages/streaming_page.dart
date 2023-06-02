@@ -46,16 +46,19 @@ class _StreamingPageState extends State<StreamingPage> {
       children: [
         // Container for the local video
         Container(
-          height: 400,
+          height: MediaQuery.of(context).size.height * 0.49,
           decoration: BoxDecoration(
             border: Border.all(),
 
             // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
-            color: Colors.grey[200], // 원하는 색상으로 설정
+            color: Colors.black54, // 원하는 색상으로 설정
           ),
           child: Center(
             child: _videoPanel(),
           ),
+        ),
+        SizedBox(
+          height: 8,
         ),
         Visibility(
           visible: widget.isHost,
@@ -126,12 +129,18 @@ class _StreamingPageState extends State<StreamingPage> {
       } else {
         // 방송시작 안했을때
         // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
-        return Text('참가자가 준비될 때까지 잠시만 기다려주세요!',
+        return Container(
+          margin: EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            '참가자가 준비될 때까지 잠시만 기다려주세요!',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-                fontWeight: FontWeight.bold));
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
       }
     }
   }

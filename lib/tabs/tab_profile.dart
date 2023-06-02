@@ -69,7 +69,9 @@ class MyPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Show a loading indicator while fetching user data
-            return CircularProgressIndicator();
+            return CircularProgressIndicator(
+              color: Colors.white,
+            );
           } else if (snapshot.hasError) {
             // Show an error message if there was an error fetching user data
             return Text('Error: ${snapshot.error}');

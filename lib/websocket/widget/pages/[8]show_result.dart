@@ -23,6 +23,8 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
   List<String> buttonValues = []; // 버튼 값 리스트
   String selectedValue; // 선택된 값
   bool isPushed = false;
+  String pollParticipantName;
+  String pollParicipantImage;
 
   Widget _buildImageFromEncodedData(String encodedImage,
       {double width, double height}) {
@@ -71,31 +73,12 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
         ));
   }
 
-  // Widget _buildImageFromEncodedData(String encodedImage,
-  //     {double width, double height, double borderWidth, Color borderColor}) {
-  //   Uint8List imageBytes = base64.decode(encodedImage);
-  //   ImageProvider imageProvider = MemoryImage(imageBytes);
-  //   return Container(
-  //     width: width,
-  //     height: height,
-  //     decoration: BoxDecoration(
-  //       border: Border.all(
-  //         color: borderColor,
-  //         width: 2,
-  //       ),
-  //       shape: BoxShape.circle,
-  //     ),
-  //     child: ClipOval(
-  //       child: Image(image: imageProvider, fit: BoxFit.cover),
-  //     ),
-  //   );
-  // }
-
   @override
   void initState() {
     super.initState();
 
     buttonValues = widget.client.state.gameInfo.order;
+    whopoll();
   }
 
   @override
@@ -103,20 +86,26 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    String pollParticipantName;
-    String pollParicipantImage;
-    for (var memberInfo in widget.client.state.memberInfos ?? []) {
+  Future<void> whopoll() {
+    for (var memberInfo in widget.client.state.memberInfos) {
+      // print("${memberInfo.name}");
+      print("${memberInfo.sessionId}아이디");
+      print("${widget.client.state.poll}poll");
       if (memberInfo != null &&
           memberInfo.sessionId == widget.client.state.poll) {
-        pollParticipantName = memberInfo.name ?? '';
-        pollParicipantImage = memberInfo.encodedImage ?? '';
-        break;
+        // print("${memberInfo.name}");
+        setState(() {
+          pollParticipantName = memberInfo.name;
+          pollParicipantImage = memberInfo.encodedImage;
+        });
       }
     }
-    print(widget.client.state.memberInfos[0].name);
+    print(pollParticipantName);
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    whopoll();
     return Container(
         child: SingleChildScrollView(
       child: Column(

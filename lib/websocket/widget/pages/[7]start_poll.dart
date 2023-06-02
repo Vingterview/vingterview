@@ -24,7 +24,7 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
   List<String> buttonValues = []; // 버튼 값 리스트
   String selectedValue; // 선택된 값
   bool isPolled = false;
-
+  List<String> buttonNames = [];
   @override
   void initState() {
     super.initState();
@@ -37,8 +37,16 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
       });
 
     _animationController.reverse(from: 1);
-
     buttonValues = widget.client.state.gameInfo.order;
+
+    // buttonValues = widget.client.state.gameInfo.order;
+    for (var memberInfo in widget.client.state.memberInfos) {
+      if (widget.client.state.gameInfo.participant
+          .contains(memberInfo.sessionId)) {
+        buttonNames.add(memberInfo.name);
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -60,55 +68,65 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
             child: Column(
               children: [
                 Text(
-                  "가장 잘한 참가자를 선택해주세요!",
+                  '''가장 잘한 참가자를 선택해주세요!''',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: Colors.white,
                   ),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     for (int index = 0; index < buttonValues.length; index++)
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            selectedValue = buttonValues[index];
-                          });
-                        },
-                        style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                            EdgeInsets.all(15.0),
-                          ),
-                          backgroundColor:
-                              (selectedValue == buttonValues[index])
-                                  ? MaterialStateProperty.all<Color>(
-                                      Color(0xFF6fa8dc),
-                                    )
-                                  : null,
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          overlayColor:
-                              MaterialStateProperty.all<Color>(Colors.grey),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(
-                                color: Color(0xFF8A61D4),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.0), // 버튼들 사이 간격 조절
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedValue = buttonValues[index];
+                            });
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.all(15.0),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                              (states) {
+                                if (selectedValue == buttonValues[index]) {
+                                  return Color(0xFF8A61D4); // 선택된 버튼 파란색
+                                } else {
+                                  return Colors.black38; // 비활성화된 버튼 회색
+                                } // 기본 버튼 스타일
+                              },
+                            ),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            overlayColor:
+                                MaterialStateProperty.all<Color>(Colors.grey),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                side: BorderSide(
+                                  color: Color(0xFF8A61D4),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        child: Text((index + 1).toString(),
+                          child: Text(
+                            buttonNames[index],
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 12,
                               color: Colors.white,
-                            )),
+                            ),
+                          ),
+                        ),
                       ),
-                    SizedBox(
-                      width: 5,
-                    )
                   ],
                 ),
                 SizedBox(height: 20),
@@ -117,6 +135,9 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                       ? () {
                           widget.client.state.poll = selectedValue;
                           widget.client.sendMessage(MessageType.POLL);
+                          setState(() {
+                            isPolled = true;
+                          });
                         }
                       : null,
                   style: ButtonStyle(

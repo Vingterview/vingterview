@@ -61,20 +61,47 @@ class _Page9State extends State<Page9> {
     return Container(
         child: Column(
       children: [
-        Text("게임 끝 ㅅㄱ",
+        SizedBox(
+          height: 100,
+        ),
+        Text("실시간 면접 연습이 끝났습니다!",
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
             )),
         SizedBox(
-          height: 50,
+          height: 100,
         ),
         ElevatedButton(
           onPressed: () {
             widget.client.disconnect();
             Navigator.pop(context);
           },
-          child: Text("Disconnect"),
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.transparent),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            overlayColor:
+                MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.2)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                side: BorderSide(
+                  color: Color(0xFF8A61D4),
+                ),
+              ),
+            ),
+            elevation: MaterialStateProperty.all<double>(5.0),
+            padding:
+                MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(25.0)),
+          ),
+          child: Text(
+            '돌아가기',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
         ),
       ],
     ));
