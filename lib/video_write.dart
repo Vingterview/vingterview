@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 
 // import 'package:video_player/video_player.dart';
 class PostVideoPage extends StatefulWidget {
+  final int selectedIndex;
+  PostVideoPage({@required this.selectedIndex});
   @override
   _PostVideoPageState createState() => _PostVideoPageState();
 }
@@ -52,7 +54,6 @@ class _PostVideoPageState extends State<PostVideoPage> {
   @override
   Widget build(BuildContext context) {
     Questions preselected = ModalRoute.of(context).settings.arguments;
-
     if (preselected != null) {
       setState(() {
         // 버튼의 텍스트를 선택된 question의 제목으로 변경합니다.
@@ -84,7 +85,8 @@ class _PostVideoPageState extends State<PostVideoPage> {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text('영상을 업로드하는데에 1분~10분 이내에 시간이 소요됩니다.')));
                   Navigator.pop(context);
-                  _video_url = await uploadVideoApi.pickVideo(_video);
+                  _video_url = await uploadVideoApi.pickVideo(_video,
+                      dfImg: widget.selectedIndex);
                   print(_video_url);
                   int boardId = await _videoApi.postVideo(
                       _questionId, _content, _video_url);

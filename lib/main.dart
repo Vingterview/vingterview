@@ -18,6 +18,7 @@ import 'websocket/widget/orig.dart';
 import 'question_video.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'pick_df.dart';
 
 void main() {
   debugPrintRebuildDirtyWidgets = false;
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/web_socket': (context) => MyWebSocketApp(),
         '/webso': (context) => oMyWebSocketApp(),
         '/question_video': (context) => QVideoPage(),
+        '/pick_df': (context) => pick_df(),
       },
       initialRoute: '/',
     );

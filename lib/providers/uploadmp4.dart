@@ -14,7 +14,7 @@ class UploadVideoApi {
     return pickedFile;
   }
 
-  Future<String> pickVideo(XFile pickedFile) async {
+  Future<String> pickVideo(XFile pickedFile, {int dfImg = 1}) async {
     // 영상 업로드  # 2
     if (pickedFile == null) {
       return "";
@@ -22,7 +22,7 @@ class UploadVideoApi {
     // final video_url = uploadVideo(pickedFile);
     final outputPath = await compressVideo(pickedFile);
     XFile compressed = XFile(outputPath);
-    final video_url = uploadVideo(compressed);
+    final video_url = uploadVideo(compressed, dfImg);
     print("업로드 된 영상 url :$video_url");
     return video_url;
   }
@@ -66,10 +66,10 @@ class UploadVideoApi {
     }
   }
 
-  Future<String> uploadVideo(XFile videoFile) async {
+  Future<String> uploadVideo(XFile videoFile, int dfImg) async {
     //XFile에서 File로 바꿈
     String uri = myUri;
-    final url = Uri.parse('$uri/boards/video');
+    final url = Uri.parse('$uri/boards/video/$dfImg');
 
     // open the video file
     final bytes = await videoFile.readAsBytes();

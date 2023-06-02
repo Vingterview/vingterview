@@ -11,8 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 class EditVideoPage extends StatefulWidget {
   final Videos video; // 수정할 게시글의 객체
-
-  EditVideoPage({this.video});
+  EditVideoPage({@required this.video});
 
   @override
   _EditVideoPageState createState() => _EditVideoPageState();

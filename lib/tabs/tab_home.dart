@@ -285,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                       color: Color(0xFF8A61D4),
                       onPressed: () {
                         // // 수정
-                        // Navigator.pushNamed(context, '/question');
+                        Navigator.pushNamed(context, '/pick_df');
                       },
                     ),
                   ],

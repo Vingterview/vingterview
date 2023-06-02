@@ -54,7 +54,7 @@ class _IndexScreenState extends State<IndexScreen> {
                 leading: Icon(Icons.question_answer),
                 title: Text('질문 작성'),
                 onTap: () {
-                  Navigator.pushNamed(context, '/question_write');
+                  Navigator.pushNamed(context, '/pick_df');
                 },
               ),
             ],
