@@ -73,15 +73,18 @@ class _HomePageState extends State<HomePage> {
             children: [
               SizedBox(height: 20),
               Container(
-                margin: EdgeInsets.fromLTRB(20, 1, 20, 8),
+                margin: EdgeInsets.fromLTRB(30, 1, 20, 0),
                 child: Text(
-                  '',
-                  style: TextStyle(fontSize: 0, fontWeight: FontWeight.bold),
+                  '빙터뷰',
+                  style: TextStyle(
+                      color: Color(0xFF8A61D4),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                margin: EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                 child: Text(
                   '면접 연습은 빙터뷰에서!',
                   style: TextStyle(
@@ -95,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
                 child: Text(
-                  '아래 버튼 누르고 모의 면접하기',
+                  '아래 버튼 누르고 모의 면접하기 👇',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -129,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '실시간 면접 참여',
+                          '실시간 면접 참여 💬',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -152,7 +155,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  Uri uri = Uri.parse("http://www.hyungtaelee.com/");
+                  await launchUrl(uri);
+                },
                 child: Container(
                   width: double.infinity,
                   height: 65, // Set the desired height
@@ -167,11 +173,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: 4,
+                height: 14,
               ),
               Container(
                 width: double.infinity,
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
                 child: Text(
                   '빙터뷰 취준 커뮤니티',
                   style: TextStyle(
@@ -181,11 +187,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 4,
+              ),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
                 child: Text(
-                  '커뮤니티에서 정보 공유하기',
+                  '커뮤니티에서 정보 공유하기 👋👋',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -194,13 +203,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(36, 8, 30, 0),
+                margin: EdgeInsets.fromLTRB(36, 4, 30, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
-                        '영상 게시판',
+                        '영상 게시판 🧑‍💼',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18.0),
                         textAlign: TextAlign.left,
@@ -215,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(30, 0, 30, 16),
+                margin: EdgeInsets.fromLTRB(30, 0, 30, 4),
                 child: isLoadingVideos
                     ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
@@ -265,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: Text(
-                        '질문 게시판',
+                        '질문 게시판 🔎',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18.0),
                         textAlign: TextAlign.left,

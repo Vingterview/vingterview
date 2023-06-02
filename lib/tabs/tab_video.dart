@@ -163,7 +163,7 @@ class _VideoPageState extends State<VideoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '영상 게시판',
+                  '영상 게시판 ',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 dropdownButton = DropdownButton<SortingOption>(
