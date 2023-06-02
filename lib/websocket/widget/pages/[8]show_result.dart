@@ -24,64 +24,72 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
   String selectedValue; // 선택된 값
   bool isPushed = false;
 
-  // Widget _buildImageFromEncodedData(String encodedImage,
-  //     {double width, double height}) {
-  //   if (encodedImage == null || encodedImage.isEmpty) {
-  //     // 이미지가 없을 때 플레이스홀더 이미지 표시
-  //     return Container(
-  //       width: width,
-  //       height: height,
-  //       color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
-  //     );
-  //   }
+  Widget _buildImageFromEncodedData(String encodedImage,
+      {double width, double height}) {
+    if (encodedImage == null || encodedImage.isEmpty) {
+      // 이미지가 없을 때 플레이스홀더 이미지 표시
+      return Container(
+        width: width,
+        height: height,
+        color: Colors.grey, // 또는 로딩 중을 나타내는 다른 UI 요소
+      );
+    }
 
+    Uint8List imageBytes = base64.decode(encodedImage);
+    ImageProvider imageProvider = MemoryImage(imageBytes);
+
+    return Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xFF8A61D4),
+            width: 4,
+          ),
+          shape: BoxShape.circle,
+        ),
+        child: ClipOval(
+          child: Image(
+            image: imageProvider,
+            fit: BoxFit.cover,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              // 로딩 진행 상태 표시
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes
+                      : null,
+                ),
+              );
+            },
+          ),
+        ));
+  }
+
+  // Widget _buildImageFromEncodedData(String encodedImage,
+  //     {double width, double height, double borderWidth, Color borderColor}) {
   //   Uint8List imageBytes = base64.decode(encodedImage);
   //   ImageProvider imageProvider = MemoryImage(imageBytes);
-
   //   return Container(
   //     width: width,
   //     height: height,
-  //     child: Image(
-  //       image: imageProvider,
-  //       fit: BoxFit.cover,
-  //       loadingBuilder: (BuildContext context, Widget child,
-  //           ImageChunkEvent loadingProgress) {
-  //         if (loadingProgress == null) {
-  //           return child;
-  //         }
-  //         // 로딩 진행 상태 표시
-  //         return Center(
-  //           child: CircularProgressIndicator(
-  //             value: loadingProgress.expectedTotalBytes != null
-  //                 ? loadingProgress.cumulativeBytesLoaded /
-  //                     loadingProgress.expectedTotalBytes
-  //                 : null,
-  //           ),
-  //         );
-  //       },
+  //     decoration: BoxDecoration(
+  //       border: Border.all(
+  //         color: borderColor,
+  //         width: 2,
+  //       ),
+  //       shape: BoxShape.circle,
+  //     ),
+  //     child: ClipOval(
+  //       child: Image(image: imageProvider, fit: BoxFit.cover),
   //     ),
   //   );
   // }
-
-  Widget _buildImageFromEncodedData(String encodedImage,
-      {double width, double height, double borderWidth, Color borderColor}) {
-    Uint8List imageBytes = base64.decode(encodedImage);
-    ImageProvider imageProvider = MemoryImage(imageBytes);
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: borderColor,
-          width: 2,
-        ),
-        shape: BoxShape.circle,
-      ),
-      child: ClipOval(
-        child: Image(image: imageProvider, fit: BoxFit.cover),
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -136,8 +144,6 @@ class _Page8State extends State<Page8> with SingleTickerProviderStateMixin {
                       pollParicipantImage,
                       width: 100,
                       height: 100,
-                      borderWidth: 4,
-                      borderColor: Color(0xFF8A61D4),
                     ),
                     SizedBox(
                       height: 80,

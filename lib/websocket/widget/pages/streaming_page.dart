@@ -46,8 +46,10 @@ class _StreamingPageState extends State<StreamingPage> {
       children: [
         // Container for the local video
         Container(
+          height: 400,
           decoration: BoxDecoration(
             border: Border.all(),
+
             // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
             color: Colors.grey[200], // 원하는 색상으로 설정
           ),
@@ -126,8 +128,8 @@ class _StreamingPageState extends State<StreamingPage> {
         // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
-              height: 450,
-              color: Colors.black38,
+              // height: 450,
+              // color: Colors.black38,
               child: Text('참가자가 준비될 때까지 잠시만 기다려주세요!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
