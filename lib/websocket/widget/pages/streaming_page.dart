@@ -126,20 +126,12 @@ class _StreamingPageState extends State<StreamingPage> {
       } else {
         // 방송시작 안했을때
         // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
-        return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-              // height: 450,
-              // color: Colors.black38,
-              child: Text('참가자가 준비될 때까지 잠시만 기다려주세요!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold))),
-          SizedBox(
-            height: 20,
-          )
-        ]);
+        return Text('참가자가 준비될 때까지 잠시만 기다려주세요!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold));
       }
     }
   }

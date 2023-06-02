@@ -4,6 +4,7 @@ import '../providers/videos_api.dart';
 import '../models/questions.dart';
 import '../providers/questions_api.dart';
 import 'package:capston/video_detail.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -149,6 +150,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: double.infinity,
+                  height: 65, // Set the desired height
+                  margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/amho.png'),
+                      fit: BoxFit.contain,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 4,
               ),
               Container(
                 width: double.infinity,
