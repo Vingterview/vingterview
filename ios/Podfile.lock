@@ -1,0 +1,165 @@
+PODS:
+  - agora_rtc_engine (6.2.0):
+    - AgoraIrisRTC_iOS (= 4.2.0-build.3)
+    - AgoraRtcEngine_iOS (= 4.2.0)
+    - Flutter
+  - AgoraIrisRTC_iOS (4.2.0-build.3)
+  - AgoraRtcEngine_iOS (4.2.0):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.2.0)
+    - AgoraRtcEngine_iOS/AINS (= 4.2.0)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.2.0)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.2.0)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.2.0)
+    - AgoraRtcEngine_iOS/DRM (= 4.2.0)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.2.0)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.2.0)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.2.0)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.2.0)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.2.0)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.2.0)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.2.0)
+    - AgoraRtcEngine_iOS/VQA (= 4.2.0)
+  - AgoraRtcEngine_iOS/AIAEC (4.2.0)
+  - AgoraRtcEngine_iOS/AINS (4.2.0)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.2.0)
+  - AgoraRtcEngine_iOS/ClearVision (4.2.0)
+  - AgoraRtcEngine_iOS/ContentInspect (4.2.0)
+  - AgoraRtcEngine_iOS/DRM (4.2.0)
+  - AgoraRtcEngine_iOS/FaceDetection (4.2.0)
+  - AgoraRtcEngine_iOS/ReplayKit (4.2.0)
+  - AgoraRtcEngine_iOS/RtcBasic (4.2.0)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.2.0)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.2.0)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.2.0)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.2.0)
+  - AgoraRtcEngine_iOS/VQA (4.2.0)
+  - AppAuth (1.6.2):
+    - AppAuth/Core (= 1.6.2)
+    - AppAuth/ExternalUserAgent (= 1.6.2)
+  - AppAuth/Core (1.6.2)
+  - AppAuth/ExternalUserAgent (1.6.2):
+    - AppAuth/Core
+  - camera_avfoundation (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - flutter_ffmpeg (0.4.2):
+    - Flutter
+    - flutter_ffmpeg/https (= 0.4.2)
+  - flutter_ffmpeg/https (0.4.2):
+    - Flutter
+    - mobile-ffmpeg-https (= 4.4)
+  - flutter_web_auth (0.3.2):
+    - Flutter
+  - google_sign_in_ios (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 6.2)
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - GTMSessionFetcher/Core (2.3.0)
+  - image_picker_ios (0.0.1):
+    - Flutter
+  - iris_method_channel (0.0.1):
+    - Flutter
+  - mobile-ffmpeg-https (4.4)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.0.4):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_ffmpeg (from `.symlinks/plugins/flutter_ffmpeg/ios`)
+  - flutter_web_auth (from `.symlinks/plugins/flutter_web_auth/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - iris_method_channel (from `.symlinks/plugins/iris_method_channel/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AgoraIrisRTC_iOS
+    - AgoraRtcEngine_iOS
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - mobile-ffmpeg-https
+
+EXTERNAL SOURCES:
+  agora_rtc_engine:
+    :path: ".symlinks/plugins/agora_rtc_engine/ios"
+  camera_avfoundation:
+    :path: ".symlinks/plugins/camera_avfoundation/ios"
+  Flutter:
+    :path: Flutter
+  flutter_ffmpeg:
+    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
+  flutter_web_auth:
+    :path: ".symlinks/plugins/flutter_web_auth/ios"
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
+  iris_method_channel:
+    :path: ".symlinks/plugins/iris_method_channel/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+  video_player_avfoundation:
+    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+
+SPEC CHECKSUMS:
+  agora_rtc_engine: 615886d3897e0f62da2b7f31e2d49a630260b376
+  AgoraIrisRTC_iOS: 401703d4d44b0d0e4f060993272397d1ba4ce7ca
+  AgoraRtcEngine_iOS: ab13aeb715fc00abc91c4f5c0baab9f05ad79aae
+  AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
+  camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_ffmpeg: 3ec3912c74649851e6c3b1885511eef78142ac4f
+  flutter_web_auth: 16bc97b544d14c399d4db60bfc3a85320d200cb3
+  google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+  image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
+  iris_method_channel: 0617c689164d8154c020c50f63ca79f92b8a7b9d
+  mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.12.1
