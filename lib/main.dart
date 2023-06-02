@@ -16,20 +16,28 @@ import 'package:capston/mypage/edit_user.dart';
 import 'websocket/widget/websocket.dart';
 import 'websocket/widget/orig.dart';
 import 'question_video.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 void main() {
+  debugPrintRebuildDirtyWidgets = false;
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
 
+  @override
+  bool get debugShowCheckedModeBanner => false;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Vingterview',
-      theme: ThemeData(primaryColor: const Color(0xFF8A61D4)),
+      theme: ThemeData(
+        primaryColor: const Color(0xFF8A61D4),
+      ),
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => SplashScreen(),
         '/index': (context) => IndexScreen(),

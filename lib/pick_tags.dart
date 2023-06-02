@@ -11,7 +11,7 @@ class pick_tags extends StatefulWidget {
 
 class _pick_tagsState extends State<pick_tags> {
   TagApi tagApi = TagApi();
-  List<Tags> tagList;
+  List<Tags> tagList = [];
   List<Tags> selectedTags = [];
   _pick_tagsState({@required this.selectedTags});
   Tags parentTag;
@@ -25,15 +25,18 @@ class _pick_tagsState extends State<pick_tags> {
 
   Future<void> initTag() async {
     selectedTags = widget.selectedTags;
+    List<Tags> _tagList;
     if (selectedTags.isEmpty) {
-      tagList = await tagApi.getTags();
+      _tagList = await tagApi.getTags();
     } else {
       parentTag = selectedTags[selectedTags.length - 1];
-      tagList =
+      _tagList =
           await tagApi.getTags(query: 1, param: parentTag.tagId.toString());
     }
     print(tagList);
-    setState(() {}); // 상태 변경 알림
+    setState(() {
+      tagList = _tagList;
+    }); // 상태 변경 알림
   }
 
   Future<void> selectTag(Tags tag) async {
@@ -71,53 +74,41 @@ class _pick_tagsState extends State<pick_tags> {
           ),
         ),
       ),
-      body: FutureBuilder<List<Tags>>(
-        future: tagApi.getTags(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading Question data'));
-          } else {
-            return ListView.builder(
-              itemCount: tagList.length,
-              itemBuilder: (BuildContext context, int index) {
-                Tags tag = tagList[index];
-                return InkWell(
-                  onTap: () {
-                    selectTag(tag);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                    margin: EdgeInsets.symmetric(
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      "#${tagList[index].tagName}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                );
+      body: ListView.builder(
+          itemCount: tagList.length,
+          itemBuilder: (BuildContext context, int index) {
+            Tags tag = tagList[index];
+            return InkWell(
+              onTap: () {
+                selectTag(tag);
               },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                margin: EdgeInsets.symmetric(
+                  vertical: 3,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  "#${tagList[index].tagName}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             );
-          }
-        },
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pop(context, selectedTags);

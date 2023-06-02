@@ -105,6 +105,38 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
     initCamera().then((_) {
       // initCamera()가 완료될 때까지 기다린 후에 build() 메서드를 호출함
       setState(() {}); // 화면을 다시 그리기 위해 setState()를 호출함
+      setCameraPreviewSize();
+    });
+  }
+
+// 카메라 프리뷰의 크기를 설정하는 메서드
+  void setCameraPreviewSize() {
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+
+    // 카메라 프리뷰의 크기와 디바이스의 크기를 비교하여 가로-세로 비율을 조정
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double deviceHeight = MediaQuery.of(context).size.height;
+    final double previewWidth = _controller.value.previewSize.width;
+    final double previewHeight = _controller.value.previewSize.height;
+
+    final double deviceAspectRatio = deviceWidth / deviceHeight;
+    final double previewAspectRatio = previewWidth / previewHeight;
+
+    // 디바이스의 가로-세로 비율과 카메라 프리뷰의 가로-세로 비율을 비교하여 스케일 적용
+    double scale = 1.0;
+    if (deviceAspectRatio > previewAspectRatio) {
+      scale = deviceAspectRatio / previewAspectRatio;
+    } else {
+      scale = previewAspectRatio / deviceAspectRatio;
+    }
+
+    // 카메라 프리뷰의 크기 조정
+    setState(() {
+      _controller.value = _controller.value.copyWith(
+        previewSize: Size(previewWidth * scale, previewHeight * scale),
+      );
     });
   }
 
@@ -118,7 +150,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
             visible: _controller?.value?.isInitialized ?? false,
             child: Center(
               child: AspectRatio(
-                aspectRatio: MediaQuery.of(context).size.aspectRatio,
+                aspectRatio: MediaQuery.of(context).size.aspectRatio * 1.12,
                 child: CameraPreview(_controller),
               ),
             ),
@@ -128,7 +160,7 @@ class _RecordVideoPageState extends State<RecordVideoPage> {
             left: 0,
             right: 0,
             bottom: MediaQuery.of(context).size.height *
-                0.9, // 위쪽 검정색 박스의 높이 설정 (30%)
+                0.88, // 위쪽 검정색 박스의 높이 설정 (30%)
             child: Container(
               color: Colors.black,
             ),

@@ -257,18 +257,6 @@ class WebSocketClient {
     }
   }
 
-  ///연결 상태 점검
-  // _startHeartBeatTimer() {
-  //   heartBeatTimer =
-  //       Timer.periodic(Duration(seconds: _heartbeatInterval), (Timer timer) {
-  //         _channel.sink?.add(_heartbeatData);
-  //       });
-  // }
-
-  /**
-   * utility method
-   */
-
   ///타이머 설정
   _setTimer(Duration duration, MessageType type) {
     _isAlive = true;
