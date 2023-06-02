@@ -238,10 +238,14 @@ class _VideoDetailState extends State<video_detail> {
                                             Container(
                                               width: 30,
                                               height: 30,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: GestureDetector(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1,
+                                                  color: Color(0xFFD9D9D9),
+                                                ),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: GestureDetector(
                                                   onTap: () {
                                                     showDialog(
                                                       context: context,
@@ -266,11 +270,12 @@ class _VideoDetailState extends State<video_detail> {
                                                       },
                                                     );
                                                   },
-                                                  child: Image.network(
-                                                    '${video.video.profileUrl}',
-                                                  ),
-                                                ),
-                                              ),
+                                                  child: ClipOval(
+                                                    child: Image.network(
+                                                      '${video.video.profileUrl}',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )),
                                             ),
                                             SizedBox(width: 10),
                                             Column(
