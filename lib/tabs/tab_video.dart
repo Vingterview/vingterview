@@ -163,7 +163,7 @@ class _VideoPageState extends State<VideoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '영상 게시판',
+                  '영상 게시판 ',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 dropdownButton = DropdownButton<SortingOption>(
@@ -233,37 +233,44 @@ class _VideoPageState extends State<VideoPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                      width: 30,
-                                      height: 30,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Stack(
-                                                  children: [
-                                                    // 배경 어둠 효과
-                                                    ModalBarrier(
-                                                      color: Colors.black
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                    // 팝업 창
-                                                    UserProfilePopup(
-                                                        userId: videoList
-                                                            .videos[index]
-                                                            .memberId),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Stack(
+                                                children: [
+                                                  // 배경 어둠 효과
+                                                  ModalBarrier(
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  // 팝업 창
+                                                  UserProfilePopup(
+                                                      userId: videoList
+                                                          .videos[index]
+                                                          .memberId),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: ClipOval(
                                           child: Image.network(
                                             '${videoList.videos[index].profileUrl}',
+                                            fit: BoxFit.cover,
                                           ),
-                                        ),
-                                      )),
+                                        )),
+                                  ),
                                   SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment:
