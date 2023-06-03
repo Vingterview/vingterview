@@ -1,6 +1,7 @@
 package ving.vingterview.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,48 +11,80 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ving.vingterview.domain.question.Question;
+import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.repository.QuestionRepository;
+import ving.vingterview.repository.TagQuestionRepository;
 
 import java.io.IOException;
-import java.util.Queue;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
 
-    private final Queue<WebSocketSession> waitingQueue = new LinkedBlockingQueue<>();
+//    private final Queue<WebSocketSession> waitingQueue = new LinkedBlockingQueue<>();
+    private final Map<Integer, Queue<WebSocketSession>> waitingQueueByTag = new HashMap<>();
     private final GameRoomRepository gameRoomRepository = new GameRoomRepository();
     private final QuestionRepository questionRepository;
+    private final TagQuestionRepository tagQuestionRepository;
 
     private final AgoraTokenBuilder tokenBuilder;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     public static final int NUMBEROFPLAYERS = 2;
+    public static final int NUMBEROFQUESTIONS = 3;
 
 
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        List<Integer> tagIds = Arrays.stream(session.getAttributes().get("X-Tag-Id").toString().split(";"))
+                .map(Integer::parseInt).collect(Collectors.toList());
+        Integer tag = tagIds.get(tagIds.size() - 1);
+        Queue<WebSocketSession> waitingQueue;
+        /**
+         * 기업별로 대기큐
+         */
+        if (waitingQueueByTag.containsKey(tag)) {
+            waitingQueue = waitingQueueByTag.get(tag);
+        }else{
+            waitingQueue = new LinkedBlockingQueue<>();
+            waitingQueueByTag.put(tag, waitingQueue);
+        }
         waitingQueue.offer(session);
-        log.info("Server : waitingQueue add {}", session);
 
+        log.info("Server : waitingQueue add {} ,  tag {}", session, tag);
         if ( NUMBEROFPLAYERS <= waitingQueue.size()) {
-            GameRoom room = createRoom();
-            log.info("Server : Make Game Room , {}", room.getRoomId());
+            GameRoom room = createRoom(waitingQueue,tag);
+            log.info("Server : Make Game Room {} , tagId {}", room.getRoomId(), tag);
         }
 
     }
 
-    private GameRoom createRoom() {
+    private GameRoom createRoom(Queue<WebSocketSession> waitingQueue,Integer tag) {
         String roomId = UUID.randomUUID().toString();
         GameRoom gameRoom = new GameRoom(roomId);
         GameInfo gameInfo = gameRoom.getGameInfo();
-        gameInfo.setQuestion(questionRepository.findRandom().stream().map(Question::getContent).toList());
+
+        /**
+         * 주어진 태그에 맞는 질문 랜덤 생성
+         */
+        List<TagQuestion> tagQuestions = tagQuestionRepository.findRandom(tag);
+        List<String> questions = new ArrayList<>();
+        for (TagQuestion tq : tagQuestions) {
+            questions.add(questionRepository.findById(tq.getQuestion().getId()).orElseThrow(()->new EntityNotFoundException("해당 질문을 찾을 수 없습니다.")).getContent());
+        }
+        if (questions.size() != NUMBEROFQUESTIONS) {
+            for (int i = 0; i < NUMBEROFQUESTIONS - questions.size(); i++) {
+                questions.add(questionRepository.findRandom().getContent());
+            }
+        }
+        gameInfo.setQuestion(questions);
 
         /**
          * 소캣 NUMBEROFPLAYERS 만큼 제거해서 GameRoom에 추가
@@ -69,7 +102,6 @@ public class SocketHandler extends TextWebSocketHandler {
         gameMessage.createGameMessage(roomId,gameInfo);
         for (WebSocketSession session : gameRoom.getSessions()) {
             gameMessage.setMemberInfo(session);
-
         }
 
         /**
@@ -217,5 +249,12 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info("sessionId {} connectin closed", session.getId());
+        List<Integer> tagIds = Arrays.stream(session.getAttributes().get("X-Tag-Id").toString().split(";"))
+                .map(Integer::parseInt).collect(Collectors.toList());
+        Integer tag = tagIds.get(tagIds.size() - 1);
+        Queue<WebSocketSession> queue = waitingQueueByTag.get(tag);
+        boolean remove = queue.remove(session);
+        log.info("sessionId {} removed from queue {}", session.getId(), remove);
+
     }
 }
