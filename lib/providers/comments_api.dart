@@ -84,7 +84,7 @@ class CommentApi {
       url,
       headers: {'Authorization': 'Bearer $token'},
     );
-
+    print(response.statusCode);
     if (response.statusCode == 204) {
       print('Delete request succeeded');
     } else {

@@ -7,6 +7,8 @@ import 'timer_widget.dart';
 import '../wsclient/game_state.dart';
 import '../wsclient/websocket_client.dart';
 import '../wsclient/stage.dart';
+import 'package:capston/models/tags.dart';
+import 'package:capston/pick_tags.dart';
 
 import 'pages/[1]start.dart';
 import 'pages/[2]game_matched.dart';
@@ -33,6 +35,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
   WebSocketClient _client;
 
   Stage _stage;
+  List<Tags> selectedTags = [];
 
   @override
   void initState() {
@@ -116,7 +119,69 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                   stageWidget = getStage9(_client);
                   break;
                 default:
-                  stageWidget = getStage1(_client);
+                  if (selectedTags.length != 0) {
+                    print("?");
+                    stageWidget = getStage1(_client, selectedTags);
+                  } else {
+                    stageWidget = Container(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 280),
+                          ElevatedButton(
+                            onPressed: () async {
+                              selectedTags = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => pick_tags(
+                                          selectedTags: selectedTags)));
+                              if (selectedTags != null) {
+                                // Tags 객체를 전달받으면 처리
+                                print(selectedTags);
+                                setState(() {}); // 변경 적용
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                  Colors.blue.withOpacity(0.2)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  side: BorderSide(
+                                    color: Color(0xFF8A61D4),
+                                  ),
+                                ),
+                              ),
+                              elevation: MaterialStateProperty.all<double>(5.0),
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.all(25.0)),
+                            ),
+                            child: Text(
+                              '태그 선택',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            '받고 싶은 질문의 태그를 선택하세요!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
               }
               return Container(
                   decoration: BoxDecoration(

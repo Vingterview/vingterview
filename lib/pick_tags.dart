@@ -110,6 +110,7 @@ class _pick_tagsState extends State<pick_tags> {
             );
           }),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF8A61D4),
         onPressed: () {
           Navigator.pop(context, selectedTags);
         },

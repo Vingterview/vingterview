@@ -47,7 +47,7 @@ class _IndexScreenState extends State<IndexScreen> {
                 leading: Icon(Icons.videocam),
                 title: Text('영상 작성'),
                 onTap: () {
-                  Navigator.pushNamed(context, '/video_write');
+                  Navigator.pushNamed(context, '/pick_df');
                 },
               ),
               ListTile(

@@ -4,11 +4,13 @@ import 'package:capston/websocket/wsclient/game_state.dart';
 import '../timer_widget.dart';
 import 'package:capston/websocket/wsclient/websocket_client.dart';
 import 'package:capston/websocket/wsclient/stage.dart';
+import 'package:capston/models/tags.dart';
 
 class Page1 extends StatefulWidget {
   final WebSocketClient client;
+  final List<Tags> selectedtags;
 
-  Page1({this.client});
+  Page1({this.client, this.selectedtags});
 
   @override
   _Page1State createState() => _Page1State();
@@ -18,15 +20,55 @@ class _Page1State extends State<Page1> {
   bool isMatching = false;
   @override
   Widget build(BuildContext context) {
+    List<int> selectedTagId = [];
+    for (var tag in widget.selectedtags) {
+      selectedTagId.add(tag.tagId);
+    }
+    print(selectedTagId);
+
     return Container(
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 280),
+          SizedBox(height: 250),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (var tag in widget.selectedtags)
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 4, 4, 0),
+                  child: ShaderMask(
+                    blendMode: BlendMode.srcATop,
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        colors: [
+                          Color.fromARGB(233, 214, 204, 232),
+                          Color.fromARGB(223, 165, 175, 222),
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds);
+                    },
+                    child: Text(
+                      '#${tag.tagName}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(
+            height: 4,
+          ),
           ElevatedButton(
             onPressed: () async {
-              await widget.client.connectToSocket();
+              // await widget.client.connectToSocket();
+              await widget.client.connectToSocket(selectedTagId);
               setState(() {
                 isMatching = true;
               });
@@ -57,7 +99,7 @@ class _Page1State extends State<Page1> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 20),
           Text(
             (isMatching) ? '매칭을 기다리는 중입니다!' : '지금 바로 시작 버튼을 누르세요!',
             style: TextStyle(
@@ -71,6 +113,6 @@ class _Page1State extends State<Page1> {
   }
 }
 
-Widget getStage1(WebSocketClient client) {
-  return Page1(client: client);
+Widget getStage1(WebSocketClient client, List<Tags> selectedtags) {
+  return Page1(client: client, selectedtags: selectedtags);
 }

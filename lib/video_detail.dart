@@ -67,6 +67,7 @@ class _VideoDetailState extends State<video_detail> {
 
   Future<void> _refreshPost() async {
     video = await videoApi.getVideoDetail(widget.index);
+    commentList = await commentApi.getcomments(0, widget.index);
     setState(() {});
   }
 
@@ -470,7 +471,15 @@ class _VideoDetailState extends State<video_detail> {
                             Comments comment = commentList[idx -
                                 1]; // Subtract 1 to account for video details
                             return Container(
-                              padding: EdgeInsets.fromLTRB(30, 5, 30, 10),
+                              margin: EdgeInsets.fromLTRB(30, 6, 30, 4),
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                              decoration: BoxDecoration(
+                                // color: Colors.white,
+                                border: BorderDirectional(
+                                  bottom: BorderSide(
+                                      color: Color(0xFFD9D9D9), width: 1),
+                                ),
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -478,11 +487,72 @@ class _VideoDetailState extends State<video_detail> {
                                     mainAxisAlignment: MainAxisAlignment
                                         .spaceBetween, // 오른쪽 정렬
                                     children: [
-                                      Text(
-                                        comment.memberNickname ?? '닉네임 미등록 사용자',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 37,
+                                            height: 37,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: Color(0xFFD9D9D9),
+                                              ),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: GestureDetector(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return Stack(
+                                                        children: [
+                                                          // 배경 어둠 효과
+                                                          ModalBarrier(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5),
+                                                          ),
+                                                          // 팝업 창
+                                                          UserProfilePopup(
+                                                              userId: comment
+                                                                  .memberId),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                child: ClipOval(
+                                                  child: Image.network(
+                                                    '${comment.profileUrl}',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                comment.memberNickname,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 2),
+                                              Text(
+                                                comment.content,
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                       Row(
                                         children: [
@@ -499,14 +569,60 @@ class _VideoDetailState extends State<video_detail> {
                                           ),
                                           SizedBox(width: 5),
                                           GestureDetector(
-                                            onTap: () {
-                                              // 메뉴 버튼 동작
-                                              // 원하는 동작을 여기에 추가하세요
-                                            },
-                                            child: Icon(
-                                              Icons.menu,
-                                              size: 18,
-                                              color: Colors.grey,
+                                            onTap: () {},
+                                            child: PopupMenuButton<String>(
+                                              itemBuilder:
+                                                  (BuildContext context) {
+                                                if (memberId ==
+                                                    comment.memberId) {
+                                                  return [
+                                                    PopupMenuItem<String>(
+                                                      value: 'edit',
+                                                      child: Text('편집'),
+                                                    ),
+                                                    PopupMenuItem<String>(
+                                                      value: 'delete',
+                                                      child: Text('삭제'),
+                                                    ),
+                                                  ];
+                                                } else {
+                                                  return [
+                                                    PopupMenuItem<String>(
+                                                      value: 'report',
+                                                      child: Text('신고하기'),
+                                                    ),
+                                                  ];
+                                                }
+                                              },
+                                              onSelected: (String value) {
+                                                if (value == 'edit') {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditVideoPage(
+                                                              video:
+                                                                  video.video),
+                                                    ),
+                                                  ).then((value) {
+                                                    initVideo();
+                                                    setState(() {});
+                                                  });
+                                                } else if (value == 'delete') {
+                                                  commentApi.deletecomment(
+                                                      comment.commentId);
+                                                  showReportSnackBar(
+                                                      context, "댓글을 삭제했습니다.");
+                                                } else if (value == 'report') {
+                                                  showReportSnackBar(
+                                                      context, "신고되었습니다.");
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.menu,
+                                                size: 18,
+                                                color: Colors.grey,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -514,12 +630,6 @@ class _VideoDetailState extends State<video_detail> {
                                     ],
                                   ),
                                   SizedBox(height: 5),
-                                  Text(
-                                    comment.content,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
                                 ],
                               ),
                             );

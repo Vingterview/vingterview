@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/questions.dart';
 import '../providers/questions_api.dart';
 import 'package:capston/question_video.dart';
+import '../tag_quesiton.dart';
 
 Widget getQuestionPage() {
   return QuestionPage();
@@ -24,7 +25,7 @@ class _QuestionPageState extends State<QuestionPage> {
   int nextPage = 0;
   bool hasNext = true;
   ScrollController _scrollController = ScrollController();
-  bool _isStarred = false;
+  List<bool> _isStarredList = [];
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _QuestionPageState extends State<QuestionPage> {
       questionList.questions = newPage.questions;
       nextPage = newPage.nextPage;
       hasNext = newPage.hasNext;
+      _isStarredList.addAll(List.filled(newPage.questions.length, false));
     });
   }
 
@@ -76,14 +78,13 @@ class _QuestionPageState extends State<QuestionPage> {
 
     setState(() {
       List<Questions> tempList = List.from(questionList.questions);
-      print(tempList.length);
+      _isStarredList.addAll(List.filled(newPage.questions.length, false));
       tempList.addAll(newPage.questions);
-      print(tempList.length);
       questionList.questions = tempList;
       nextPage = newPage.nextPage;
       hasNext = newPage.hasNext; // 로딩 상태를 false로 설정합니다.
+
       isLoading = false;
-      print(questionList.questions.length);
     });
   }
 
@@ -174,28 +175,43 @@ class _QuestionPageState extends State<QuestionPage> {
               '질문 게시판',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            dropdownButton = DropdownButton<SortingOption>(
-              value: _sortingOption,
-              onChanged: _updateSortingOption,
-              items: [
-                DropdownMenuItem(
-                  value: SortingOption.latest,
-                  child: Text('최신순'),
-                ),
-                DropdownMenuItem(
-                  value: SortingOption.scrap,
-                  child: Text('스크랩순'),
-                ),
-                DropdownMenuItem(
-                  value: SortingOption.video,
-                  child: Text('영상순'),
-                ),
-                DropdownMenuItem(
-                  value: SortingOption.old,
-                  child: Text('오래된순'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => tag_questions(selectedTags: []),
+                        ),
+                      );
+                    }),
+                dropdownButton = DropdownButton<SortingOption>(
+                  value: _sortingOption,
+                  onChanged: _updateSortingOption,
+                  items: [
+                    DropdownMenuItem(
+                      value: SortingOption.latest,
+                      child: Text('최신순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.scrap,
+                      child: Text('스크랩순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.video,
+                      child: Text('영상순'),
+                    ),
+                    DropdownMenuItem(
+                      value: SortingOption.old,
+                      child: Text('오래된순'),
+                    ),
+                  ],
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),
@@ -210,7 +226,8 @@ class _QuestionPageState extends State<QuestionPage> {
                 itemCount: questionList.questions.length + 1,
                 itemBuilder: (context, index) {
                   if (index < questionList.questions.length) {
-                    print(questionList.questions.length);
+                    Questions question = questionList.questions[index];
+                    bool isStarred = _isStarredList[index];
                     return GestureDetector(
                       onTap: () async {
                         await Navigator.push(
@@ -257,15 +274,14 @@ class _QuestionPageState extends State<QuestionPage> {
                                   margin: EdgeInsets.fromLTRB(0, 4, 0, 0),
                                   child: GestureDetector(
                                     onTap: () {
-                                      questionApi.scrap(questionList
-                                          .questions[index].questionId);
+                                      questionApi.scrap(question.questionId);
                                       setState(() {
-                                        _isStarred = !_isStarred;
+                                        _isStarredList[index] = !isStarred;
                                       });
                                     },
                                     child: Icon(
                                       Icons.star_border,
-                                      color: _isStarred
+                                      color: isStarred
                                           ? Color(0xFF8A61D4)
                                           : Colors.grey,
                                       size: 16,
@@ -302,7 +318,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10),
+                                    SizedBox(width: 6),
                                     Container(
                                       margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Text(
@@ -326,7 +342,9 @@ class _QuestionPageState extends State<QuestionPage> {
                     return Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
                       ),
                     );
                   } else {

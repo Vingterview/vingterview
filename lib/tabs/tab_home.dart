@@ -188,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: 4,
+                height: 8,
               ),
               Container(
                 width: double.infinity,
@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(36, 4, 30, 0),
+                margin: EdgeInsets.fromLTRB(36, 0, 30, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -226,7 +226,10 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 4),
                 child: isLoadingVideos
-                    ? Center(child: CircularProgressIndicator())
+                    ? Center(
+                        child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ))
                     : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -285,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                       color: Color(0xFF8A61D4),
                       onPressed: () {
                         // // 수정
-                        // Navigator.pushNamed(context, '/question');
+                        Navigator.pushNamed(context, '/pick_df');
                       },
                     ),
                   ],
@@ -294,7 +297,10 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 16),
                 child: isLoadingQuestions
-                    ? Center(child: CircularProgressIndicator())
+                    ? Center(
+                        child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ))
                     : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true, // ListView의 크기를 내용물에 맞게 조절

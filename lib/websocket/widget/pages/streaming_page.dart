@@ -189,14 +189,6 @@ class _StreamingPageState extends State<StreamingPage> {
   void dispose() async {
     await agoraEngine.leaveChannel();
     agoraEngine.release();
-
-    await agoraEngine.setExtensionProperty(
-        provider: 'FaceUnity',
-        extension: 'Effect',
-        key: 'fuDestroyLibData',
-        value: jsonEncode({})
-    );
-
     super.dispose();
   }
 
@@ -236,23 +228,6 @@ class _StreamingPageState extends State<StreamingPage> {
             _remoteUid = null;
           });
         },
-        onExtensionStarted: (provider, extension) {
-          debugPrint(
-              '[onExtensionStarted] provider: $provider, extension: $extension');
-          if (provider == 'FaceUnity' && extension == 'Effect') {
-            initializeFaceUnityExt();
-          }
-        },
-        onExtensionError: (provider, extension, error, message) {
-          debugPrint(
-              '[onExtensionError] provider: $provider, '
-                  'extension: $extension, error: $error, message: $message');
-        },
-        onExtensionEvent: (String provider, String extName, String key, String value) {
-          debugPrint(
-              '[onExtensionEvent] provider: $provider, '
-                  'extension: $extName, key: $key, value: $value');
-        },
       ),
     );
 
@@ -260,58 +235,6 @@ class _StreamingPageState extends State<StreamingPage> {
     //   join();
     // }
   }
-
-  Future<void> initializeFaceUnityExt() async {
-    // Initialize the extension and authenticate the user
-    await agoraEngine.setExtensionProperty(
-        provider: 'FaceUnity',
-        extension: 'Effect',
-        key: 'fuSetup',
-        value: jsonEncode({'authdata': authpack.gAuthPackage}));
-
-    // Load the AI model
-    final aiFaceProcessorPath =
-    await _copyAsset('Resource/model/ai_face_processor.bundle');
-    await agoraEngine.setExtensionProperty(
-        provider: 'FaceUnity',
-        extension: 'Effect',
-        key: 'fuLoadAIModelFromPackage',
-        value: jsonEncode({'data': aiFaceProcessorPath, 'type': 1 << 8}));
-
-    // Load the qgirl prop
-    final itemPath = await _copyAsset('Resource/items/Animoji/qgirl.bundle');
-
-    await agoraEngine.setExtensionProperty(
-        provider: 'FaceUnity',
-        extension: 'Effect',
-        key: 'fuCreateItemFromPackage',
-        value: jsonEncode({'data': itemPath}));
-  }
-
-  Future<String> _copyAsset(String assetPath) async {
-    ByteData data = await rootBundle.load(assetPath);
-    List<int> bytes =
-    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-
-    final dirname = path.dirname(assetPath);
-
-    Directory dstDir = Directory(path.join(appDocDir.path, dirname));
-    if (!(await dstDir.exists())) {
-      await dstDir.create(recursive: true);
-    }
-
-    String p = path.join(appDocDir.path, path.basename(assetPath));
-    final file = File(p);
-    if (!(await file.exists())) {
-      await file.create();
-      await file.writeAsBytes(bytes);
-    }
-
-    return file.absolute.path;
-  }
-
 
   void _handleBroadcasting() {
     if(_onAir.value) {
