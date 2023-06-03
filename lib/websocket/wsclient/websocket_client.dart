@@ -206,6 +206,11 @@ class WebSocketClient {
           state.notifyState(Stage.WATCH_STREAMING);
           break;
 
+        case MessageType.FINISH_VIDEO:
+          //signal : finish streaming
+          state.notifyState(Stage.FINISH_STREAMING);
+          break;
+
         case MessageType.POLL:
           //set : 투표 시간
           state.duration = _pollSec;

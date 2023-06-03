@@ -6,6 +6,7 @@ enum MessageType {
   START, // 게임 시작하세요
   PARTICIPATE, // 이 질문에 대답 할거임 (클라 -> 서버) (내가 하겠다!)
   FINISH_PARTICIPATE, // 대답할 사람 모집 종료 (타이머 다 돌면 클라 -> 서버) (알아서 감)
+  START_VIDEO, // 스트리밍 시작 신호(클라 -> 서버)
   FINISH_VIDEO, // 대답 끝남 (클라 -> 서버) (스트림 끝났을 때 눌러야함)
   INFO, // 게임 진행 정보 : 참가자, 순서, 라운드, 질문 등
   TURN, // 누구 차례인지 서버에서 알려주는거

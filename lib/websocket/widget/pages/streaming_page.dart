@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'package:capston/websocket/wsclient/stage.dart';
+import 'package:capston/websocket/wsclient/websocket_client.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,6 +11,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:provider/provider.dart';
+
+import '../../wsclient/game_state.dart';
 
 const String appId = "900e3c6f550048e98c348640f5febd90";
 
@@ -19,6 +24,7 @@ class StreamingPage extends StatefulWidget {
       @required this.channelName,
       @required this.currentBroadcaster,
       @required this.isHost,
+      @required this.onStart,
       @required this.onFinished})
       : super(key: key);
 
@@ -26,6 +32,8 @@ class StreamingPage extends StatefulWidget {
   String channelName;
   String currentBroadcaster;
   bool isHost; // Indicates whether the user has joined as a host or audience
+  WebSocketClient client;
+  final void Function() onStart;
   final void Function() onFinished;
 
   @override
@@ -40,64 +48,84 @@ class _StreamingPageState extends State<StreamingPage> {
   final ValueNotifier<bool> _onAir = ValueNotifier(false);
   RtcEngine agoraEngine; // Agora engine instance
 
+  Stage _stage;
+
   // Build UI
   @override
   Widget build(BuildContext context) {
-    if (!_onAir.value && widget.isHost && _isJoined) {
-      _leaveChannel();
-    }
+    // if (!_onAir.value && widget.isHost && _isJoined) {
+    //   _leaveChannel();
+    // }
+    return ChangeNotifierProvider<GameState>(
+        create: (context) => WebSocketClient.getInstance().state,
+        builder: (context, child) {
+          ///추가
+          _stage = Provider
+              .of<GameState>(context)
+              .stage;
 
-    return Column(
-      children: [
-        // Container for the local video
-        Container(
-          height: MediaQuery.of(context).size.height * 0.49,
-          decoration: BoxDecoration(
-            border: Border.all(),
+          // if(_stage == Stage.WATCH_STREAMING || _stage == Stage.READY_STREAMING) {
+          //   join();
+          // } else if (_stage == Stage.FINISH_STREAMING) {
+          //   _leaveChannel();
+          // }
 
-            // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
-            color: Colors.black54, // 원하는 색상으로 설정
-          ),
-          child: Center(
-            child: _videoPanel(),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Visibility(
-          visible: widget.isHost,
-          child: ElevatedButton(
-            onPressed: _handleBroadcasting,
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              overlayColor: MaterialStateProperty.all<Color>(
-                  Colors.blue.withOpacity(0.2)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(
-                    color: Color(0xFF8A61D4),
+          return Column(
+            children: [
+              // Container for the local video
+              Container(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.49,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+
+                  // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
+                  color: Colors.black54, // 원하는 색상으로 설정
+                ),
+                child: Center(
+                  child: _videoPanel(),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Visibility(
+                visible: widget.isHost,
+                child: ElevatedButton(
+                  onPressed: _handleBroadcasting,
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                        Colors.blue.withOpacity(0.2)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(
+                          color: Color(0xFF8A61D4),
+                        ),
+                      ),
+                    ),
+                    elevation: MaterialStateProperty.all<double>(5.0),
+                    padding:
+                    MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0)),
+                  ),
+                  child: Text(
+                    _onAir.value ? '끝내기' : '시작하기',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-              elevation: MaterialStateProperty.all<double>(5.0),
-              padding:
-                  MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0)),
-            ),
-            child: Text(
-              _onAir.value ? '끝내기' : '시작하기',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+            ],
+          );
+        });
   }
 
   Widget _videoPanel() {
@@ -228,9 +256,9 @@ class _StreamingPageState extends State<StreamingPage> {
       ),
     );
 
-    if (!widget.isHost) {
-      join();
-    }
+    // if (!widget.isHost) {
+    //   join();
+    // }
   }
 
   Future<void> initializeFaceUnityExt() async {
@@ -286,15 +314,23 @@ class _StreamingPageState extends State<StreamingPage> {
 
 
   void _handleBroadcasting() {
+    if(_onAir.value) {
+      //끝내기
+      leave();
+    } else {
+      //시작하기
+      widget.onStart.call();
+    }
+
     setState(() {
       _onAir.value = !_onAir.value;
     });
-
-    if (_isJoined) {
-      leave();
-    } else {
-      join();
-    }
+    //
+    // if (_isJoined) {
+    //   leave();
+    // } else {
+    //   join();
+    // }
   }
 
   void join() async {
@@ -350,7 +386,4 @@ class _StreamingPageState extends State<StreamingPage> {
     });
     agoraEngine.leaveChannel();
   }
-
-  // Release the resources when you leave
-
 }

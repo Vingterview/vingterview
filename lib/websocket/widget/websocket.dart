@@ -155,6 +155,11 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                                       currentBroadcaster:
                                           Provider.of<GameState>(context)
                                               .currentBroadcaster,
+                                      onStart: () {
+                                        _client.sendMessage(
+                                          MessageType.START_VIDEO
+                                        );
+                                      },
                                       onFinished: () {
                                         _client.sendMessage(
                                             MessageType.FINISH_VIDEO);
