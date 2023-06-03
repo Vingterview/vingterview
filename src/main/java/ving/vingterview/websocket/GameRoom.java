@@ -135,15 +135,32 @@ public class GameRoom {
 
                         TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
                         session.sendMessage(message);
+                        break;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }else{
+                }/*else{
                     try {
                         messageObject.setSessionId(session.getId());
                         messageObject.setType(MessageType.VIDEO);
                         messageObject.setCurrentBroadcaster(target);
 
+                        TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
+                        session.sendMessage(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+            }
+
+        } else if (messageObject.getType() == MessageType.VIDEO || messageObject.getType() == MessageType.FINISH_VIDEO) {
+
+            for (WebSocketSession session : sessions) {
+                if (!session.getId().equals(messageObject.getCurrentBroadcaster())) {
+                    try {
+                        messageObject.setSessionId(session.getId());
+                        // 이미 currentBroadCaster 설정되어 있음
+//                        messageObject.setCurrentBroadcaster(messageObject.getCurrentBroadcaster());
                         TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageObject));
                         session.sendMessage(message);
                     } catch (IOException e) {

@@ -93,7 +93,6 @@ public class SocketHandler extends TextWebSocketHandler {
         String roomId = gameMessage.getRoomId();
         MessageType type = gameMessage.getType();
         String sessionId = gameMessage.getSessionId();
-
         GameRoom gameRoom = gameRoomRepository.getGameRoomMap().get(roomId);
         GameInfo gameInfo = gameRoom.getGameInfo();
 
@@ -101,7 +100,7 @@ public class SocketHandler extends TextWebSocketHandler {
         switch (type) {
             case PARTICIPATE ->
             {
-                log.info("CLIENT SEND PARTICIPANT");
+                log.info("CLIENT SEND PARTICIPANT, {}" , sessionId);
                 gameRoom.addParticipant(sessionId);
             }
             case FINISH_PARTICIPATE -> {
@@ -115,15 +114,29 @@ public class SocketHandler extends TextWebSocketHandler {
 
                 }
             }
+            case START_VIDEO -> {
+                // 여기가 START_VIDEO 메세지를 서버가 받았을 때 코드
+                log.info("CLIENT SENT START VIDEO {}", sessionId);
+
+                GameMessage videoGameMessage = new GameMessage();
+                // sessionId = currentBroadCaster sessionId
+                videoGameMessage.videoGameMessage(roomId, gameInfo,sessionId);
+                gameRoom.handleMessage(videoGameMessage,objectMapper);
+            }
             case FINISH_VIDEO ->{
+                log.info("CLIENT SEND FINISH VIDEO, {}",sessionId);
+
+                GameMessage finishVideoMessage = new GameMessage();
+                finishVideoMessage.finishVideoMessage(roomId,gameInfo,sessionId);
+                gameRoom.handleMessage(finishVideoMessage,objectMapper);
 
                 if (gameRoom.getGameInfo().getOrder().size() == 0) {
-                    log.info("CLIENT SEND FINISH VIDEO, NO MORE PARTICIPANT");
+                    log.info("NO MORE PARTICIPANT");
                     GameMessage pollGameMessage = new GameMessage();
                     pollGameMessage.pollGameMessage(roomId, gameInfo);
                     gameRoom.handleMessage(pollGameMessage,objectMapper);
                 }else{
-                    log.info("CLIENT SEND FINISH VIDEO, NEXT PARTICIPANT");
+                    log.info("NEXT PARTICIPANT");
                     GameMessage turnGameMessage = new GameMessage();
                     turnGameMessage.turnGameMessage(roomId, gameInfo);
                     gameRoom.handleMessage(turnGameMessage, objectMapper);

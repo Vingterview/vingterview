@@ -79,11 +79,13 @@ public class S3Upload{
 
     /**
      * 비디오 업로드
+     *
      * @param storeName
+     * @param imgNumber
      */
     @Async("threadPoolTaskExecutor")
 
-    public void uploadFile(String storeName) {
+    public void uploadFile(String storeName, Long imgNumber) {
         log.info("Started uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
 
         RestTemplate restTemplate = new RestTemplate();
@@ -93,7 +95,7 @@ public class S3Upload{
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 //        String videoPath = tempDir + storeName;
         String videoPath = amazonS3.getUrl(bucket, "temp/" + storeName).toString();
-        body.add("videoPath", videoPath);
+        body.add("imgNumber", imgNumber.toString());
         body.add("name", storeName);
         body.add("bucket", bucket);
         HttpEntity<?> request = new HttpEntity<>(body, headers);
