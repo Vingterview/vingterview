@@ -10,7 +10,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import ving.vingterview.domain.question.Question;
 import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.repository.QuestionRepository;
 import ving.vingterview.repository.TagQuestionRepository;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
 
-//    private final Queue<WebSocketSession> waitingQueue = new LinkedBlockingQueue<>();
     private final Map<Integer, Queue<WebSocketSession>> waitingQueueByTag = new HashMap<>();
     private final GameRoomRepository gameRoomRepository = new GameRoomRepository();
     private final QuestionRepository questionRepository;
