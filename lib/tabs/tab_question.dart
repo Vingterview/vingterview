@@ -342,7 +342,9 @@ class _QuestionPageState extends State<QuestionPage> {
                     return Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
                       ),
                     );
                   } else {
