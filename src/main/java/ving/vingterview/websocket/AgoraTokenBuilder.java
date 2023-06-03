@@ -17,14 +17,13 @@ public class AgoraTokenBuilder {
 
     public String generateToken(String roomId, int userId) {
         RtcTokenBuilder2 tokenBuilder = new RtcTokenBuilder2();
-        int timeStamp = (int) (System.currentTimeMillis()) / 1000 + expirationTimeSeconds;
         return tokenBuilder.buildTokenWithUid(
                 appId,
                 appCertificate,
                 roomId,
                 userId,
                 RtcTokenBuilder2.Role.ROLE_PUBLISHER,
-                timeStamp,
-                timeStamp);
+                expirationTimeSeconds,
+                expirationTimeSeconds);
     }
 }
