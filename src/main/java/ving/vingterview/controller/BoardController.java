@@ -167,9 +167,11 @@ public class BoardController {
         boardService.like(memberId, id);
     }
 
-    @PostMapping("/video")
+    @PostMapping("/video/{imgNumber}")
     @Trace
-    public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO) {
+    public ResponseEntity<VideoResponseDTO> videoUpload(@ModelAttribute VideoDTO videoDTO,
+                                                        @PathVariable(name = "imgNumber") Long imgNumber) {
+
         if (videoDTO.getVideo() != null && !videoDTO.getVideo().isEmpty()) {
             String storeFileName = fileStore.createStoreFileName(videoDTO.getVideo().getOriginalFilename());
 
@@ -178,7 +180,7 @@ public class BoardController {
             fileStore.tempFileUpload(videoDTO.getVideo(), storeFileName);
 //          videoDTO.getVideo().transferTo(new File(tempDir + storeFileName));
 
-            fileStore.uploadFile(storeFileName);
+            fileStore.uploadFile(storeFileName,imgNumber);
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
