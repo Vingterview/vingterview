@@ -29,7 +29,7 @@ class Message {
           orElse: () => null),
       roomId: json['roomId'] as String,
       sessionId: json['sessionId'] as String,
-      currentBroadcaster: json['currentBroadCaster'] as String,
+      currentBroadcaster: json['currentBroadcaster'] as String,
       gameInfo: GameInfo.fromJson(json['gameInfo'] as Map<String, dynamic>),
       memberInfos: (json['memberInfos'] as List<dynamic>)
           ?.map((memberInfos) => MemberInfo.fromJson(memberInfos))

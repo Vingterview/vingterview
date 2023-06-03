@@ -45,7 +45,7 @@ class _StreamingPageState extends State<StreamingPage> {
 
   int _remoteUid; // uid of the remote user
   bool _isJoined = false; // Indicates if the local user has joined the channel
-  final ValueNotifier<bool> _onAir = ValueNotifier(false);
+  bool _onAir = false;
   RtcEngine agoraEngine; // Agora engine instance
 
   Stage _stage;
@@ -53,103 +53,78 @@ class _StreamingPageState extends State<StreamingPage> {
   // Build UI
   @override
   Widget build(BuildContext context) {
-    // if (!_onAir.value && widget.isHost && _isJoined) {
-    //   _leaveChannel();
-    // }
-    return ChangeNotifierProvider<GameState>(
-        create: (context) => WebSocketClient.getInstance().state,
-        builder: (context, child) {
-          ///추가
-          _stage = Provider
-              .of<GameState>(context)
-              .stage;
+    return Column(
+      children: [
+        // Container for the local video
+        Container(
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.48,
+          decoration: BoxDecoration(
+            border: Border.all(),
 
-          // if(_stage == Stage.WATCH_STREAMING || _stage == Stage.READY_STREAMING) {
-          //   join();
-          // } else if (_stage == Stage.FINISH_STREAMING) {
-          //   _leaveChannel();
-          // }
-
-          return Column(
-            children: [
-              // Container for the local video
-              Container(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.49,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-
-                  // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
-                  color: Colors.black54, // 원하는 색상으로 설정
-                ),
-                child: Center(
-                  child: _videoPanel(),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Visibility(
-                visible: widget.isHost,
-                child: ElevatedButton(
-                  onPressed: _handleBroadcasting,
-                  style: ButtonStyle(
-                    backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white),
-                    overlayColor: MaterialStateProperty.all<Color>(
-                        Colors.blue.withOpacity(0.2)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(
-                          color: Color(0xFF8A61D4),
-                        ),
-                      ),
-                    ),
-                    elevation: MaterialStateProperty.all<double>(5.0),
-                    padding:
-                    MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0)),
-                  ),
-                  child: Text(
-                    _onAir.value ? '끝내기' : '시작하기',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+            // borderRadius: BorderRadius.circular(10), // 원하는 값으로 설정
+            color: Colors.black54, // 원하는 색상으로 설정
+          ),
+          child: Center(
+            child: _videoPanel(),
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Visibility(
+          visible: widget.isHost,
+          child: ElevatedButton(
+            onPressed: handleBroadcasting,
+            style: ButtonStyle(
+              backgroundColor:
+              MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white),
+              overlayColor: MaterialStateProperty.all<Color>(
+                  Colors.blue.withOpacity(0.2)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  side: BorderSide(
+                    color: Color(0xFF8A61D4),
                   ),
                 ),
               ),
-            ],
-          );
-        });
+              elevation: MaterialStateProperty.all<double>(5.0),
+              padding:
+              MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0)),
+            ),
+            child: Text(
+              _onAir ? '끝내기' : '시작하기',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _videoPanel() {
-    if (widget.isHost) {
-      print(_isJoined);
-      return ValueListenableBuilder(
-          valueListenable: _onAir,
-          builder: (context, onAir, child) {
-            if (onAir) {
-              // Show local video preview
-              return AgoraVideoView(
-                controller: VideoViewController(
-                  rtcEngine: agoraEngine,
-                  canvas: VideoCanvas(uid: 0),
-                ),
-              );
-            } else {
-              return SizedBox();
-            }
-          });
+    if (!_isJoined) {
+      return const Text(
+        'Join a channel',
+        textAlign: TextAlign.center,
+      );
+    } else if (widget.isHost) {
+      // Show local video preview
+      return AgoraVideoView(
+        controller: VideoViewController(
+          rtcEngine: agoraEngine,
+          canvas: VideoCanvas(uid: 0),
+        ),
+      );
     } else {
-      if (!_isJoined) {
-        join();
-      }
       // Show remote video
       if (_remoteUid != null) {
         return AgoraVideoView(
@@ -157,11 +132,11 @@ class _StreamingPageState extends State<StreamingPage> {
             rtcEngine: agoraEngine,
             canvas: VideoCanvas(uid: _remoteUid),
             connection: RtcConnection(channelId: widget.channelName),
+            // connection: RtcConnection(channelId: "testChannel"),
           ),
         );
       } else {
         // 방송시작 안했을때
-        // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
         return Container(
           margin: EdgeInsets.only(bottom: 8.0),
           child: Text(
@@ -178,6 +153,63 @@ class _StreamingPageState extends State<StreamingPage> {
     }
   }
 
+  // Widget _videoPanel() {
+  //   if(_stage == Stage.WATCH_STREAMING) {
+  //     join();
+  //   } else if (_stage == Stage.FINISH_STREAMING) {
+  //     _leaveChannel();
+  //   }
+  //
+  //   if (widget.isHost) {
+  //     join();
+  //
+  //     return ValueListenableBuilder(
+  //         valueListenable: _onAir,
+  //         builder: (context, onAir, child) {
+  //           if (onAir) {
+  //             // Show local video preview
+  //             return AgoraVideoView(
+  //               controller: VideoViewController(
+  //                 rtcEngine: agoraEngine,
+  //                 canvas: VideoCanvas(uid: 0),
+  //               ),
+  //             );
+  //           } else {
+  //             return SizedBox();
+  //           }
+  //         });
+  //   } else {
+  //     // if (!_isJoined) {
+  //     //   join();
+  //     // }
+  //     // Show remote video
+  //     if (_remoteUid != null) {
+  //       return AgoraVideoView(
+  //         controller: VideoViewController.remote(
+  //           rtcEngine: agoraEngine,
+  //           canvas: VideoCanvas(uid: _remoteUid),
+  //           connection: RtcConnection(channelId: widget.channelName),
+  //         ),
+  //       );
+  //     } else {
+  //       // 방송시작 안했을때
+  //       // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
+  //       return Container(
+  //         margin: EdgeInsets.only(bottom: 8.0),
+  //         child: Text(
+  //           '참가자가 준비될 때까지 잠시만 기다려주세요!',
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //             fontSize: 14,
+  //             color: Colors.white,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -185,12 +217,6 @@ class _StreamingPageState extends State<StreamingPage> {
     setupVideoSDKEngine();
   }
 
-  @override
-  void dispose() async {
-    await agoraEngine.leaveChannel();
-    agoraEngine.release();
-    super.dispose();
-  }
 
   Future<void> setupVideoSDKEngine() async {
     // retrieve or request camera and microphone permissions
@@ -198,14 +224,19 @@ class _StreamingPageState extends State<StreamingPage> {
 
     //create an instance of the Agora engine
     agoraEngine = createAgoraRtcEngine();
-    await agoraEngine.initialize(const RtcEngineContext(appId: appId));
+    await agoraEngine.initialize(const RtcEngineContext(
+        appId: appId
+    ));
 
     if (Platform.isAndroid) {
-      await agoraEngine.loadExtensionProvider(path: 'AgoraFaceUnityExtension');
+      print("[isAndroid]");
+      //TODO path부분 바꿔가면서 라이브러리 로드할수있게 찾기
+      await agoraEngine.loadExtensionProvider(path: '/libs/extension_aar-release.aar');
     }
 
     await agoraEngine.enableExtension(
         provider: "FaceUnity", extension: "Effect", enable: true);
+
 
     await agoraEngine.enableVideo();
 
@@ -228,32 +259,109 @@ class _StreamingPageState extends State<StreamingPage> {
             _remoteUid = null;
           });
         },
+        onExtensionStarted: (provider, extension) {
+          debugPrint(
+              '[onExtensionStarted] provider: $provider, extension: $extension');
+          if (provider == 'FaceUnity' && extension == 'Effect') {
+            initializeFaceUnityExt();
+          }
+        },
+        onExtensionError: (provider, extension, error, message) {
+          debugPrint(
+              '[onExtensionError] provider: $provider, '
+                  'extension: $extension, error: $error, message: $message');
+        },
+        onExtensionEvent: (String provider, String extName, String key, String value) {
+          debugPrint(
+              '[onExtensionEvent] provider: $provider, '
+                  'extension: $extName, key: $key, value: $value');
+        },
+        onError: (e, msg) {
+          print("[에러발생] :$e, $msg");
+        },
       ),
     );
 
-    // if (!widget.isHost) {
-    //   join();
-    // }
+    join();
   }
 
-  void _handleBroadcasting() {
-    if(_onAir.value) {
-      //끝내기
-      leave();
-    } else {
-      //시작하기
-      widget.onStart.call();
+
+  @override
+  void dispose() async {
+    await agoraEngine.leaveChannel();
+    agoraEngine.release();
+
+    await agoraEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuDestroyLibData',
+        value: jsonEncode({})
+    );
+
+    super.dispose();
+  }
+
+  Future<void> initializeFaceUnityExt() async {
+    // Initialize the extension and authenticate the user
+    await agoraEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuSetup',
+        value: jsonEncode({'authdata': authpack.gAuthPackage}));
+
+    // Load the AI model
+    final aiFaceProcessorPath =
+    await _copyAsset('Resource/model/ai_face_processor.bundle');
+    await agoraEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuLoadAIModelFromPackage',
+        value: jsonEncode({'data': aiFaceProcessorPath, 'type': 1 << 8}));
+
+    // Load the qgirl prop
+    final itemPath = await _copyAsset('Resource/items/Animoji/qgirl.bundle');
+
+    await agoraEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuCreateItemFromPackage',
+        value: jsonEncode({'data': itemPath}));
+  }
+
+  Future<String> _copyAsset(String assetPath) async {
+    ByteData data = await rootBundle.load(assetPath);
+    List<int> bytes =
+    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+
+    final dirname = path.dirname(assetPath);
+
+    Directory dstDir = Directory(path.join(appDocDir.path, dirname));
+    if (!(await dstDir.exists())) {
+      await dstDir.create(recursive: true);
     }
 
-    setState(() {
-      _onAir.value = !_onAir.value;
-    });
-    //
-    // if (_isJoined) {
-    //   leave();
-    // } else {
-    //   join();
-    // }
+    String p = path.join(appDocDir.path, path.basename(assetPath));
+    final file = File(p);
+    if (!(await file.exists())) {
+      await file.create();
+      await file.writeAsBytes(bytes);
+    }
+
+    return file.absolute.path;
+  }
+
+
+  void handleBroadcasting() {
+    if(_onAir) {
+      leave();
+    } else {
+      setState(() {
+        _onAir = true;
+      });
+      widget.onStart.call();
+    }
   }
 
   void join() async {
@@ -291,19 +399,25 @@ class _StreamingPageState extends State<StreamingPage> {
         uid: uid,
       );
     } catch (e) {
-      print("error");
+      print("[joinChannel] error : $e");
     }
 
-    setState(() {});
+    setState(() {
+      _isJoined = true;
+    });
   }
 
   void leave() {
     _leaveChannel();
     widget.onFinished.call();
+    setState(() {
+      widget.isHost = false;
+    });
   }
 
   void _leaveChannel() {
     setState(() {
+      _onAir = false;
       _isJoined = false;
       _remoteUid = null;
     });

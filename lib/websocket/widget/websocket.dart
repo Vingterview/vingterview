@@ -47,12 +47,16 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
   @override
   void dispose() {
     // 채널을 닫음
-    widget.client.disconnect();
+    print("[dispose] websocket widget");
+    if(widget.client != null) {
+      widget.client.disconnect();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider<GameState>(
       create: (context) => WebSocketClient.getInstance().state,
       builder: (context, child) {
@@ -87,7 +91,6 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                   Container(); // <----------------------------------잘 되나 확인
 
               if (_isMatched()) {
-                print("Dd");
                 memberWidget = getStage2(_client);
               }
 
@@ -106,6 +109,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                 case Stage.READY_STREAMING:
                   stageWidget = getStage5(_client);
                   break;
+                case Stage.FINISH_STREAMING:
                 case Stage.WATCH_STREAMING:
                   stageWidget = getStage6(_client);
                   break;
@@ -240,6 +244,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
 
   ///추가
   bool _isStreaming() {
+    print("[isStreaming] $_stage");
     if (_stage == Stage.WATCH_STREAMING || _stage == Stage.READY_STREAMING) {
       return true;
     } else {

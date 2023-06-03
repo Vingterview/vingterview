@@ -55,6 +55,7 @@ class WebSocketClient {
   /// singleton 객체 획득 메소드
   static WebSocketClient getInstance() {
     if (_instance == null) {
+      print("[websocket_client] create new ws instanse");
       _instance = WebSocketClient._();
     }
     return _instance;
@@ -67,11 +68,17 @@ class WebSocketClient {
    */
 
   ///웹소켓 연결
-  connectToSocket() async {
+  connectToSocket({List<int> selectedTagId}) async {
     if (!_isConnected) {
       String endPoint = "ws://$BASE_URL/ving";
+
+      String tags = "";
+      if(selectedTagId != null) {
+        tags = selectedTagId.map((tag) => tag.toString()).join(';');
+      }
       token = await get_token();
-      WebSocket.connect(endPoint, headers: {'Authorization': 'Bearer $token'})
+
+      WebSocket.connect(endPoint, headers: {'Authorization': 'Bearer $token', 'X-Tag-Id': tags})
           .then((ws) {
         _channel = IOWebSocketChannel(ws);
         if (_channel != null) {
@@ -113,6 +120,8 @@ class WebSocketClient {
       if (!_isAlive) {
         return;
       }
+    } else if (type == MessageType.FINISH_VIDEO){
+      state.notifyState(Stage.FINISH_STREAMING);
     }
 
     Message message = Message(
@@ -154,6 +163,7 @@ class WebSocketClient {
   _listenToMessage() {
     _channel.stream.listen((msg) {
       Message message = Message.fromJson(jsonDecode(msg));
+      print("[MESSEGE_ARRIVED] ${message.type}, ${message.currentBroadcaster}");
       switch (message.type) {
         case MessageType.CREATE:
           //set : 방 정보, 세션 정보
@@ -232,8 +242,6 @@ class WebSocketClient {
           break;
 
         case MessageType.FINISH_GAME:
-          //웹소켓 연결 해제
-          disconnect();
 
           //signal : game finish
           state.notifyState(Stage.GAME_FINISH);

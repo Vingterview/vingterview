@@ -66,10 +66,10 @@ class _Page6State extends State<Page6> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.client.state.currentBroadcaster); // <-- null 찍힘
+    print("[현재 발표자 세션 아이디] ${widget.client.state.currentBroadcaster}"); // <-- null 찍힘
     print(widget.client.state.memberInfos[0].sessionId);
     print(widget.client.state.memberInfos[1].sessionId);
-    print(widget.client.state.memberInfos[2].sessionId);
+    // print(widget.client.state.memberInfos[2].sessionId);
     return Column(children: [
       SizedBox(
         height: 10,

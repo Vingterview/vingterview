@@ -68,7 +68,7 @@ class _Page1State extends State<Page1> {
           ElevatedButton(
             onPressed: () async {
               // await widget.client.connectToSocket();
-              await widget.client.connectToSocket(selectedTagId);
+              await widget.client.connectToSocket(selectedTagId: selectedTagId);
               setState(() {
                 isMatching = true;
               });
@@ -99,6 +99,8 @@ class _Page1State extends State<Page1> {
               ),
             ),
           ),
+
+          ///매칭 취소 버튼 추가
           SizedBox(height: 20),
           Text(
             (isMatching) ? '매칭을 기다리는 중입니다!' : '지금 바로 시작 버튼을 누르세요!',
@@ -107,6 +109,43 @@ class _Page1State extends State<Page1> {
               color: Colors.white,
             ),
           ),
+          SizedBox(height: 20),
+          Visibility(
+              visible: isMatching,
+              child:  ElevatedButton(
+                onPressed: () {
+                  widget.client.disconnect();
+                  setState(() {
+                    isMatching = false;
+                  });
+                  },
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.transparent),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  overlayColor:
+                  MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.2)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      side: BorderSide(
+                        color: Color(0xFF8A61D4),
+                      ),
+                    ),
+                  ),
+                  elevation: MaterialStateProperty.all<double>(5.0),
+                  padding:
+                  MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(25.0)),
+                ),
+                child: Text(
+                  '돌아가기',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+          )
         ],
       ),
     );
