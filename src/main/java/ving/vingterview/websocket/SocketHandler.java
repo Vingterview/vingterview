@@ -131,6 +131,8 @@ public class SocketHandler extends TextWebSocketHandler {
                 finishVideoMessage.finishVideoMessage(roomId,gameInfo,sessionId);
                 gameRoom.handleMessage(finishVideoMessage,objectMapper);
 
+                Thread.sleep(1000);
+
                 if (gameRoom.getGameInfo().getOrder().size() == 0) {
                     log.info("NO MORE PARTICIPANT");
                     GameMessage pollGameMessage = new GameMessage();
