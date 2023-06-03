@@ -109,21 +109,3 @@ class _pick_dfState extends State<pick_df> {
     );
   }
 }
-
-class OtherPage extends StatelessWidget {
-  final int selectedIndex;
-
-  const OtherPage({Key key, this.selectedIndex}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('다른 페이지'),
-      ),
-      body: Center(
-        child: Text('선택한 사진 인덱스: $selectedIndex'),
-      ),
-    );
-  }
-}
