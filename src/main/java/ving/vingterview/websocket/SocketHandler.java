@@ -30,7 +30,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public static final int NUMBEROFPLAYERS = 3;
+    public static final int NUMBEROFPLAYERS = 2;
 
 
 
@@ -123,6 +123,7 @@ public class SocketHandler extends TextWebSocketHandler {
                 videoGameMessage.videoGameMessage(roomId, gameInfo,sessionId);
                 gameRoom.handleMessage(videoGameMessage,objectMapper);
             }
+
             case FINISH_VIDEO ->{
                 log.info("CLIENT SEND FINISH VIDEO, {}",sessionId);
 
@@ -135,7 +136,7 @@ public class SocketHandler extends TextWebSocketHandler {
                     GameMessage pollGameMessage = new GameMessage();
                     pollGameMessage.pollGameMessage(roomId, gameInfo);
                     gameRoom.handleMessage(pollGameMessage,objectMapper);
-                }else{
+                } else {
                     log.info("NEXT PARTICIPANT");
                     GameMessage turnGameMessage = new GameMessage();
                     turnGameMessage.turnGameMessage(roomId, gameInfo);

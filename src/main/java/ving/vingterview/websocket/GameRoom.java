@@ -17,6 +17,8 @@ public class GameRoom {
     private Set<WebSocketSession> sessions = new HashSet<>();
     private GameInfo gameInfo;
 
+    public static final int NUMBEROFPARTICIPANTS = 2;
+
 
 
     public GameRoom(String roomId) {
@@ -59,8 +61,8 @@ public class GameRoom {
     public void setRandomOrder() {
         List<String> participant = gameInfo.getParticipant();
 
-        if (participant.size() < 3) {
-            int rest = 3 - participant.size();
+        if (participant.size() < NUMBEROFPARTICIPANTS) {
+            int rest = NUMBEROFPARTICIPANTS - participant.size();
             for (WebSocketSession session : sessions) {
                 if ((!participant.contains(session.getId())) && rest > 0) {
                     participant.add(session.getId());
