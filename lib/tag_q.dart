@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import '../models/questions.dart';
 import '../providers/questions_api.dart';
 import 'package:capston/question_video.dart';
-import '../tag_quesiton.dart';
-
-Widget getQuestionPage() {
-  return QuestionPage();
-}
+import '../models/tags.dart';
 
 enum SortingOption { latest, scrap, video, old }
 
-class QuestionPage extends StatefulWidget {
+class tQuestionPage extends StatefulWidget {
+  final List<Tags> selectedTags;
+  tQuestionPage({@required this.selectedTags});
   @override
-  _QuestionPageState createState() => _QuestionPageState();
+  _tQuestionPageState createState() =>
+      _tQuestionPageState(selectedTags: selectedTags);
 }
 
-class _QuestionPageState extends State<QuestionPage> {
+class _tQuestionPageState extends State<tQuestionPage> {
+  List<Tags> selectedTags = [];
+  _tQuestionPageState({@required this.selectedTags});
   QuestionApi questionApi = QuestionApi();
   PageQuestions questionList = PageQuestions(questions: []);
   bool isLoading = false;
   String textData;
   SortingOption _sortingOption = SortingOption.latest;
-  DropdownButton<SortingOption> dropdownButton; // Add this variable
   int nextPage = 0;
   bool hasNext = true;
   ScrollController _scrollController = ScrollController();
@@ -35,7 +35,6 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Future<void> initializeDataList() async {
-    // 비동기 함수를 사용하여 초기 데이터를 가져옵니다.
     nextPage = 0;
     hasNext = true;
     PageQuestions newPage = await _updateWithSorting(_sortingOption, nextPage);
@@ -58,7 +57,6 @@ class _QuestionPageState extends State<QuestionPage> {
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      // Reached the bottom of the scroll view
       _loadMore();
     }
   }
@@ -69,7 +67,7 @@ class _QuestionPageState extends State<QuestionPage> {
         isLoading = true;
       });
     }
-    print("로드모어");
+
     if (!hasNext) {
       return;
     }
@@ -78,12 +76,11 @@ class _QuestionPageState extends State<QuestionPage> {
 
     setState(() {
       List<Questions> tempList = List.from(questionList.questions);
-      _isStarredList.addAll(List.filled(newPage.questions.length, false));
       tempList.addAll(newPage.questions);
       questionList.questions = tempList;
       nextPage = newPage.nextPage;
-      hasNext = newPage.hasNext; // 로딩 상태를 false로 설정합니다.
-
+      hasNext = newPage.hasNext;
+      _isStarredList.addAll(List.filled(newPage.questions.length, false));
       isLoading = false;
     });
   }
@@ -106,89 +103,113 @@ class _QuestionPageState extends State<QuestionPage> {
 
   Future<PageQuestions> _updateWithSorting(
       SortingOption newValue, int nextPage) async {
-    print("소팅 함수");
+    PageQuestions _questionList;
+    String _sort = "&tag_id=${widget.selectedTags.last.tagId}";
+
     switch (_sortingOption) {
       case SortingOption.latest:
-        PageQuestions _questionList =
-            await questionApi.getQuestions(page: nextPage);
-        setState(() {
-          nextPage = _questionList.nextPage;
-          hasNext = _questionList.hasNext;
-        });
-        print(nextPage);
-
-        return (_questionList);
+        _questionList =
+            await questionApi.getQuestions(page: nextPage, sort: _sort);
         break;
       case SortingOption.scrap:
-        PageQuestions _questionList = await questionApi.getQuestions(
-            query: 4, param: "scrap", page: nextPage);
-        setState(() {
-          nextPage = _questionList.nextPage;
-          hasNext = _questionList.hasNext;
-        });
-
-        return (_questionList);
+        _questionList = await questionApi.getQuestions(
+            query: 4, param: "scrap", page: nextPage, sort: _sort);
         break;
       case SortingOption.video:
-        PageQuestions _questionList = await questionApi.getQuestions(
-            query: 4, param: "video", page: nextPage);
-        setState(() {
-          nextPage = _questionList.nextPage;
-          hasNext = _questionList.hasNext;
-        });
-
-        return (_questionList);
+        _questionList = await questionApi.getQuestions(
+            query: 4, param: "video", page: nextPage, sort: _sort);
         break;
       case SortingOption.old:
-        PageQuestions _questionList = await questionApi.getQuestions(
-            query: 4, param: "old", page: nextPage);
-        setState(() {
-          nextPage = _questionList.nextPage;
-          hasNext = _questionList.hasNext;
-        });
-
-        return (_questionList);
+        _questionList = await questionApi.getQuestions(
+            query: 4, param: "old", page: nextPage, sort: _sort);
         break;
       default:
-        PageQuestions _questionList =
-            await questionApi.getQuestions(page: nextPage);
-        setState(() {
-          nextPage = _questionList.nextPage;
-          hasNext = _questionList.hasNext;
-        });
-
-        return (_questionList);
+        _questionList =
+            await questionApi.getQuestions(page: nextPage, sort: _sort);
         break;
     }
+
+    setState(() {
+      nextPage = _questionList.nextPage;
+      hasNext = _questionList.hasNext;
+    });
+
+    return _questionList;
   }
 
   @override
   Widget build(BuildContext context) {
+    List<int> selectedTagId = [];
+    for (var tag in widget.selectedTags) {
+      selectedTagId.add(tag.tagId);
+    }
+    print(selectedTagId);
+
     return Scaffold(
-        body: Column(children: [
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '질문 게시판',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6fa8dc), Color(0xFF8A61D4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          ),
+        ),
+        title: Text(
+          '태그별 질문 보기',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => tag_questions(selectedTags: []),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 8,
+                    ),
+                    for (var tag in widget.selectedTags)
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(175, 218, 210, 224)
+                                  .withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-                dropdownButton = DropdownButton<SortingOption>(
+                        child: Text(
+                          '#${tag.tagName}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF1A4FB5),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                DropdownButton<SortingOption>(
                   value: _sortingOption,
                   onChanged: _updateSortingOption,
                   items: [
@@ -211,16 +232,11 @@ class _QuestionPageState extends State<QuestionPage> {
                   ],
                 ),
               ],
-            )
-          ],
-        ),
-      ),
-      Expanded(
-          child: RefreshIndicator(
-              onRefresh: () {
-                // 게시글을 다시 불러오는 동작을 수행하는 로직을 작성
-                return _refreshPosts();
-              },
+            ),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshPosts,
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: questionList.questions.length + 1,
@@ -228,19 +244,19 @@ class _QuestionPageState extends State<QuestionPage> {
                   if (index < questionList.questions.length) {
                     Questions question = questionList.questions[index];
                     bool isStarred = _isStarredList[index];
+
                     return GestureDetector(
                       onTap: () async {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => QVideoPage(
-                                question: questionList.questions[index]),
+                            builder: (_) => QVideoPage(question: question),
                           ),
                         );
                       },
                       onLongPress: () async {
                         Navigator.pushNamed(context, '/video_write',
-                            arguments: questionList.questions[index]);
+                            arguments: question);
                       },
                       child: Container(
                         padding:
@@ -260,9 +276,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(8, 3, 20, 8),
                                     child: Text(
-                                      textData ??
-                                          questionList
-                                              .questions[index].questionContent,
+                                      textData ?? question.questionContent,
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -294,35 +308,42 @@ class _QuestionPageState extends State<QuestionPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 4, 8, 0),
-                                  child: Text(
-                                    questionList.questions[index].tags
-                                        .map((tag) => '#${tag.tagName}')
-                                        .join(' '),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
+                                Row(children: [
+                                  for (var tag in question.tags)
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 4, 4, 0),
+                                      child: Text(
+                                        '#${tag.tagName}',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: selectedTagId
+                                                    .contains(tag.tagId)
+                                                ? Color(0xFF8A61D4)
+                                                : Colors.grey,
+                                            fontWeight: selectedTagId
+                                                    .contains(tag.tagId)
+                                                ? FontWeight.bold
+                                                : FontWeight.normal),
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                ]),
                                 Row(
                                   children: [
                                     Container(
                                       margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Text(
-                                        '스크랩 ${questionList.questions[index].scrapCount}',
+                                        '스크랩 ${question.scrapCount}',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 6),
+                                    SizedBox(width: 10),
                                     Container(
                                       margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Text(
-                                        '답변 ${questionList.questions[index].boardCount}',
+                                        '답변 ${question.boardCount}',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
@@ -338,7 +359,6 @@ class _QuestionPageState extends State<QuestionPage> {
                       ),
                     );
                   } else if (hasNext) {
-                    print(questionList.questions.length);
                     return Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
@@ -346,11 +366,14 @@ class _QuestionPageState extends State<QuestionPage> {
                       ),
                     );
                   } else {
-                    print(questionList.questions.length);
                     return Container();
                   }
                 },
-              ))),
-    ]));
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

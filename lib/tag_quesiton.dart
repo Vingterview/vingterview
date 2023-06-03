@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import '../models/tags.dart';
 import '../providers/tags_api.dart';
+import 'tag_q.dart';
 
-class pick_tags extends StatefulWidget {
+class tag_questions extends StatefulWidget {
   final List<Tags> selectedTags;
-  pick_tags({@required this.selectedTags});
+  tag_questions({@required this.selectedTags});
   @override
-  _pick_tagsState createState() => _pick_tagsState(selectedTags: selectedTags);
+  _tag_questionsState createState() =>
+      _tag_questionsState(selectedTags: selectedTags);
 }
 
-class _pick_tagsState extends State<pick_tags> {
+class _tag_questionsState extends State<tag_questions> {
   TagApi tagApi = TagApi();
   List<Tags> tagList = [];
   List<Tags> selectedTags = [];
-  _pick_tagsState({@required this.selectedTags});
+  _tag_questionsState({@required this.selectedTags});
   Tags parentTag;
 
   @override
@@ -42,12 +44,17 @@ class _pick_tagsState extends State<pick_tags> {
   Future<void> selectTag(Tags tag) async {
     selectedTags.add(tag);
     if (selectedTags.length < 3) {
-      selectedTags = await Navigator.push(
+      selectedTags = await Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (_) => pick_tags(selectedTags: selectedTags)));
+              builder: (_) => tag_questions(selectedTags: selectedTags)));
     }
-    Navigator.pop(context, selectedTags);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => tQuestionPage(selectedTags: selectedTags),
+      ),
+    );
   }
 
   @override
@@ -66,7 +73,7 @@ class _pick_tagsState extends State<pick_tags> {
           ),
         ),
         title: Text(
-          '태그 선택',
+          '태그로 질문 찾기',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -112,7 +119,12 @@ class _pick_tagsState extends State<pick_tags> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF8A61D4),
         onPressed: () {
-          Navigator.pop(context, selectedTags);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => tQuestionPage(selectedTags: selectedTags),
+            ),
+          );
         },
         child: Icon(Icons.check),
       ),
