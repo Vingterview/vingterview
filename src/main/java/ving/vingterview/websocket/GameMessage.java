@@ -37,9 +37,10 @@ public class GameMessage {
 
     }
 
-    public void videoGameMessage(String roomId,GameInfo gameInfo) {
+    public void videoGameMessage(String roomId,GameInfo gameInfo,String sessionId) {
         this.roomId = roomId;
         this.type = MessageType.VIDEO;
+        this.currentBroadcaster =sessionId;
         this.gameInfo = gameInfo;
     }
 
@@ -79,5 +80,13 @@ public class GameMessage {
         this.roomId = roomId;
         this.type = MessageType.FINISH_GAME;
         this.gameInfo = gameInfo;
+    }
+
+    public void finishVideoMessage(String roomId, GameInfo gameInfo, String sessionId) {
+        this.roomId = roomId;
+        this.type = MessageType.FINISH_VIDEO;
+        this.currentBroadcaster = sessionId;
+        this.gameInfo = gameInfo;
+
     }
 }
