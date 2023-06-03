@@ -29,6 +29,10 @@ public class WebSocketAuthenticationInterceptor implements HandshakeInterceptor 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("찾을 수 없는 사용자입니다."));
 //        Member member = memberRepository.findById(2L).orElseThrow(() -> new EntityNotFoundException("찾을 수 없는 사용자입니다."));
 
+        /**
+         * header에서 tag 가져오기
+         */
+        attributes.put("X-Tag-Id", request.getHeaders().getFirst("X-Tag-Id"));
         attributes.put("name", member.getName());
         attributes.put("imageUrl", member.getProfileImageUrl());
         return true;

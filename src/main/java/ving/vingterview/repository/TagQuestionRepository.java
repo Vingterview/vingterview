@@ -16,4 +16,12 @@ public interface TagQuestionRepository extends JpaRepository<TagQuestion,Long> {
             "where tq.tag.id in (:tagIds)")
     Slice<TagQuestion> findAllQuestionByTagId(@Param("tagIds") List<Long> tagIds, Pageable pageable);
 
+    @Query("select tq from TagQuestion tq " +
+            " where tq.tag.id = :tagId" +
+            " order by rand() " +
+            " limit 3")
+    List<TagQuestion> findRandom(@Param("tagId") Integer tagId);
+
+
+
 }
