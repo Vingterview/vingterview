@@ -4,6 +4,7 @@ import '../providers/videos_api.dart';
 import 'package:capston/video_detail.dart';
 import 'package:capston/user_popup.dart';
 import 'models/questions.dart';
+import 'package:intl/intl.dart';
 
 Widget getQVideoPage() {
   return QVideoPage();
@@ -79,14 +80,14 @@ class _QVideoPageState extends State<QVideoPage> {
 
     setState(() {
       List<Videos> tempList = List.from(videoList.videos);
-      print(tempList.length);
+      // print(tempList.length);
       tempList.addAll(newPage.videos);
-      print(tempList.length);
+      // print(tempList.length);
       videoList.videos = tempList;
       nextPage = newPage.nextPage;
       hasNext = newPage.hasNext; // 로딩 상태를 false로 설정합니다.
       isLoading = false;
-      print(videoList.videos.length);
+      // print(videoList.videos.length);
     });
   }
 
@@ -104,13 +105,14 @@ class _QVideoPageState extends State<QVideoPage> {
 
   Future<PageVideos> _updateWithSorting(
       SortingOption newValue, int nextPage) async {
-    print("소팅함수");
+    // print("소팅함수");
     switch (_sortingOption) {
       case SortingOption.latest:
         PageVideos _videoList = await videoApi.getVideos(
             query: 2,
             param: widget.question.questionId.toString(),
-            page: nextPage);
+            page: nextPage,
+            sort: "&order_by=");
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;
@@ -121,7 +123,8 @@ class _QVideoPageState extends State<QVideoPage> {
         PageVideos _videoList = await videoApi.getVideos(
             query: 2,
             param: widget.question.questionId.toString(),
-            page: nextPage);
+            page: nextPage,
+            sort: "&order_by=like");
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;
@@ -132,7 +135,8 @@ class _QVideoPageState extends State<QVideoPage> {
         PageVideos _videoList = await videoApi.getVideos(
             query: 2,
             param: widget.question.questionId.toString(),
-            page: nextPage);
+            page: nextPage,
+            sort: "&order_by=comment");
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;
@@ -144,7 +148,8 @@ class _QVideoPageState extends State<QVideoPage> {
         PageVideos _videoList = await videoApi.getVideos(
             query: 2,
             param: widget.question.questionId.toString(),
-            page: nextPage);
+            page: nextPage,
+            sort: "&order_by=old");
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;
@@ -155,7 +160,8 @@ class _QVideoPageState extends State<QVideoPage> {
         PageVideos _videoList = await videoApi.getVideos(
             query: 2,
             param: widget.question.questionId.toString(),
-            page: nextPage);
+            page: nextPage,
+            sort: "&order_by=");
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;
@@ -166,7 +172,7 @@ class _QVideoPageState extends State<QVideoPage> {
   }
 
   Future<void> _refreshPosts() async {
-    print("리프레시");
+    // print("리프레시");
     initializeDataList();
   }
 
@@ -265,8 +271,8 @@ class _QVideoPageState extends State<QVideoPage> {
                 itemCount: videoList.videos.length + 1,
                 itemBuilder: (context, index) {
                   if (index < videoList.videos.length) {
-                    print(videoList.videos[index].profileUrl);
-                    print(videoList.videos[index].memberName);
+                    // print(videoList.videos[index].profileUrl);
+                    // print(videoList.videos[index].memberName);
                     return GestureDetector(
                       onTap: () async {
                         Navigator.push(
@@ -351,7 +357,9 @@ class _QVideoPageState extends State<QVideoPage> {
                                       ),
                                       SizedBox(height: 1),
                                       Text(
-                                        videoList.videos[index].createTime,
+                                        DateFormat('MM/dd HH:mm').format(
+                                            DateTime.parse(videoList
+                                                .videos[index].createTime)),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,

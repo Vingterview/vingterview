@@ -102,6 +102,7 @@ class _VideoPageState extends State<VideoPage> {
     switch (_sortingOption) {
       case SortingOption.latest:
         PageVideos _videoList = await videoApi.getVideos(page: nextPage);
+
         setState(() {
           nextPage = _videoList.nextPage;
           hasNext = _videoList.hasNext;

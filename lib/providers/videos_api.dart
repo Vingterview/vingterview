@@ -57,9 +57,10 @@ class VideoApi {
     List<String> queries = [
       "?page=$page$sort",
       "?page=$page&member_id=$param",
-      "?page=$page&question_id=$param",
+      "?page=$page&question_id=$param$sort",
       "?page=$page&order_by=$param$sort"
     ];
+    print('$uri/boards${queries[query]}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token');
     final response = await http.get(

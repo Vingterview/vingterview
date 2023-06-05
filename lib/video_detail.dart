@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import 'video_edit.dart';
 import 'package:intl/intl.dart';
 import 'package:capston/user_popup.dart';
+import 'comment_edit.dart';
 
 // 영상 재생할 수 있게 하기 + 댓글 가져오기
 class video_detail extends StatefulWidget {
@@ -536,13 +537,36 @@ class _VideoDetailState extends State<video_detail> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                comment.memberNickname,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
+                                              Row(children: [
+                                                Text(
+                                                  comment.memberNickname,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
+                                                SizedBox(width: 6),
+                                                Text(
+                                                  comment.create ==
+                                                          comment.update
+                                                      ? DateFormat(
+                                                              'MM/dd HH:mm')
+                                                          .format(
+                                                              DateTime.parse(
+                                                                  comment
+                                                                      .create))
+                                                      : DateFormat(
+                                                              'MM/dd HH:mm 편집됨')
+                                                          .format(
+                                                          DateTime.parse(
+                                                              comment.update),
+                                                        ),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ]),
                                               SizedBox(height: 2),
                                               Text(
                                                 comment.content,
@@ -596,18 +620,17 @@ class _VideoDetailState extends State<video_detail> {
                                               },
                                               onSelected: (String value) {
                                                 if (value == 'edit') {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditVideoPage(
-                                                              video:
-                                                                  video.video),
-                                                    ),
-                                                  ).then((value) {
-                                                    initVideo();
-                                                    setState(() {});
-                                                  });
+                                                  // Navigator.push(
+                                                  //   context,
+                                                  //   MaterialPageRoute(
+                                                  //     builder: (context) =>
+                                                  //         EditcommentPage(
+                                                  //             comment: comment),
+                                                  //   ),
+                                                  // ).then((value) {
+                                                  //   initVideo();
+                                                  //   setState(() {});
+                                                  // });
                                                 } else if (value == 'delete') {
                                                   commentApi.deletecomment(
                                                       comment.commentId);

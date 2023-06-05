@@ -17,30 +17,17 @@
 // }
 
 // class _EditcommentPageState extends State<EditcommentPage> {
-//   int _questionId;
 //   String _content;
 //   String _comment_url;
-  
+
 //   XFile _comment;
 //   String uri = myUri;
 //   Questions selectedQuestion;
-//   String buttonText = "질문을 선택하세요";
 
-//   commentApi _commentApi = commentApi();
+//   CommentApi _commentApi = CommentApi();
 
 //   final _formKey = GlobalKey<FormState>();
 //   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-//   void pickQuestion(BuildContext context) async {
-//     selectedQuestion = await Navigator.push<Questions>(
-//         context, MaterialPageRoute(builder: (context) => pick_question()));
-//     if (selectedQuestion != null) {
-//       setState(() {
-//         buttonText = selectedQuestion.questionContent;
-//         _questionId = selectedQuestion.questionId;
-//       });
-//     }
-//   }
 
 //   @override
 //   void initState() {
@@ -85,7 +72,8 @@
 //                         content: Text('글을 수정하는데에 1분~10분 이내에 시간이 소요될 수 있습니다.')));
 //                     Navigator.pop(context);
 //                     if (_comment != null) {
-//                       _comment_url = await uploadcommentApi.pickcomment(_comment);
+//                       _comment_url =
+//                           await uploadcommentApi.pickcomment(_comment);
 //                       print(_comment_url);
 //                     }
 //                     print(_comment_url);
@@ -162,8 +150,6 @@
 //                     SizedBox(
 //                       height: 3,
 //                     ),
-                    
-              
 //                   ],
 //                 ),
 //               ),

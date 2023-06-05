@@ -10,6 +10,8 @@ class Comments {
   final String profileUrl;
   final String content;
   final int likeCount;
+  final String create;
+  final String update;
 
   Comments({
     this.commentId,
@@ -19,18 +21,21 @@ class Comments {
     this.profileUrl,
     this.content,
     this.likeCount,
+    this.create,
+    this.update,
   });
 
   factory Comments.fromJson(Map<String, dynamic> json) {
     return Comments(
-      commentId: json['comment_id'],
-      boardId: json['board_id'],
-      memberId: json['member_id'],
-      memberNickname: json['member_nickname'],
-      profileUrl: json['profile_image_url'],
-      content: json['content'],
-      likeCount: json['like_count'],
-    );
+        commentId: json['comment_id'],
+        boardId: json['board_id'],
+        memberId: json['member_id'],
+        memberNickname: json['member_nickname'],
+        profileUrl: json['profile_image_url'],
+        content: json['content'],
+        likeCount: json['like_count'],
+        create: json['create_time'],
+        update: json['update_time']);
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +47,8 @@ class Comments {
       'profile_image_url': profileUrl,
       'content': content,
       'like_count': likeCount,
+      'create_time': create,
+      'update_time': update,
     };
   }
 }
