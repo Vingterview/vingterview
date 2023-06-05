@@ -37,13 +37,21 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
       });
 
     _animationController.reverse(from: 1);
-    buttonValues = widget.client.state.gameInfo.order;
+    buttonValues = widget.client.state.gameInfo.participant;
 
-    // buttonValues = widget.client.state.gameInfo.order;
-    for (var memberInfo in widget.client.state.memberInfos) {
-      if (widget.client.state.gameInfo.participant
-          .contains(memberInfo.sessionId)) {
-        buttonNames.add(memberInfo.name);
+    //  buttonValues = widget.client.state.gameInfo.order;
+    // for (var memberInfo in widget.client.state.memberInfos) {
+    //   if (widget.client.state.gameInfo.participant
+    //       .contains(memberInfo.sessionId)) {
+    //     buttonNames.add(memberInfo.name);
+    //   }
+    // }
+
+    for (var value in buttonValues) {
+      for (var memberInfo in widget.client.state.memberInfos) {
+        if (value == memberInfo.sessionId) {
+          buttonNames.add(memberInfo.name);
+        }
       }
     }
     setState(() {});
@@ -135,6 +143,8 @@ class _Page7State extends State<Page7> with SingleTickerProviderStateMixin {
                       ? () {
                           widget.client.state.poll = selectedValue;
                           widget.client.sendMessage(MessageType.POLL);
+                          print(widget.client.state.poll);
+
                           setState(() {
                             isPolled = true;
                           });

@@ -4,6 +4,7 @@ import '../models/videos.dart';
 import '../providers/videos_api.dart';
 import 'package:capston/video_detail.dart';
 import 'package:capston/user_popup.dart';
+import 'package:intl/intl.dart';
 
 Widget getMyVideoPage() {
   return MyVideoPage();
@@ -333,7 +334,9 @@ class _VideoPageState extends State<MyVideoPage> {
                                         ),
                                         SizedBox(height: 1),
                                         Text(
-                                          videoList.videos[index].createTime,
+                                          DateFormat('MM/dd HH:mm').format(
+                                              DateTime.parse(videoList
+                                                  .videos[index].createTime)),
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey,
@@ -362,37 +365,37 @@ class _VideoPageState extends State<MyVideoPage> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 30,
-                                ),
-                                width: 300,
-                                height: 30,
+                                margin: EdgeInsets.symmetric(horizontal: 30),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 10),
+                                constraints:
+                                    BoxConstraints(maxWidth: 300), // 너비 제약조건 추가
                                 decoration: BoxDecoration(
                                   color: Color(0xFFEEEEEE),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 alignment: Alignment.centerLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '   Q.',
-                                        style: TextStyle(
-                                          color: Color(0xFF3D85C6),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Q. ',
+                                      style: TextStyle(
+                                        color: Color(0xFF3D85C6),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
                                       ),
-                                      TextSpan(
-                                        text: videoList
-                                            .videos[index].questionContent,
+                                    ),
+                                    Expanded(
+                                      // Expanded 위젯 추가
+                                      child: Text(
+                                        videoList.videos[index].questionContent,
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 16,
+                                          fontSize: 14,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               Container(
