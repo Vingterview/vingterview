@@ -58,8 +58,8 @@ class _Page2State extends State<Page2> {
                       SizedBox(height: 8), // 사진과 글자 사이 여백
                       _buildImageFromEncodedData(
                         memberInfo.encodedImage,
-                        width: 60,
-                        height: 60,
+                        width: 50,
+                        height: 50,
                         borderWidth: 4,
                         borderColor: widget.client.state.currentBroadcaster ==
                                 memberInfo.sessionId

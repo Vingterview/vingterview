@@ -546,7 +546,8 @@ class _VideoDetailState extends State<video_detail> {
                                                 ),
                                                 SizedBox(width: 6),
                                                 Text(
-                                                  comment.create ==
+                                                  comment
+                                                              .create ==
                                                           comment.update
                                                       ? DateFormat(
                                                               'MM/dd HH:mm')
@@ -557,9 +558,9 @@ class _VideoDetailState extends State<video_detail> {
                                                       : DateFormat(
                                                               'MM/dd HH:mm 편집됨')
                                                           .format(
-                                                          DateTime.parse(
-                                                              comment.update),
-                                                        ),
+                                                              DateTime.parse(
+                                                                  comment
+                                                                      .update)),
                                                   style: TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.grey,
@@ -567,10 +568,17 @@ class _VideoDetailState extends State<video_detail> {
                                                 ),
                                               ]),
                                               SizedBox(height: 2),
-                                              Text(
-                                                comment.content,
-                                                style: TextStyle(
-                                                  fontSize: 13,
+                                              SingleChildScrollView(
+                                                child: Container(
+                                                  constraints: BoxConstraints(
+                                                    maxWidth: 210, // 원하는 높이 설정
+                                                  ),
+                                                  child: Text(
+                                                    comment.content,
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ],
