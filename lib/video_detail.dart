@@ -89,9 +89,8 @@ class _VideoDetailState extends State<video_detail> {
     // isMine = true; // <- 수정 삭제용 코드 --------------------------------------------
 
     _videoController = VideoPlayerController.network(
-      'https://vingterview.s3.ap-northeast-2.amazonaws.com/video/2db1f066-4dfc-4c9c-8d1e-1345598f3e97.mp4',
-      // '${video.videoUrl}' <------------------------------------------------------------------------- 수정 필요
-    );
+        // 'https://vingterview.s3.ap-northeast-2.amazonaws.com/video/2db1f066-4dfc-4c9c-8d1e-1345598f3e97.mp4',
+        '${video.video.videoUrl}');
     await _videoController.initialize().then((_) {
       // Set looping to true here
       _videoController.setLooping(true);

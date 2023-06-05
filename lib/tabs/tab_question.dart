@@ -322,7 +322,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                     Container(
                                       margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                       child: Text(
-                                        '답변 ${questionList.questions[index].boardCount}',
+                                        '영상 ${questionList.questions[index].boardCount}',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
