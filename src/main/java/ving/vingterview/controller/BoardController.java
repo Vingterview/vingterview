@@ -92,19 +92,19 @@ public class BoardController {
             return ResponseEntity.ok(boardListDTO);
         }
 
+        BoardListDTO boardListDTO = boardService.findByQuestion(question_id, page, size);
 
+        return ResponseEntity.ok(boardListDTO);
 
-        /*BoardListDTO boardListDTO = boardService.findByQuestion(question_id, page, size);
-
-        return ResponseEntity.ok(boardListDTO);*/
-
-        BoardListDTO boardListDTO = new BoardListDTO();
+   /*     BoardListDTO boardListDTO = new BoardListDTO();
         boardListDTO.setBoards(new ArrayList<>());
         boardListDTO.setHasNext(false);
         boardListDTO.setNextPage(0);
 
-        return ResponseEntity.badRequest().body(boardListDTO);
+        return ResponseEntity.badRequest().body(boardListDTO);*/
     }
+
+
 
     @GetMapping(value = "", params = "order_by")
     @Trace
