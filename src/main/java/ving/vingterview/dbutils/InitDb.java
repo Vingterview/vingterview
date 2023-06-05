@@ -87,6 +87,7 @@ public class InitDb {
                 Board board = createBoard(question,member3,"임시글","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
                 em.persist(board);
             }*/
+/*
 
             Tag tag1 = createTag(null,"대기업", TagType.TOPLEVEL);
             Tag tag2 = createTag(null,"중소기업",TagType.TOPLEVEL);
@@ -220,6 +221,7 @@ public class InitDb {
             em.persist(createTagMember(tag1,member3));
             em.persist(createTagMember(tag5,member3));
             em.persist(createTagMember(tag8,member3));
+*/
 
 
 
