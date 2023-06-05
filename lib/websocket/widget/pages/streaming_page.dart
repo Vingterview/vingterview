@@ -229,9 +229,9 @@ class _StreamingPageState extends State<StreamingPage> {
     ));
 
     if (Platform.isAndroid) {
-      print("[isAndroid]");
+      print("[isAndroid] : ");
       //TODO path부분 바꿔가면서 라이브러리 로드할수있게 찾기
-      await agoraEngine.loadExtensionProvider(path: '/libs/extension_aar-release.aar');
+      await agoraEngine.loadExtensionProvider(path: 'AgoraFaceUnityExtension');
     }
 
     await agoraEngine.enableExtension(
