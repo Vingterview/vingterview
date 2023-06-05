@@ -53,7 +53,7 @@ public class BoardController {
     public ResponseEntity<BoardListDTO> boards(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "20") int size) {
         log.info("BoardController boards");
-        BoardListDTO boardListDTO = boardService.findAll(page, size, true);
+        BoardListDTO boardListDTO = boardService.findAll(page, size, true,null);
 
         return ResponseEntity.ok(boardListDTO);
     }
@@ -72,14 +72,38 @@ public class BoardController {
         return ResponseEntity.ok(boardListDTO);
     }
 
-    @GetMapping(value = "", params = "question_id")
+    @GetMapping(value = "", params = {"question_id","order_by"})
     @Trace
     public ResponseEntity<BoardListDTO> filterByQuestion(@RequestParam(name = "question_id") Long question_id,
+                                                         @RequestParam(name = "order_by",defaultValue = "") String order_by,
                                                          @RequestParam(name = "page", defaultValue = "0") int page,
                                                          @RequestParam(name = "size", defaultValue = "20") int size) {
-        BoardListDTO boardListDTO = boardService.findByQuestion(question_id, page, size);
 
-        return ResponseEntity.ok(boardListDTO);
+        if (order_by.equals("like")) {
+            BoardListDTO boardListDTO = boardService.orderByLike(page, size,question_id);
+            return ResponseEntity.ok(boardListDTO);
+
+        } else if (order_by.equals("comment")) {
+            BoardListDTO boardListDTO = boardService.orderByComment(page, size,question_id);
+            return ResponseEntity.ok(boardListDTO);
+
+        } else if (order_by.equals("old")) {
+            BoardListDTO boardListDTO = boardService.findAll(page, size, false,question_id);
+            return ResponseEntity.ok(boardListDTO);
+        }
+
+
+
+        /*BoardListDTO boardListDTO = boardService.findByQuestion(question_id, page, size);
+
+        return ResponseEntity.ok(boardListDTO);*/
+
+        BoardListDTO boardListDTO = new BoardListDTO();
+        boardListDTO.setBoards(new ArrayList<>());
+        boardListDTO.setHasNext(false);
+        boardListDTO.setNextPage(0);
+
+        return ResponseEntity.badRequest().body(boardListDTO);
     }
 
     @GetMapping(value = "", params = "order_by")
@@ -89,15 +113,15 @@ public class BoardController {
                                                       @RequestParam(name = "size", defaultValue = "20") int size) {
 
         if (order_by.equals("like")) {
-            BoardListDTO boardListDTO = boardService.orderByLike(page, size);
+            BoardListDTO boardListDTO = boardService.orderByLike(page, size,null);
             return ResponseEntity.ok(boardListDTO);
 
         } else if (order_by.equals("comment")) {
-            BoardListDTO boardListDTO = boardService.orderByComment(page, size);
+            BoardListDTO boardListDTO = boardService.orderByComment(page, size, null);
             return ResponseEntity.ok(boardListDTO);
 
         } else if (order_by.equals("old")) {
-            BoardListDTO boardListDTO = boardService.findAll(page, size, false);
+            BoardListDTO boardListDTO = boardService.findAll(page, size, false, null);
             return ResponseEntity.ok(boardListDTO);
         }
 

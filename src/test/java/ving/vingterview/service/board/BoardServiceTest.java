@@ -108,7 +108,7 @@ class BoardServiceTest {
         }
 
 
-        BoardListDTO boardListDTO = boardService.findAll(0,10,true);
+        BoardListDTO boardListDTO = boardService.findAll(0,10,true, null);
         List<BoardDTO> findBoardDTOS = boardListDTO.getBoards().stream().collect(Collectors.toList());
 
 //        assertThat(boardListDTO.getBoards().size()).isEqualTo(5);

@@ -127,13 +127,13 @@ public class BoardService {
     }
 
     /**
-     *
-     * @param page 현재 페이지
-     * @param size 페이지 크기
+     * @param page        현재 페이지
+     * @param size        페이지 크기
+     * @param question_id
      * @return BoardListDTO
      * 최근 생성된 게시물 순
      */
-    public BoardListDTO findAll(int page,int size,boolean desc) {
+    public BoardListDTO findAll(int page, int size, boolean desc, Long questionId) {
         PageRequest pageRequest;
         if (desc) {
             pageRequest = PageRequest.of(page, size, Sort.by("createTime").descending());
@@ -141,7 +141,14 @@ public class BoardService {
             pageRequest = PageRequest.of(page, size, Sort.by("createTime").ascending());
         }
 
-        Slice<Board> boardSlice = boardRepository.findSliceBy(pageRequest);
+        Slice<Board> boardSlice = null;
+        if (questionId == null) {
+            boardSlice = boardRepository.findSliceBy(pageRequest);
+        }else{
+            boardSlice = boardRepository.findByQuestionIdWithMemberQuestion(questionId, pageRequest);
+        }
+
+
         List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
         BoardListDTO boardListDTO = new BoardListDTO();
@@ -200,10 +207,16 @@ public class BoardService {
     }
 
 
-    public BoardListDTO orderByLike(int page,int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+    public BoardListDTO orderByLike(int page,int size,Long questionId) {
 
-        Slice<Board> boardSlice = boardRepository.orderSliceByLike(pageRequest);
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Slice<Board> boardSlice = null;
+        if (questionId == null) {
+            boardSlice = boardRepository.orderSliceByLike(pageRequest);
+        }else{
+            boardSlice = boardRepository.orderSliceByLikeQuestion(pageRequest, questionId);
+        }
         List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
         BoardListDTO boardListDTO = new BoardListDTO();
@@ -215,10 +228,16 @@ public class BoardService {
 
     }
 
-    public BoardListDTO orderByComment(int page,int size) {
+    public BoardListDTO orderByComment(int page, int size, Long questionId) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Slice<Board> boardSlice = boardRepository.orderSliceByComment(pageRequest);
+        Slice<Board> boardSlice = null;
+        if (questionId == null) {
+            boardSlice = boardRepository.orderSliceByComment(pageRequest);
+        }else{
+            boardSlice = boardRepository.orderSliceByCommentQuestion(pageRequest, questionId);
+        }
+
         List<BoardDTO> boardDTOList = boardSlice.stream().map(board -> transferBoardDTO(board)).collect(Collectors.toList());
 
         BoardListDTO boardListDTO = new BoardListDTO();

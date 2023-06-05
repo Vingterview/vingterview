@@ -46,6 +46,8 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     Page<Board> findPageBy(Pageable pageable);
     Slice<Board> findSliceBy(Pageable pageable);
 
+
+
     @Query("select b from Board b " +
             " left outer join b.boardMemberLikes bml " +
             " join fetch b.member m " +
@@ -55,12 +57,30 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     Slice<Board> orderSliceByLike(Pageable pageable);
 
     @Query("select b from Board b " +
+            " left outer join b.boardMemberLikes bml " +
+            " join fetch b.member m " +
+            " join fetch b.question q " +
+            " where b.question.id = :questionId" +
+            " group by b.id " +
+            " order by count(bml.id) desc, b.createTime desc ")
+    Slice<Board> orderSliceByLikeQuestion(Pageable pageable,@Param(value = "questionId") Long questionId);
+
+    @Query("select b from Board b " +
             " left outer join b.comments c " +
             " join fetch b.member m " +
             " join fetch b.question q " +
             " group by b.id " +
             " order by count(c.id) desc, b.createTime desc ")
     Slice<Board> orderSliceByComment(Pageable pageable);
+
+    @Query("select b from Board b " +
+            " left outer join b.comments c " +
+            " join fetch b.member m " +
+            " join fetch b.question q " +
+            " where b.question.id = :questionId" +
+            " group by b.id " +
+            " order by count(c.id) desc, b.createTime desc ")
+    Slice<Board> orderSliceByCommentQuestion(Pageable pageable,@Param(value = "questionId") Long questionId);
 
     int countByQuestion(Question question);
 
