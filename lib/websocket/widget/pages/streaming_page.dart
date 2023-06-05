@@ -153,63 +153,6 @@ class _StreamingPageState extends State<StreamingPage> {
     }
   }
 
-  // Widget _videoPanel() {
-  //   if(_stage == Stage.WATCH_STREAMING) {
-  //     join();
-  //   } else if (_stage == Stage.FINISH_STREAMING) {
-  //     _leaveChannel();
-  //   }
-  //
-  //   if (widget.isHost) {
-  //     join();
-  //
-  //     return ValueListenableBuilder(
-  //         valueListenable: _onAir,
-  //         builder: (context, onAir, child) {
-  //           if (onAir) {
-  //             // Show local video preview
-  //             return AgoraVideoView(
-  //               controller: VideoViewController(
-  //                 rtcEngine: agoraEngine,
-  //                 canvas: VideoCanvas(uid: 0),
-  //               ),
-  //             );
-  //           } else {
-  //             return SizedBox();
-  //           }
-  //         });
-  //   } else {
-  //     // if (!_isJoined) {
-  //     //   join();
-  //     // }
-  //     // Show remote video
-  //     if (_remoteUid != null) {
-  //       return AgoraVideoView(
-  //         controller: VideoViewController.remote(
-  //           rtcEngine: agoraEngine,
-  //           canvas: VideoCanvas(uid: _remoteUid),
-  //           connection: RtcConnection(channelId: widget.channelName),
-  //         ),
-  //       );
-  //     } else {
-  //       // 방송시작 안했을때
-  //       // return const Text("참가자가 준비될 때까지 잠시만 기다려주세요!");
-  //       return Container(
-  //         margin: EdgeInsets.only(bottom: 8.0),
-  //         child: Text(
-  //           '참가자가 준비될 때까지 잠시만 기다려주세요!',
-  //           textAlign: TextAlign.center,
-  //           style: TextStyle(
-  //             fontSize: 14,
-  //             color: Colors.white,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -229,8 +172,6 @@ class _StreamingPageState extends State<StreamingPage> {
     ));
 
     if (Platform.isAndroid) {
-      print("[isAndroid] : ");
-      //TODO path부분 바꿔가면서 라이브러리 로드할수있게 찾기
       await agoraEngine.loadExtensionProvider(path: 'AgoraFaceUnityExtension');
     }
 
