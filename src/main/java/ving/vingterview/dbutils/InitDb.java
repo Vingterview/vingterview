@@ -87,6 +87,18 @@ public class InitDb {
                 Board board = createBoard(question,member3,"임시글","https://vingterview.s3.ap-northeast-2.amazonaws.com/video/e474aa97-b4f1-434b-a89e-203bb9b9f6d3.mp4");
                 em.persist(board);
             }*/
+
+            Tag tag1 = createTag(null, "공무원", TagType.TOPLEVEL);
+            Tag tag2 = createTag(tag1, "7,9급", TagType.MIDLEVEL);
+            Tag tag3 = createTag(tag2, "검찰사무직", TagType.SUB);
+            Tag tag4 = createTag(tag2, "고용노동부", TagType.SUB);
+
+            em.persist(tag1);
+            em.persist(tag2);
+            em.persist(tag3);
+            em.persist(tag4);
+
+
 /*
 
             Tag tag1 = createTag(null,"대기업", TagType.TOPLEVEL);
