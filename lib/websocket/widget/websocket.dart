@@ -48,7 +48,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
   void dispose() {
     // 채널을 닫음
     print("[dispose] websocket widget");
-    if(widget.client != null) {
+    if (widget.client != null) {
       widget.client.disconnect();
     }
     super.dispose();
@@ -56,7 +56,6 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider<GameState>(
       create: (context) => WebSocketClient.getInstance().state,
       builder: (context, child) {
@@ -132,7 +131,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 280),
+                          SizedBox(height: 230),
                           ElevatedButton(
                             onPressed: () async {
                               selectedTags = await Navigator.push(
@@ -226,8 +225,7 @@ class _MyWebSocketAppState extends State<MyWebSocketApp> {
                                               .currentBroadcaster,
                                       onStart: () {
                                         _client.sendMessage(
-                                          MessageType.START_VIDEO
-                                        );
+                                            MessageType.START_VIDEO);
                                       },
                                       onFinished: () {
                                         _client.sendMessage(

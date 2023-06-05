@@ -31,7 +31,7 @@ class _Page1State extends State<Page1> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 250),
+          SizedBox(height: 230),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -109,42 +109,31 @@ class _Page1State extends State<Page1> {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: 20),
-          Visibility(
-              visible: isMatching,
-              child:  ElevatedButton(
-                onPressed: () {
-                  widget.client.disconnect();
-                  setState(() {
-                    isMatching = false;
-                  });
-                  },
-                style: ButtonStyle(
-                  backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  overlayColor:
-                  MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.2)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide(
-                        color: Color(0xFF8A61D4),
-                      ),
-                    ),
-                  ),
-                  elevation: MaterialStateProperty.all<double>(5.0),
-                  padding:
-                  MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(25.0)),
-                ),
-                child: Text(
-                  '돌아가기',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-              )
+          SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: () async {
+              if (isMatching) {
+                await widget.client.disconnect();
+                setState(() {
+                  isMatching = false;
+                });
+              } else {
+                await widget.client.disconnect();
+                Navigator.pop(context);
+              }
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(0, 57, 57, 57)),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              overlayColor: MaterialStateProperty.all<Color>(
+                  Colors.blue.withOpacity(0.2)),
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                CircleBorder(),
+              ),
+              elevation: MaterialStateProperty.all<double>(1.0),
+            ),
+            child: Icon(Icons.close, size: 18.0, color: Colors.white),
           )
         ],
       ),
