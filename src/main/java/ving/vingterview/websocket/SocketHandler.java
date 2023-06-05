@@ -33,7 +33,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public static final int NUMBEROFPLAYERS = 2;
+    public static final int NUMBEROFPLAYERS = 5;
     public static final int NUMBEROFQUESTIONS = 3;
 
 
