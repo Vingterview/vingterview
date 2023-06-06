@@ -208,8 +208,8 @@ public class BoardController {
             log.info("----------UploadFile----------returned {} {}", LocalDateTime.now(), Thread.currentThread().getName());
 
             VideoResponseDTO videoResponseDTO = new VideoResponseDTO();
-            videoResponseDTO.setVideoUrl("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/31181518-cb36-4aa2-8b9f-49fd03899f34.mp4");
-//            videoResponseDTO.setVideoUrl(fileStore.getFullPath(storeFileName, false));
+//            videoResponseDTO.setVideoUrl("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/31181518-cb36-4aa2-8b9f-49fd03899f34.mp4");
+            videoResponseDTO.setVideoUrl(fileStore.getFullPath(storeFileName, false));
 
             return new ResponseEntity<>(videoResponseDTO, HttpStatus.CREATED);
 

@@ -101,11 +101,12 @@ public class S3Upload{
         HttpEntity<?> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = null;
         try {
-            response = restTemplate.postForEntity("http://localhost:5000/boards/video", request, String.class);
+            response = restTemplate.postForEntity("http://18.116.5.117:5000/boards/video", request, String.class);
             log.info("Response from flask server {}", response);
             log.info("Ended uploading file at {} {}", LocalDateTime.now(),Thread.currentThread().getName());
         } catch (ResourceAccessException e) {
             log.error("비디오 변환 과정에서 오류 발생하였습니다.");
+            e.printStackTrace();
             File file = new File(videoPath);
             file.delete();
         }
