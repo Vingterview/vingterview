@@ -239,7 +239,8 @@ class _QuestionPageState extends State<QuestionPage> {
                         );
                       },
                       onLongPress: () async {
-                        Navigator.pushNamed(context, '/video_write',
+                        // 수정
+                        Navigator.pushNamed(context, '/pick_df',
                             arguments: questionList.questions[index]);
                       },
                       child: Container(

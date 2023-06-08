@@ -28,6 +28,7 @@ class _pick_dfState extends State<pick_df> {
 
   @override
   Widget build(BuildContext context) {
+    Questions preselected = ModalRoute.of(context).settings.arguments; // 추가
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.white,
@@ -58,6 +59,7 @@ class _pick_dfState extends State<pick_df> {
                     MaterialPageRoute(
                       builder: (context) =>
                           PostVideoPage(selectedIndex: selectedPhotoIndex),
+                      settings: RouteSettings(arguments: preselected), // 수정
                     ),
                   );
                 })
