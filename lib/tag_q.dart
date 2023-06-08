@@ -255,7 +255,7 @@ class _tQuestionPageState extends State<tQuestionPage> {
                         );
                       },
                       onLongPress: () async {
-                        Navigator.pushNamed(context, '/video_write',
+                        Navigator.pushNamed(context, '/pick_df',
                             arguments: question);
                       },
                       child: Container(
