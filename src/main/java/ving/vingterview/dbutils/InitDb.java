@@ -19,6 +19,7 @@ import ving.vingterview.domain.tag.Tag;
 import ving.vingterview.domain.tag.TagMember;
 import ving.vingterview.domain.tag.TagQuestion;
 import ving.vingterview.domain.tag.TagType;
+import ving.vingterview.repository.QuestionRepository;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class InitDb {
     static class InitService {
 
         private final EntityManager em;
+        private final QuestionRepository questionRepository;
 
         @Value("classpath:기업.txt")
         private Resource fileResource;
@@ -59,15 +61,52 @@ public class InitDb {
 
         public void dbInit() {
 
-            Member member1 = createMember("User1","PassWord1","임동현","Impala",25,"dla33834051@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
-            Member member2 = createMember("User2","PassWord2","정찬영","Chan0",26,"jungchanyoung32@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
-            Member member3 = createMember("User3","PassWord3","장혜정","Hae",23,"","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
-            Member member4 = createMember("User4","PassWord4","장혜정2","Hae",23,"capstonvivi@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member1 = createMember("User1","PassWord1","임동현","임팔라",25,"dla33834051@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member2 = createMember("User2","PassWord2","정찬영","정찬영",26,"jungchanyoung31@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member3 = createMember("User3","PassWord3","임동현","장혜쩡",25,"editimpala@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member4 = createMember("User4","PassWord4","장혜정","면접왕",23,"hjnet01@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+            Member member5 = createMember("User5","PassWord4","장혜정","내일은 취업왕",23,"capstonvivi@gmail.com","https://vingterview.s3.ap-northeast-2.amazonaws.com/image/1b9ec992-d85f-4758-bbfc-69b0c68ccc47.png");
+
+            List<Member> members = new ArrayList<>();
+            members.add(member1);
+            members.add(member2);
+            members.add(member3);
+            members.add(member4);
+            members.add(member5);
 
             em.persist(member1);
             em.persist(member2);
             em.persist(member3);
             em.persist(member4);
+            em.persist(member5);
+
+
+            List<String> contents = new ArrayList<>();
+            contents.add("시선처리가 아직 많이 어렵네요. 더 열심히 하겠습니다.");
+            contents.add("아직 부족한 점이 많네요. 피드백 부탁드립니다");
+            contents.add("안녕하세요. 취업 1년차입니다. 면접 준비가 항상 어려웠는데, 뷰인터 너무 좋은 것 같네요.");
+            contents.add("답변 내용 위주로 피드백 부탁드립니다!");
+            contents.add("냉정하게 평가 부탁드리겠습니다.");
+
+            List<String> urls = new ArrayList<>();
+            urls.add("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/dade5483-fbf8-492b-bb8d-b9766e8d1231.mp4");
+            urls.add("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/cf0a7c6c-4297-4425-9c07-9c31d1f4cf12.mp4");
+            urls.add("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/d3f9f160-bcf2-4bb9-856e-a336fef2420d.mp4");
+            urls.add("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/51f2f0c8-aa6b-48c4-bb15-e1cf4018c5c7.mp4");
+            urls.add("https://vingterview.s3.ap-northeast-2.amazonaws.com/video/bf74f782-66ce-4c1a-a777-46d3b28b9c85.mp4");
+
+
+
+            for (int i = 0; i < 10; i++) {
+                Question question = questionRepository.findRandom();
+                Board board = createBoard(question, members.get(i % 5), contents.get(i % 5), urls.get(i % 5));
+                em.persist(board);
+            }
+
+
+
+
+
 
            /* Tag tag1 = createTag(null,"이벤트", TagType.TOPLEVEL);
             Tag tag2 = createTag(tag1,"이벤트", TagType.MIDLEVEL);
